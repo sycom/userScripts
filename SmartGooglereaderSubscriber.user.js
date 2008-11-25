@@ -4,7 +4,7 @@
 // @description	display a small icon for subscribing to the feeds of the current page. 
 //			based upon Jasper's Google Reader subscribe.
 //			see http://browservulsel.blogspot.com/2006/05/google-reader-subscribed-indicator.html for more informations
-// @version	S-0.6.a
+// @version	S-1.0
 // @licence	ask Jasper de Vries please. I don't know...
 // ==/UserScript==.
 
@@ -12,7 +12,7 @@
 //  http://userscripts.org/scripts/show/35611 > version 0.0.4
 /* This script parameters */
 var thisId=33600;
-var thisVersion="S-0.6.a";
+var thisVersion="S-1.0";
 /* script version control parameters */
 var GMSUCtime=10;		// delay before alert disapears. Set to 0 if you don't want it to disapear
 var GMSUCbgColor="black";	// background color
@@ -26,7 +26,7 @@ function GM_scriptVersionControl(scriptId,version) {
 	// go to script home page to get official release number and compare it to current one
 	GM_xmlhttpRequest({
 		method: 'GET',
-		url: scriptUrl,
+		url:scriptUrl,
 		headers: {
 			 'User-agent': 'Mozilla/4.0 (compatible) Greasemonkey/0.3',
 			 'Accept': 'text/html,application/xml,text/xml',
@@ -40,27 +40,15 @@ function GM_scriptVersionControl(scriptId,version) {
 				// Styling
 				GM_addStyle("#GMSUC-alerte {position:absolute;top:5px;left:50%;margin:20px 0 0 -128px;padding:6px;width:250px;background:"+GMSUCbgColor+";border:"+GMSUCfgColor+" 1px solid;color:"+GMSUCfgColor+";font-size:12px;text-align:center} #GMSUC-alerte a {font-weight:bold;font-size:12px} #GMSUC-alerte * {color:"+GMSUCfgColor+";}");
 				// Lang detection and apply
-				var Langues="en, fr";
-				var lang=navigator.language;
-				var reg=new RegExp(lang,"g");
+				var Langues="en, fr";var lang=navigator.language;var reg=new RegExp(lang,"g");
 				if(!Langues.match(lang)) lang="en";
 				/* traductions / translations */
 					var Txt=new Array();
 					for(i=1;i<7;i++) {Txt[i]=new Array();} 
 					// français
-					Txt[1]["fr"]="Vous utilisez la version";
-					Txt[2]["fr"]="du script";
-					Txt[3]["fr"]="La version officielle est différente";
-					Txt[4]["fr"]="Voulez-vous";
-					Txt[5]["fr"]="l'installer";
-					Txt[6]["fr"]="voir le code";
+					Txt[1]["fr"]="Vous utilisez la version";Txt[2]["fr"]="du script";Txt[3]["fr"]=". La version officielle est différente";Txt[4]["fr"]="Voulez-vous";Txt[5]["fr"]="l'installer";Txt[6]["fr"]="voir le code";
 					// english
-					Txt[1]["en"]="You're using";
-					Txt[2]["en"]="version of";
-					Txt[3]["en"]="script. Official release version is different";
-					Txt[4]["en"]="Do you want to";
-					Txt[5]["en"]="install it";
-					Txt[6]["en"]="view code";
+					Txt[1]["en"]="You're using";Txt[2]["en"]="version of";Txt[3]["en"]="script. Official release version is different";Txt[4]["en"]="Do you want to";Txt[5]["en"]="install it";Txt[6]["en"]="view code";
 				/* ------------------------------- */	
 				var alerte=document.createElement('div');
 				alerte.setAttribute('id','GMSUC-alerte');
@@ -75,16 +63,9 @@ function GM_scriptVersionControl(scriptId,version) {
 						if(GMSUCtime>0) {
 							document.getElementById("GMSUC-timer").innerHTML=GMSUCtime+" s";
 							GMSUCtime+=-1;
-							setTimeout(disparition,1000)
-							}
-						else document.getElementById("GMSUC-alerte").setAttribute("style","display:none");
-						}
-					disparition();
-					}
-				}
-			}
-		});
-	}
+							setTimeout(disparition,1000)}
+						else document.getElementById("GMSUC-alerte").setAttribute("style","display:none");}
+					disparition();}}}});}
 
 
 /* About 
@@ -94,6 +75,15 @@ function GM_scriptVersionControl(scriptId,version) {
   Change for version 0.4 and S-* by Sylvain Comte:
 	see http://userscripts.org/scripts/show/33600 for more informations
 */
+
+/*********** VARIABLES ****************/
+var item;				// a feed found under <link>
+var control="";			// used to avoid multiple occurence for one unique feed (specialy <a href...)
+var Feeds=new Array();	// all  feeds detected in the page
+var FeedLinks=new Array(); // links to the feeds subscriber
+var UrlList=new Array();// all url used in the links
+var ctrlTxt;
+
 /********* MAIN WINDOW ONLY ********/
 // avoid the logo to be displayed in each iframe of the page
 var adresseGlob=parent.window.location;
@@ -110,109 +100,76 @@ const logoRssBleu = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAA
 
 const logoRssTransp = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAAAXNSR0IArs4c6QAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9gLDhUULdQqmHsAAAH3SURBVCjPjZBNS+NQGIWf9947wZqWWisWXAyCzcJaiXT+Qf+G6O/UvVtBMLa1XyLFD3QRpWk1SZM7CzHDwCzmwOGFA4fz8sjp6akDtK21DqAAKyL8Q99hDFwboF2tVitpmnJ0dESSJLy/vxOGIVprjDEopdBaA2Ct/XF/f39orLWlPM+p1+t0u92/JkajEVdXV6RpitYaESHLMoCyERExxiAinJ+fIyK4rsvOzg6e5+F5Hjc3NwRBgIiglALAABZgPp+ztrZGHMekacrt7S3D4ZBOp8PBwQFaa4IgKL7Rvu//LJVKqlwuc3x8jO/71Ot1kiTh+fmZ6XRKo9Fgd3eXIAhYLpfM5/OvYqVSUY7jEMcxYRjieR57e3skScLd3R0vLy+0222yLGM2m7FYLL6KtVpNAcXCeDxmY2ODVqvFw8MDj4+PiAidTofLy0sWiwXKWstqtWK5XJKmKcYYwjDk7OwMAN/3+WYAsLm5+QXHWksURXS7XXzfp9/vc3FxwcfHB71ej1arxfr6Op+fnwA4jgOAyvNc8jyn2WwCsL+/X2B/e3sDwHXdgubW1tYfqq7rqmq1SqPRoNfrMZvNAAo4T09PrFYrJpMJg8GAJEmQk5OTX9vb22UR4dvWWqy15Hle3CzLijyKosiIyPXr6+shUOb/FAHXvwGFg/gbBn5+xQAAAABJRU5ErkJggg==';
 
-/*********** VARIABLES ****************/
-var item;				// a feed found under <link>
-var control="";			// used to avoid multiple occurence for one unique feed (specialy <a href...)
-var thisFeed;			// the feed being processed
-var Feeds=new Array();	// all  feeds detected in the page
-
 /*************** GO! ******************/
 // check <link rel="alternate">
-var result=document.evaluate('//link[@rel="alternate"][contains(@type, "rss") or contains(@type, "atom") or contains(@type, "rdf") or contains(@type, "xml")]', document, null, 0, null);
-
-while(item=result.iterateNext()) {
+var xpathResult=document.evaluate('//link[@rel="alternate"][contains(@type, "rss") or contains(@type, "atom") or contains(@type, "rdf") or contains(@type, "xml")]', document, null, 0, null);
+while(item=xpathResult.iterateNext()) {
 	Feeds.push(item);
 	control+=", "+item.href;
 	}
-	
 // check direct links to rss feeds not declared as <link>	
 if(Feeds.length==0) {
-	function fd(adresse,titre) {this.href=adresse;this.title=titre;}	// define feed objects as fd
-	var Links=document.getElementsByTagName("a");					
-	for(var i=0;i<Links.length;i++) {
-		var url=Links[i].getAttribute("href");
-		if(url!=undefined) {
-			var name=Links[i].text;
-			var UrlParts=url.split(".");
-			var ext=UrlParts[UrlParts.length-1];
-			if(ext=="rss" || ext=="xml" || ext=="rdf" || ext=="atom") {
-			/* nb : with this method, we can't get some dynamic feed like http://yoursite.net/feed.php?type=rss */
-				var reg=new RegExp(url,"g");
-				if(!control.match(reg)) {
-					var flux=new fd(url,name);
-					Feeds.push(flux);
-					control+=", "+url;
-					}
-				}	
-			}
+	var xpathResult=document.evaluate('//a[contains(@href,".rss") or contains(@href,"=rss") or contains(@href, ".atom") or contains(@href, "=atom") or (contains(@href,"feed") and (contains(@href, "rdf") or contains(@href, "xml")))]',document,null,0,null);
+	while(item=xpathResult.iterateNext()) {
+		Feeds.push(item);
+		control+=", "+item.href;
 		}
 	}		
 
+/* COMMON STYLES */
+// colorpalette
+var colorBack="#E1ECFE";
+var colorDark="#4277CF";
+var colorLight="#FFFFFF";
+// styles
+GM_addStyle('#SGSmain {position:fixed;z-index:32767;top:0;right:0;padding: 0 0 0 20px;min-height:20px;background: 2px 2px url('+logoRssOrange+') no-repeat;}');
+GM_addStyle('#SGSmain.subscribed {background:2px 2px url('+logoRssBleu+') no-repeat;}');
+GM_addStyle("#SGSmain.subscribed:hover {background: transparent;}");	
+GM_addStyle('#SGSmain:hover {padding:0;}');	
+GM_addStyle('#SGSmain > div {display:none;}');
+GM_addStyle('#SGSmain:hover > div {display:block;padding:1px 0;background:'+colorBack+';-moz-border-radius: 0 0 0 10px;border:solid '+colorDark+';border-width:0 0 2px 2px;}');
+GM_addStyle('#SGSmain a {display:block;margin:0 0 0 3px;padding:2px 10px 2px 7px;font-family:"Verdana";font-size:11px;line-height:14px;font-weight:normal;text-decoration:none;color:'+colorDark+';text-align:left;background:'+colorBack+';border:0;}');
+GM_addStyle('#SGSmain a:hover {background-color:'+colorDark+';color:'+colorLight+';}');
+GM_addStyle('#SGSmain a.abonne {background-color:'+colorDark+';color:'+colorLight+';}');
+GM_addStyle('#SGSmain a.abonne:hover {padding:1px 10px 1px 7px;background-color:'+colorBack+';color:'+colorDark+';border:solid '+colorDark+'; border-width:1px 0 1px 1px}');
+
 if (Feeds.length>0) {
-	GM_addStyle('#SGSmain { position: fixed; z-index: 32767; top: 0; right: 0; padding: 0 0 0 20px; min-height: 20px; background: 2px 2px url('+logoRssOrange+') no-repeat; }');
-	GM_addStyle('#SGSmain.subscribed { background:2px 2px url('+logoRssBleu+') no-repeat; }');
-	GM_addStyle("#SGSmain.subscribed:hover { background: transparent;}");
-	GM_addStyle('#SGSmain.partSubscribed { background:2px 2px url('+logoRssVert+') no-repeat; }');
-	GM_addStyle("#SGSmain.partSubscribed:hover { background: transparent;}");
-	GM_addStyle('#SGSmain:hover { padding: 0; }');
-	GM_addStyle('#SGSmain > div { display: none; }');
-	GM_addStyle('#SGSmain:hover > div { display: block; padding: 1px 0; background: #f8f8f8; -moz-border-radius: 0 0 0 10px; border: solid #ccc; border-width: 0 0 1px 1px; }');
-	GM_addStyle('#SGSmain a { display: block; margin: 4px 0; padding: 0 10px; font-family: "Verdana"; font-size: 11px; line-height: 14px; font-weight: normal; color: #669; text-decoration: underline; text-align: left; background: #f8f8f8; border: 0; }');
-	GM_addStyle('#SGSmain a:hover { color: #f66; }');
-	GM_addStyle('#SGSmain a.abonne { font-style: italic; }');
+	/* CONTEXTUAL STYLES */
+	GM_addStyle('#SGSmain.partSubscribed {background:2px 2px url('+logoRssVert+') no-repeat;}');
+	GM_addStyle("#SGSmain.partSubscribed:hover {background: transparent;}");
+	// create list of link to subscribe to feeds
 	var SGSmain=document.createElement('div');
 		SGSmain.setAttribute('id','SGSmain');
 	document.body.appendChild(SGSmain);
 	var SGSfeeds=document.createElement('div');
 	SGSmain.appendChild(SGSfeeds);
-	for(i in Feeds) {
-		var feed=Feeds[i];
-		var encodedFeedUrl=encodeURIComponent(feed.href);
-		var thisFeed=document.createElement("a");
-			thisFeed.setAttribute("href","https://www.google.com/reader/view/feed/"+encodedFeedUrl);
-			thisFeed.setAttribute("id",encodedFeedUrl);
-			thisFeed.innerHTML=feed.title;
-		SGSfeeds.appendChild(thisFeed);
-		var doc=document;
-		GM_xmlhttpRequest({
-			method: "GET",
-			url: "https://www.google.com/reader/api/0/subscribed?s=feed%2F"+encodedFeedUrl,
-			onload: function(response) {
-				if (response.responseText=="true") {
-					doc.getElementById(encodedFeedUrl).className="abonne";
-					if(SGSmain.className=="notSubscribed" || SGSmain.className=="partSubscribed") SGSmain.className="partSubscribed";
-					else SGSmain.className="subscribed";
-					}
-				else {
-					if(SGSmain.className=="subscribed" || SGSmain.className=="partSubscribed") SGSmain.className="partSubscribed";
-					else SGSmain.className="notSubscribed";
-					}					
-				},
-			});
+	for(var f in Feeds) {
+		var feed=Feeds[f];	
+		UrlList[f]=encodeURIComponent(feed.href);
+		var feedTitle=feed.title;
+		if(feedTitle=="") feedTitle=feed.textContent;
+		FeedLinks[f]=document.createElement("a");
+		FeedLinks[f].setAttribute("href","https://www.google.com/reader/view/feed/"+UrlList[f]);
+		FeedLinks[f].setAttribute("id",UrlList[f]);
+		FeedLinks[f].innerHTML=feedTitle;
+		SGSfeeds.appendChild(FeedLinks[f]);
+	// verify if feed is already subscribed
+		verifyFeed(0);
 		}
 	}
 	
 else {
-// artificial feed through diffbot (http://www.diffbot.com)
-	GM_addStyle('#SGSmain { position: fixed; z-index: 32767; top: 0; right: 0; padding: 0 0 0 20px; min-height: 20px; background: 2px 2px url('+logoRssOrange+') no-repeat; }');
-	GM_addStyle('#SGSmain.subscribed { background:2px 2px url('+logoRssBleu+') no-repeat; }');
-	GM_addStyle("#SGSmain.subscribed:hover { background: transparent;}");
-	GM_addStyle('#SGSmain.noFeed { background:2px 2px url('+logoRssTransp+') no-repeat; }');
-	GM_addStyle("#SGSmain.noFeed:hover { background: transparent;}");
-	GM_addStyle('#SGSmain:hover { padding: 0; }');
-	GM_addStyle('#SGSmain > div { display: none; }');
-	GM_addStyle('#SGSmain:hover > div { display: block; padding: 1px 0; background: #f8f8f8; -moz-border-radius: 0 0 0 10px; border: solid #ccc; border-width: 0 0 1px 1px; }');
-	GM_addStyle('#SGSmain a { display: block; margin: 4px 0; padding: 0 10px; font-family: "Verdana"; font-size: 11px; line-height: 14px; font-weight: normal; color: #669; text-decoration: underline; text-align: left; background: #f8f8f8; border: 0; }');
-	GM_addStyle('#SGSmain a:hover { color: #f66; }');
-	GM_addStyle('#SGSmain a.abonne { font-style: italic; }');
-
+// create an artificial feed
+	/* CONTEXTUAL STYLES */
+	GM_addStyle('#SGSmain.noFeed {background:2px 2px url('+logoRssTransp+') no-repeat;}');
+	GM_addStyle("#SGSmain.noFeed:hover {background: transparent;}");
+	//create an artificial feed link through diffbot (http://www.diffbot.com)
 	var SGSmain=document.createElement('div');
 		SGSmain.setAttribute('id','SGSmain');
 	document.body.appendChild(SGSmain);
 	var SGSfeeds=document.createElement('div');
 	SGSmain.appendChild(SGSfeeds);
- 
-	createdFeedUrl="http://api.diffbot.com/rss/"+window.location.href;
+ 	createdFeedUrl="http://api.diffbot.com/rss/"+window.location.href;
 	createdFeedTitle=document.title;
 	var encodedFeedUrl=encodeURIComponent(createdFeedUrl);
 	var thisFeed=document.createElement("a");
@@ -220,13 +177,12 @@ else {
 		thisFeed.setAttribute("id",encodedFeedUrl);
 		thisFeed.innerHTML=createdFeedTitle;
 		SGSfeeds.appendChild(thisFeed);
-	var doc=document;
 	GM_xmlhttpRequest({
 		method: "GET",
 		url: "https://www.google.com/reader/api/0/subscribed?s=feed%2F"+encodedFeedUrl,
 		onload: function(response) {
 			if (response.responseText=="true") {
-				doc.getElementById(encodedFeedUrl).className="abonne";
+				document.getElementById(encodedFeedUrl).className="abonne";
 				SGSmain.className="subscribed";
 				}
 			else {
@@ -236,3 +192,23 @@ else {
 		});
 	}
 	} // end of Main Window only control
+
+function verifyFeed(n) {
+	GM_xmlhttpRequest({
+		method:"GET",
+		url:"https://www.google.com/reader/api/0/subscribed?s=feed%2F"+UrlList[n],
+		onload:function(resp) {
+			if (resp.responseText=="true") {
+				if(SGSmain.className=="notSubscribed" || SGSmain.className=="partSubscribed") SGSmain.className="partSubscribed";
+				else SGSmain.className="subscribed";
+				FeedLinks[n].className="abonne";
+				}
+			else {
+				if(SGSmain.className=="subscribed" || SGSmain.className=="partSubscribed") SGSmain.className="partSubscribed";
+				else SGSmain.className="notSubscribed";
+				}
+			n=n+1;
+			if(n<FeedLinks.length) verifyFeed(n);
+			},
+		});
+	}	
