@@ -1,32 +1,55 @@
 // ==UserScript==
 // @name		Smart Google Subscriber
-// @namespace	http://userscripts.org/scripts/show/33600
+// @namespace	http://sylvain.comte.online.fr
 // @description	display a small icon for subscribing to the feeds of the current page. 
 //			based upon Jasper's Google Reader subscribe.
 //			see http://browservulsel.blogspot.com/2006/05/google-reader-subscribed-indicator.html for more informations
-// @version	S-1.0
+// @version	S-1.1
 // @licence	ask Jasper de Vries please. I don't know...
 // ==/UserScript==.
+/******* PARAMETERS ********/
+
+/****************** About ************************
+Author: Jasper de Vries, jepsar@gmail.com	Date:   2006-04-13
+Change for version 0.3 by Mihai Parparita :
+	Check if the user is already subscribed, and modify the appearance of the image accordingly.
+Change for version 0.4 and S-* by Sylvain Comte :
+	see http://userscripts.org/scripts/show/33600 for more informations
+**************************************************/
+
+/********* CUSTOMIZATION **************/
+// if you like to tweak your GM scripts
+/* use Diffbot to generate artificial feed for current page which don't have any other feed */
+SGSDiffbot=1;	// set to 0 if you don't want this
+/* colorpalettes */
+// feel free to create your own. color in this order : back, highlight, front, light.
+// You may like to share them by commenting http://userscripts.org/scripts/show/33600
+var cpChrome=new colorPalette("#E1ECFE","#FD2","#4277CF","#FFF");	// but for Firefox ;-)
+var cpUserscript=new colorPalette("#FFF","#F80","#000","#EEE");		// javascrgeek only
+var cpFlickr=new colorPalette("#FFF","#FF0084","#0063DC","#FFF");	// pink my blue
+// choose yours
+var colPal=cpChrome;
 
 /********** SCRIPT VERSION CONTROL *************/
-//  http://userscripts.org/scripts/show/35611 > version 0.0.4
+//  http://userscripts.org/scripts/show/35611 > version 0.1 by Sylvain Comte
+//  licence cc by-nc-sa 
 /* This script parameters */
 var thisId=33600;
 var thisVersion="S-1.0";
 /* script version control parameters */
-var GMSUCtime=10;		// delay before alert disapears. Set to 0 if you don't want it to disapear
+var GMSUCtime=11;			// delay before alert disapears. Set to 0 if you don't want it to disapear (might be a bit intrusive!)
 var GMSUCbgColor="black";	// background color
 var GMSUCfgColor="white";	// foreground color
 /* This script version control  */
 GM_scriptVersionControl(thisId,thisVersion);
-
 // define function
 function GM_scriptVersionControl(scriptId,version) {
+//  http://userscripts.org/scripts/show/35611 - version 0.1
 	var scriptUrl="http://userscripts.org/scripts/show/"+scriptId;
 	// go to script home page to get official release number and compare it to current one
 	GM_xmlhttpRequest({
 		method: 'GET',
-		url:scriptUrl,
+		url: scriptUrl,
 		headers: {
 			 'User-agent': 'Mozilla/4.0 (compatible) Greasemonkey/0.3',
 			 'Accept': 'text/html,application/xml,text/xml',
@@ -38,51 +61,39 @@ function GM_scriptVersionControl(scriptId,version) {
 			var scriptName=dom.getElementById('content').getElementsByTagName('h1')[0].textContent;
 			if(offRel!=version) {
 				// Styling
-				GM_addStyle("#GMSUC-alerte {position:absolute;top:5px;left:50%;margin:20px 0 0 -128px;padding:6px;width:250px;background:"+GMSUCbgColor+";border:"+GMSUCfgColor+" 1px solid;color:"+GMSUCfgColor+";font-size:12px;text-align:center} #GMSUC-alerte a {font-weight:bold;font-size:12px} #GMSUC-alerte * {color:"+GMSUCfgColor+";}");
+				GM_addStyle("#GMSUC-alerte {position:absolute;top:5px;left:50%;margin:20px 0 0 -128px;padding:6px;width:250px;background:"+GMSUCbgColor+";border:"+GMSUCfgColor+" 1px solid;color:"+GMSUCfgColor+";font-size:1em;text-align:center} #GMSUC-alerte a {font-weight:bold;font-size:1em} #GMSUC-alerte * {color:"+GMSUCfgColor+";} #GMSUC-alerte table {width:100%} #GMSUC-alerte td {width:33%;border:solid 1px "+GMSUCfgColor+"} #GMSUC-alerte td:hover{background:"+GMSUCfgColor+"} #GMSUC-alerte td:hover a {color:"+GMSUCbgColor+"} #GMSUC-timer {font:big bolder} #GMSUC-info {text-align:right} #GMSUC-info a {font:small sans-serif;text-decoration:none}  #GMSUC-info a:hover {background:"+GMSUCfgColor+";color:"+GMSUCbgColor+"}");
 				// Lang detection and apply
-				var Langues="en, fr";var lang=navigator.language;var reg=new RegExp(lang,"g");
-				if(!Langues.match(lang)) lang="en";
+				var Langues="en, fr";var lang=navigator.language;var reg=new RegExp(lang,"g");if(!Langues.match(lang)) lang="en";
 				/* traductions / translations */
-					var Txt=new Array();
-					for(i=1;i<7;i++) {Txt[i]=new Array();} 
+					var Txt=new Array();for(i=1;i<7;i++) {Txt[i]=new Array();} 
 					// français
-					Txt[1]["fr"]="Vous utilisez la version";Txt[2]["fr"]="du script";Txt[3]["fr"]=". La version officielle est différente";Txt[4]["fr"]="Voulez-vous";Txt[5]["fr"]="l'installer";Txt[6]["fr"]="voir le code";
+					Txt[1]["fr"]="Vous utilisez la version";Txt[2]["fr"]="du script";Txt[3]["fr"]="La version officielle est différente";Txt[4]["fr"]="installer";Txt[5]["fr"]="voir le code";Txt[6]["fr"]="propulsé par";
 					// english
-					Txt[1]["en"]="You're using";Txt[2]["en"]="version of";Txt[3]["en"]="script. Official release version is different";Txt[4]["en"]="Do you want to";Txt[5]["en"]="install it";Txt[6]["en"]="view code";
+					Txt[1]["en"]="You're using";Txt[2]["en"]="version of";Txt[3]["en"]="script. Official release version is different";Txt[4]["en"]="install";Txt[5]["en"]="view code";Txt[6]["en"]="powered by";
 				/* ------------------------------- */	
 				var alerte=document.createElement('div');
 				alerte.setAttribute('id','GMSUC-alerte');
-				var GMSUCtextAlerte=Txt[1][lang]+" "+version+" "+Txt[2][lang]+" <i><b>"+scriptName+"</b></i>";
-				GMSUCtextAlerte+=". "+Txt[3][lang]+" (<a href='http://userscripts.org/scripts/show/"+scriptId+"'>"+offRel+"</a>)";
-				GMSUCtextAlerte+=" "+Txt[4][lang]+" <a  href='http://userscripts.org/scripts/source/"+scriptId+".user.js'>"+Txt[5][lang]+"</a>? (<a href='http://userscripts.org/scripts/review/"+scriptId+"'>"+Txt[6][lang]+"</a>)";
+				var GMSUCtextAlerte=Txt[1][lang]+" "+version+" "+Txt[2][lang]+" <i><b>"+scriptName+"</b></i>";	GMSUCtextAlerte+=". "+Txt[3][lang]+" (<a href='http://userscripts.org/scripts/show/"+scriptId+"'>"+offRel+"</a>)";GMSUCtextAlerte+="";GMSUCtextAlerte+="<table><tr><td><a href='http://userscripts.org/scripts/show/"+scriptId+"'>v."+offRel+"</a></td><td><a href='http://userscripts.org/scripts/review/"+scriptId+"'>"+Txt[5][lang]+"</a></td><td><a  href='http://userscripts.org/scripts/source/"+scriptId+".user.js'>"+Txt[4][lang]+"</a></td></tr></table>"
 				if(GMSUCtime>0) GMSUCtextAlerte+="<div id='GMSUC-timer'>"+GMSUCtime+" s</div>";
-				document.body.appendChild(alerte);
-				document.getElementById('GMSUC-alerte').innerHTML=GMSUCtextAlerte;
-				if(GMSUCtime>0) {
-					function disparition() {
-						if(GMSUCtime>0) {
+				GMSUCtextAlerte+="<div id='GMSUC-info'>"+Txt[6][lang]+" <a href='http://userscripts.org/scripts/show/35611'>GM Script Update Control</a></div>";
+				document.body.appendChild(alerte);document.getElementById('GMSUC-alerte').innerHTML=GMSUCtextAlerte;
+				if(GMSUCtime>0) {function disparition() {if(GMSUCtime>0) {
 							document.getElementById("GMSUC-timer").innerHTML=GMSUCtime+" s";
 							GMSUCtime+=-1;
 							setTimeout(disparition,1000)}
-						else document.getElementById("GMSUC-alerte").setAttribute("style","display:none");}
-					disparition();}}}});}
-
-
-/* About 
-  Author: Jasper de Vries, jepsar@gmail.com	Date:   2006-04-13
-    Change for version 0.3 by Mihai Parparita: 
-	Check if the user is already subscribed, and modify the appearance of the image accordingly.
-  Change for version 0.4 and S-* by Sylvain Comte:
-	see http://userscripts.org/scripts/show/33600 for more informations
-*/
-
+						else document.getElementById("GMSUC-alerte").setAttribute("style","display:none");
+						} disparition();}}}});}
+						
+/***********************************************************************************************************/
+/***************************************  *****  ***** MAIN PROGRAM *****  *****  ****************************/
+/***********************************************************************************************************/
 /*********** VARIABLES ****************/
-var item;				// a feed found under <link>
-var control="";			// used to avoid multiple occurence for one unique feed (specialy <a href...)
-var Feeds=new Array();	// all  feeds detected in the page
-var FeedLinks=new Array(); // links to the feeds subscriber
-var UrlList=new Array();// all url used in the links
-var ctrlTxt;
+var item;					// a feed found under <link>
+var control="";				// used to avoid multiple occurence for one unique feed (specialy <a href...)
+var Feeds=new Array();		// all  feeds detected in the page
+var FeedLinks=new Array(); 	// links to the feeds subscriber
+var UrlList=new Array();	// all url used in the links
+var subStatus="";			// global subscription status
 
 /********* MAIN WINDOW ONLY ********/
 // avoid the logo to be displayed in each iframe of the page
@@ -91,6 +102,8 @@ var adresseFrame=document.location;
 
 if(adresseGlob==adresseFrame) {
 /********* CONSTANTES ****************/
+// the waiting image
+const waitLogo = 'data:image/png;base64,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';
 // the four logos...
 const logoRssOrange = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAANbY1E9YMgAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAJnSURBVDiNpdNPSNNhHMfxj66SLFcOMis6dAoPXYooPIUdgqCi0Z8RK2gsDEcpVmSkJUZoGWJQEUURpNEfSjxElygiorLSLmW2X/ZbOjeVqTndouXeHbbGj6AI+sKH57k8r8/l+wjQ/0TD15Y6Bk7O7TYrs/CXCX+ZMP6QQGUWwZNzetqPLC6UZAOkgbq87pHG2YTbNhF80sDQs1NMvqxh4t5KErcWkryzCCwZbZyNeTzvk6QFkmwyfWLqegH+Vhe/T7zvKeN31zDVMh9aU0m2FGD6hKQiSTNkeEXyioPwucV0NK3l+ZkSOlsqiJhdGShyfy/fL+XDVQdcdWB4haRlKcAjuGgncd7OQH0uofpZxM7mEW7IJdBWSTw6CkD/HS9TF+xw0Y7hsQK7BM25hGpzMo2xYBdfb29l8vRMehqXEx8fAWDs8kqSzbkYu6yAW3A6h+EaGyPvHxH++CYDDT+oJVo3jcDN8hRsPCbRMB3DbQV2CE5kk6zLJnYsi0CFeFRVTCzdOnRlE+GDImKk4LFTSzB2WAGXSFaLeJUIl4vEURE/LF5UrwYgar5h4pAItvoA+HpvH4bLCmwT0Qrx7Uuq4Ud/J4mDIlgqBj+8BqBvjxg8UwxA6O5R/NuswBZh7J+HdQa9IlYmIm8fAvDKKSabVgEQvFmF32kBTKcIucW4/xUA33pfE/OKH6Wiz5fPQO0Kxj1i7ICDdzfqCZ510msFgi71jLjEkEt0rBNRt0h6BJ7U+es+tVvEdorh7cLYokAGaF+vws9O9ZobhbHh7zE3CmOzAmsWqCSzypJs6Y9RlFb/JUXpN7afIVhSDdLWIM4AAAAASUVORK5CYII=';
 
@@ -102,14 +115,15 @@ const logoRssTransp = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAY
 
 /*************** GO! ******************/
 // check <link rel="alternate">
-var xpathResult=document.evaluate('//link[@rel="alternate"][contains(@type, "rss") or contains(@type, "atom") or contains(@type, "rdf") or contains(@type, "xml")]', document, null, 0, null);
+var xpathResult=document.evaluate('//link[@rel="alternate" or @rel="chapter" or @rel="section" or @rel="subsection"][contains(@type, "rss") or contains(@type, "atom") or contains(@type, "rdf") or contains(@type, "xml")]', document, null, 0, null);
 while(item=xpathResult.iterateNext()) {
 	Feeds.push(item);
 	control+=", "+item.href;
 	}
+	
 // check direct links to rss feeds not declared as <link>	
 if(Feeds.length==0) {
-	var xpathResult=document.evaluate('//a[contains(@href,".rss") or contains(@href,"=rss") or contains(@href, ".atom") or contains(@href, "=atom") or (contains(@href,"feed") and (contains(@href, "rdf") or contains(@href, "xml")))]',document,null,0,null);
+	var xpathResult=document.evaluate('//a[contains(@href,".rss") or contains(@href,"=rss") or contains(@href, ".atom") or contains(@href, "=atom") or ((contains(@href,"feed") or contains(@href,"rss")) and (contains(@href, "rdf") or contains(@href, "xml")))]',document,null,0,null);
 	while(item=xpathResult.iterateNext()) {
 		Feeds.push(item);
 		control+=", "+item.href;
@@ -117,21 +131,19 @@ if(Feeds.length==0) {
 	}		
 
 /* COMMON STYLES */
-// colorpalette
-var colorBack="#E1ECFE";
-var colorDark="#4277CF";
-var colorLight="#FFFFFF";
 // styles
-GM_addStyle('#SGSmain {position:fixed;z-index:32767;top:0;right:0;padding: 0 0 0 20px;min-height:20px;background: 2px 2px url('+logoRssOrange+') no-repeat;}');
+GM_addStyle('#SGSmain {position:fixed;z-index:32767;top:0;right:0;padding: 0 0 0 20px;min-height:20px;background:2px 2px url('+waitLogo+') no-repeat;}');
 GM_addStyle('#SGSmain.subscribed {background:2px 2px url('+logoRssBleu+') no-repeat;}');
+GM_addStyle("#SGSmain.subscribed:hover {background: transparent;}");
+GM_addStyle('#SGSmain.notSubscribed {background:2px 2px url('+logoRssOrange+') no-repeat;}');
 GM_addStyle("#SGSmain.subscribed:hover {background: transparent;}");	
 GM_addStyle('#SGSmain:hover {padding:0;}');	
 GM_addStyle('#SGSmain > div {display:none;}');
-GM_addStyle('#SGSmain:hover > div {display:block;padding:1px 0;background:'+colorBack+';-moz-border-radius: 0 0 0 10px;border:solid '+colorDark+';border-width:0 0 2px 2px;}');
-GM_addStyle('#SGSmain a {display:block;margin:0 0 0 3px;padding:2px 10px 2px 7px;font-family:"Verdana";font-size:11px;line-height:14px;font-weight:normal;text-decoration:none;color:'+colorDark+';text-align:left;background:'+colorBack+';border:0;}');
-GM_addStyle('#SGSmain a:hover {background-color:'+colorDark+';color:'+colorLight+';}');
-GM_addStyle('#SGSmain a.abonne {background-color:'+colorDark+';color:'+colorLight+';}');
-GM_addStyle('#SGSmain a.abonne:hover {padding:1px 10px 1px 7px;background-color:'+colorBack+';color:'+colorDark+';border:solid '+colorDark+'; border-width:1px 0 1px 1px}');
+GM_addStyle('#SGSmain:hover > div {display:block;padding:1px 0;background:'+colPal.back+';-moz-border-radius: 0 0 0 3px;border:solid '+colPal.front+';border-width:0 0 2px 2px;}');
+GM_addStyle('#SGSmain a {display:block;margin:0 0 0 3px;padding:2px 10px 2px 7px;font-family:"Verdana";font-size:11px;line-height:14px;font-weight:normal;text-decoration:none;color:'+colPal.front+';text-align:left;background:'+colPal.back+';border:0;}');
+GM_addStyle('#SGSmain a:hover {background-color:'+colPal.high+';color:'+colPal.front+';}');
+GM_addStyle('#SGSmain a.abonne {background-color:'+colPal.front+';color:'+colPal.light+';}');
+GM_addStyle('#SGSmain a.abonne:hover {padding:0px 10px 0px 6px;background-color:'+colPal.light+';color:'+colPal.front+';border:solid '+colPal.high+'; border-width:2px 0 2px 2px}');
 
 if (Feeds.length>0) {
 	/* CONTEXTUAL STYLES */
@@ -153,62 +165,67 @@ if (Feeds.length>0) {
 		FeedLinks[f].setAttribute("id",UrlList[f]);
 		FeedLinks[f].innerHTML=feedTitle;
 		SGSfeeds.appendChild(FeedLinks[f]);
-	// verify if feed is already subscribed
-		verifyFeed(0);
 		}
+	// verify if feed is already subscribed
+	verifyFeed(0);
 	}
 	
 else {
 // create an artificial feed
-	/* CONTEXTUAL STYLES */
-	GM_addStyle('#SGSmain.noFeed {background:2px 2px url('+logoRssTransp+') no-repeat;}');
-	GM_addStyle("#SGSmain.noFeed:hover {background: transparent;}");
-	//create an artificial feed link through diffbot (http://www.diffbot.com)
-	var SGSmain=document.createElement('div');
-		SGSmain.setAttribute('id','SGSmain');
-	document.body.appendChild(SGSmain);
-	var SGSfeeds=document.createElement('div');
-	SGSmain.appendChild(SGSfeeds);
- 	createdFeedUrl="http://api.diffbot.com/rss/"+window.location.href;
-	createdFeedTitle=document.title;
-	var encodedFeedUrl=encodeURIComponent(createdFeedUrl);
-	var thisFeed=document.createElement("a");
-		thisFeed.setAttribute("href","https://www.google.com/reader/view/feed/"+encodedFeedUrl);
-		thisFeed.setAttribute("id",encodedFeedUrl);
-		thisFeed.innerHTML=createdFeedTitle;
-		SGSfeeds.appendChild(thisFeed);
-	GM_xmlhttpRequest({
-		method: "GET",
-		url: "https://www.google.com/reader/api/0/subscribed?s=feed%2F"+encodedFeedUrl,
-		onload: function(response) {
-			if (response.responseText=="true") {
-				document.getElementById(encodedFeedUrl).className="abonne";
-				SGSmain.className="subscribed";
-				}
-			else {
-				SGSmain.className="noFeed";
-				}
-			},
-		});
+	if(SGSDiffbot==1) {
+		/* CONTEXTUAL STYLES */
+		GM_addStyle('#SGSmain.noFeed {background:2px 2px url('+logoRssTransp+') no-repeat;}');
+		GM_addStyle("#SGSmain.noFeed:hover {background: transparent;}");
+		//create an artificial feed link through diffbot (http://www.diffbot.com)
+		var SGSmain=document.createElement('div');
+			SGSmain.setAttribute('id','SGSmain');
+		document.body.appendChild(SGSmain);
+		var SGSfeeds=document.createElement('div');
+		SGSmain.appendChild(SGSfeeds);
+	 	createdFeedUrl="http://api.diffbot.com/rss/"+window.location.href;
+		createdFeedTitle=document.title;
+		var encodedFeedUrl=encodeURIComponent(createdFeedUrl);
+		var thisFeed=document.createElement("a");
+			thisFeed.setAttribute("href","https://www.google.com/reader/view/feed/"+encodedFeedUrl);
+			thisFeed.setAttribute("id",encodedFeedUrl);
+			thisFeed.innerHTML=createdFeedTitle;
+			SGSfeeds.appendChild(thisFeed);
+		GM_xmlhttpRequest({
+			method: "GET",
+			url: "https://www.google.com/reader/api/0/subscribed?s=feed%2F"+encodedFeedUrl,
+			onload: function(response) {
+				if (response.responseText=="true") {
+					document.getElementById(encodedFeedUrl).className="abonne";
+					subStatus="subscribed";
+					}
+				else {
+					subStatus="noFeed";
+					}
+				SGSmain.className=subStatus;
+				},
+			});		
+		}
 	}
 	} // end of Main Window only control
 
+function colorPalette(b,h,f,l) {this.back=b;this.high=h;this.front=f;this.light=l;}
+	
 function verifyFeed(n) {
-	GM_xmlhttpRequest({
-		method:"GET",
-		url:"https://www.google.com/reader/api/0/subscribed?s=feed%2F"+UrlList[n],
-		onload:function(resp) {
-			if (resp.responseText=="true") {
-				if(SGSmain.className=="notSubscribed" || SGSmain.className=="partSubscribed") SGSmain.className="partSubscribed";
-				else SGSmain.className="subscribed";
-				FeedLinks[n].className="abonne";
-				}
-			else {
-				if(SGSmain.className=="subscribed" || SGSmain.className=="partSubscribed") SGSmain.className="partSubscribed";
-				else SGSmain.className="notSubscribed";
-				}
-			n=n+1;
-			if(n<FeedLinks.length) verifyFeed(n);
-			},
-		});
-	}	
+	if(n<FeedLinks.length) {
+		GM_xmlhttpRequest({
+			method:"GET",
+			url:"https://www.google.com/reader/api/0/subscribed?s=feed%2F"+UrlList[n],
+			onload: function(resp) {
+				if (resp.responseText=="true") {
+					if(subStatus=="notSubscribed" || subStatus=="partSubscribed") subStatus="partSubscribed";
+					else subStatus="subscribed";
+					FeedLinks[n].className="abonne";
+					}
+				else {
+					if(subStatus=="subscribed" ||subStatus=="partSubscribed") subStatus="partSubscribed";
+					else subStatus="notSubscribed";
+					}
+				n=n+1;
+				verifyFeed(n);
+				SGSmain.className=subStatus;			
+				},});}}	
