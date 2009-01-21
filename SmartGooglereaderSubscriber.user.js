@@ -4,7 +4,7 @@
 // @description	display a small icon for subscribing to the feeds of the current page. 
 //			based upon Jasper's Google Reader subscribe.
 //			see http://browservulsel.blogspot.com/2006/05/google-reader-subscribed-indicator.html for more informations
-// @version	S-1.1
+// @version	S-1.1.b
 // @licence	ask Jasper de Vries please. I don't know...
 // ==/UserScript==.
 /******* PARAMETERS ********/
@@ -35,7 +35,7 @@ var colPal=cpChrome;
 //  licence cc by-nc-sa 
 /* This script parameters */
 var thisId=33600;
-var thisVersion="S-1.0";
+var thisVersion="S-1.1.b";
 /* script version control parameters */
 var GMSUCtime=11;			// delay before alert disapears. Set to 0 if you don't want it to disapear (might be a bit intrusive!)
 var GMSUCbgColor="black";	// background color
@@ -57,9 +57,9 @@ function GM_scriptVersionControl(scriptId,version) {
 		onload: function(responseDetails) {
 			var parser=new DOMParser();
 			var dom=parser.parseFromString(responseDetails.responseText,"text/xml");
-			var offRel=dom.getElementById('right').getElementsByTagName('code')[0].getElementsByTagName('b')[0].textContent;
+			var offRel=dom.getElementById('summary').getElementsByTagName('b')[1].nextSibling.textContent;
 			var scriptName=dom.getElementById('content').getElementsByTagName('h1')[0].textContent;
-			if(offRel!=version) {
+			if(offRel!=" "+version) {
 				// Styling
 				GM_addStyle("#GMSUC-alerte {position:absolute;top:5px;left:50%;margin:20px 0 0 -128px;padding:6px;width:250px;background:"+GMSUCbgColor+";border:"+GMSUCfgColor+" 1px solid;color:"+GMSUCfgColor+";font-size:1em;text-align:center} #GMSUC-alerte a {font-weight:bold;font-size:1em} #GMSUC-alerte * {color:"+GMSUCfgColor+";} #GMSUC-alerte table {width:100%} #GMSUC-alerte td {width:33%;border:solid 1px "+GMSUCfgColor+"} #GMSUC-alerte td:hover{background:"+GMSUCfgColor+"} #GMSUC-alerte td:hover a {color:"+GMSUCbgColor+"} #GMSUC-timer {font:big bolder} #GMSUC-info {text-align:right} #GMSUC-info a {font:small sans-serif;text-decoration:none}  #GMSUC-info a:hover {background:"+GMSUCfgColor+";color:"+GMSUCbgColor+"}");
 				// Lang detection and apply
