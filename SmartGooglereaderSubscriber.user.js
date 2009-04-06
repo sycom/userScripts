@@ -4,7 +4,7 @@
 // @description	display a small icon for subscribing to the feeds of the current page. 
 //			based upon Jasper's Google Reader subscribe.
 //			see http://browservulsel.blogspot.com/2006/05/google-reader-subscribed-indicator.html for more informations
-// @version	S-1.1.b
+// @version	S-1.2
 // @licence	ask Jasper de Vries please. I don't know...
 // ==/UserScript==.
 /******* PARAMETERS ********/
@@ -31,20 +31,21 @@ var cpFlickr=new colorPalette("#FFF","#FF0084","#0063DC","#FFF");	// pink my blu
 var colPal=cpChrome;
 
 /********** SCRIPT VERSION CONTROL *************/
-//  http://userscripts.org/scripts/show/35611 > version 0.1 by Sylvain Comte
-//  licence cc by-nc-sa 
+//  http://userscripts.org/scripts/show/35611 - version 0.2
 /* This script parameters */
-var thisId=33600;
-var thisVersion="S-1.1.b";
+/* SET YOUR OWN SCRIPT VALUES */
+var thisId=33600;			// your script userscript id
+var thisVersion="S-1.2";		// the @version metadata value
 /* script version control parameters */
 var GMSUCtime=11;			// delay before alert disapears. Set to 0 if you don't want it to disapear (might be a bit intrusive!)
 var GMSUCbgColor="black";	// background color
 var GMSUCfgColor="white";	// foreground color
 /* This script version control  */
-GM_scriptVersionControl(thisId,thisVersion);
+// avoid script execution in each frame of the page
+if(window.parent) GM_scriptVersionControl(thisId,thisVersion);
+
 // define function
 function GM_scriptVersionControl(scriptId,version) {
-//  http://userscripts.org/scripts/show/35611 - version 0.1
 	var scriptUrl="http://userscripts.org/scripts/show/"+scriptId;
 	// go to script home page to get official release number and compare it to current one
 	GM_xmlhttpRequest({
@@ -55,35 +56,70 @@ function GM_scriptVersionControl(scriptId,version) {
 			 'Accept': 'text/html,application/xml,text/xml',
 			 },
 		onload: function(responseDetails) {
+			var textResp=responseDetails.responseText;
+			// temp hack for correcting userscript homepage when not logged in (google ads)
+			textResp=textResp.replace(/<!-- \*/g,"/*");
+			textResp=textResp.replace(/\*\/ -->/g,"*/");
+			// end of hack
 			var parser=new DOMParser();
-			var dom=parser.parseFromString(responseDetails.responseText,"text/xml");
+			var dom=parser.parseFromString(textResp,"text/xml");
+			var ad=dom.getElementById('header').getElementsByTagName('div')[0];
 			var offRel=dom.getElementById('summary').getElementsByTagName('b')[1].nextSibling.textContent;
+			offRel=offRel.replace(/[\0\n\f\r\t\v\s]/g,"");
 			var scriptName=dom.getElementById('content').getElementsByTagName('h1')[0].textContent;
-			if(offRel!=" "+version) {
+			if(offRel!=version) {
 				// Styling
 				GM_addStyle("#GMSUC-alerte {position:absolute;top:5px;left:50%;margin:20px 0 0 -128px;padding:6px;width:250px;background:"+GMSUCbgColor+";border:"+GMSUCfgColor+" 1px solid;color:"+GMSUCfgColor+";font-size:1em;text-align:center} #GMSUC-alerte a {font-weight:bold;font-size:1em} #GMSUC-alerte * {color:"+GMSUCfgColor+";} #GMSUC-alerte table {width:100%} #GMSUC-alerte td {width:33%;border:solid 1px "+GMSUCfgColor+"} #GMSUC-alerte td:hover{background:"+GMSUCfgColor+"} #GMSUC-alerte td:hover a {color:"+GMSUCbgColor+"} #GMSUC-timer {font:big bolder} #GMSUC-info {text-align:right} #GMSUC-info a {font:small sans-serif;text-decoration:none}  #GMSUC-info a:hover {background:"+GMSUCfgColor+";color:"+GMSUCbgColor+"}");
 				// Lang detection and apply
-				var Langues="en, fr";var lang=navigator.language;var reg=new RegExp(lang,"g");if(!Langues.match(lang)) lang="en";
+				var Langues="en, fr";
+				var lang=navigator.language;
+				var reg=new RegExp(lang,"g");
+				if(!Langues.match(lang)) lang="en";
 				/* traductions / translations */
-					var Txt=new Array();for(i=1;i<7;i++) {Txt[i]=new Array();} 
+					var Txt=new Array();
+					for(i=1;i<7;i++) {Txt[i]=new Array();} 
 					// français
-					Txt[1]["fr"]="Vous utilisez la version";Txt[2]["fr"]="du script";Txt[3]["fr"]="La version officielle est différente";Txt[4]["fr"]="installer";Txt[5]["fr"]="voir le code";Txt[6]["fr"]="propulsé par";
+					Txt[1]["fr"]="Vous utilisez la version";
+					Txt[2]["fr"]="du script";
+					Txt[3]["fr"]="La version officielle est différente";
+					Txt[4]["fr"]="installer";
+					Txt[5]["fr"]="voir le code";
+					Txt[6]["fr"]="propulsé par";
 					// english
-					Txt[1]["en"]="You're using";Txt[2]["en"]="version of";Txt[3]["en"]="script. Official release version is different";Txt[4]["en"]="install";Txt[5]["en"]="view code";Txt[6]["en"]="powered by";
+					Txt[1]["en"]="You're using";
+					Txt[2]["en"]="version of";
+					Txt[3]["en"]="script. Official release version is different";
+					Txt[4]["en"]="install";
+					Txt[5]["en"]="view code";
+					Txt[6]["en"]="powered by";
 				/* ------------------------------- */	
 				var alerte=document.createElement('div');
 				alerte.setAttribute('id','GMSUC-alerte');
-				var GMSUCtextAlerte=Txt[1][lang]+" "+version+" "+Txt[2][lang]+" <i><b>"+scriptName+"</b></i>";	GMSUCtextAlerte+=". "+Txt[3][lang]+" (<a href='http://userscripts.org/scripts/show/"+scriptId+"'>"+offRel+"</a>)";GMSUCtextAlerte+="";GMSUCtextAlerte+="<table><tr><td><a href='http://userscripts.org/scripts/show/"+scriptId+"'>v."+offRel+"</a></td><td><a href='http://userscripts.org/scripts/review/"+scriptId+"'>"+Txt[5][lang]+"</a></td><td><a  href='http://userscripts.org/scripts/source/"+scriptId+".user.js'>"+Txt[4][lang]+"</a></td></tr></table>"
+				var GMSUCtextAlerte=Txt[1][lang]+" "+version+" "+Txt[2][lang]+" <i><b>"+scriptName+"</b></i>";
+				GMSUCtextAlerte+=". "+Txt[3][lang]+" (<a href='http://userscripts.org/scripts/show/"+scriptId+"'>"+offRel+"</a>)";
+				GMSUCtextAlerte+="";
+				GMSUCtextAlerte+="<table><tr><td><a href='http://userscripts.org/scripts/show/"+scriptId+"'>v."+offRel+"</a></td><td><a href='http://userscripts.org/scripts/review/"+scriptId+"'>"+Txt[5][lang]+"</a></td><td><a  href='http://userscripts.org/scripts/source/"+scriptId+".user.js'>"+Txt[4][lang]+"</a></td></tr></table>"
 				if(GMSUCtime>0) GMSUCtextAlerte+="<div id='GMSUC-timer'>"+GMSUCtime+" s</div>";
 				GMSUCtextAlerte+="<div id='GMSUC-info'>"+Txt[6][lang]+" <a href='http://userscripts.org/scripts/show/35611'>GM Script Update Control</a></div>";
-				document.body.appendChild(alerte);document.getElementById('GMSUC-alerte').innerHTML=GMSUCtextAlerte;
-				if(GMSUCtime>0) {function disparition() {if(GMSUCtime>0) {
+				document.body.appendChild(alerte);
+				document.getElementById('GMSUC-alerte').innerHTML=GMSUCtextAlerte;
+				if(GMSUCtime>0) {
+					function disparition() {
+						if(GMSUCtime>0) {
 							document.getElementById("GMSUC-timer").innerHTML=GMSUCtime+" s";
 							GMSUCtime+=-1;
-							setTimeout(disparition,1000)}
+							setTimeout(disparition,1000)
+							}
 						else document.getElementById("GMSUC-alerte").setAttribute("style","display:none");
-						} disparition();}}}});}
-						
+						}
+					disparition();
+					}
+				}
+			}
+		});
+	}
+/******* END OF SCRIPT VERSION CONTROL **********/
+
 /***********************************************************************************************************/
 /***************************************  *****  ***** MAIN PROGRAM *****  *****  ****************************/
 /***********************************************************************************************************/
@@ -97,10 +133,8 @@ var subStatus="";			// global subscription status
 
 /********* MAIN WINDOW ONLY ********/
 // avoid the logo to be displayed in each iframe of the page
-var adresseGlob=parent.window.location;
-var adresseFrame=document.location;
 
-if(adresseGlob==adresseFrame) {
+ if(window.parent) {
 /********* CONSTANTES ****************/
 // the waiting image
 const waitLogo = 'data:image/png;base64,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';
@@ -144,6 +178,7 @@ GM_addStyle('#SGSmain a {display:block;margin:0 0 0 3px;padding:2px 10px 2px 7px
 GM_addStyle('#SGSmain a:hover {background-color:'+colPal.high+';color:'+colPal.front+';}');
 GM_addStyle('#SGSmain a.abonne {background-color:'+colPal.front+';color:'+colPal.light+';}');
 GM_addStyle('#SGSmain a.abonne:hover {padding:0px 10px 0px 6px;background-color:'+colPal.light+';color:'+colPal.front+';border:solid '+colPal.high+'; border-width:2px 0 2px 2px}');
+GM_addStyle('@media print {#SGSmain{display:none}}');
 
 if (Feeds.length>0) {
 	/* CONTEXTUAL STYLES */
@@ -228,4 +263,4 @@ function verifyFeed(n) {
 				n=n+1;
 				verifyFeed(n);
 				SGSmain.className=subStatus;			
-				},});}}	
+				},});}}
