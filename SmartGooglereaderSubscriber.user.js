@@ -4,7 +4,7 @@
 // @description	display a small icon for subscribing to the feeds of the current page. 
 //			based upon Jasper's Google Reader subscribe.
 //			see http://browservulsel.blogspot.com/2006/05/google-reader-subscribed-indicator.html for more informations
-// @version	S-1.2
+// @version	S-1.3
 // @licence	ask Jasper de Vries please. I don't know...
 // ==/UserScript==.
 /******* PARAMETERS ********/
@@ -31,22 +31,22 @@ var cpFlickr=new colorPalette("#FFF","#FF0084","#0063DC","#FFF");	// pink my blu
 var colPal=cpChrome;
 
 /********** SCRIPT VERSION CONTROL *************/
-//  http://userscripts.org/scripts/show/35611 - version 0.2
+//  http://userscripts.org/scripts/show/35611 - version 0.3
 /* This script parameters */
 /* SET YOUR OWN SCRIPT VALUES */
 var thisId=33600;			// your script userscript id
-var thisVersion="S-1.2";		// the @version metadata value
+var thisVersion="S-1.3";		// the @version metadata value
 /* script version control parameters */
 var GMSUCtime=11;			// delay before alert disapears. Set to 0 if you don't want it to disapear (might be a bit intrusive!)
-var GMSUCbgColor="black";	// background color
-var GMSUCfgColor="white";	// foreground color
+var GMSUCbgColor=colPal.front;	// background color
+var GMSUCfgColor=colPal.back;	// foreground color
 /* This script version control  */
 // avoid script execution in each frame of the page
-if(window.parent) GM_scriptVersionControl(thisId,thisVersion);
+if(self.location==top.location) GM_scriptVersionControl(thisId,thisVersion);
 
 // define function
 function GM_scriptVersionControl(scriptId,version) {
-	var scriptUrl="http://userscripts.org/scripts/show/"+scriptId;
+	var scriptUrl="http://userscripts.org/scripts/source/"+scriptId+".meta.js";
 	// go to script home page to get official release number and compare it to current one
 	GM_xmlhttpRequest({
 		method: 'GET',
@@ -57,16 +57,8 @@ function GM_scriptVersionControl(scriptId,version) {
 			 },
 		onload: function(responseDetails) {
 			var textResp=responseDetails.responseText;
-			// temp hack for correcting userscript homepage when not logged in (google ads)
-			textResp=textResp.replace(/<!-- \*/g,"/*");
-			textResp=textResp.replace(/\*\/ -->/g,"*/");
-			// end of hack
-			var parser=new DOMParser();
-			var dom=parser.parseFromString(textResp,"text/xml");
-			var ad=dom.getElementById('header').getElementsByTagName('div')[0];
-			var offRel=dom.getElementById('summary').getElementsByTagName('b')[1].nextSibling.textContent;
-			offRel=offRel.replace(/[\0\n\f\r\t\v\s]/g,"");
-			var scriptName=dom.getElementById('content').getElementsByTagName('h1')[0].textContent;
+			var offRel=/\/\/\s*@version\s*(.*)\s*\n/i.exec(textResp)[1];
+			var scriptName=/\/\/\s*@name\s*(.*)\s*\n/i.exec(textResp)[1];
 			if(offRel!=version) {
 				// Styling
 				GM_addStyle("#GMSUC-alerte {position:absolute;top:5px;left:50%;margin:20px 0 0 -128px;padding:6px;width:250px;background:"+GMSUCbgColor+";border:"+GMSUCfgColor+" 1px solid;color:"+GMSUCfgColor+";font-size:1em;text-align:center} #GMSUC-alerte a {font-weight:bold;font-size:1em} #GMSUC-alerte * {color:"+GMSUCfgColor+";} #GMSUC-alerte table {width:100%} #GMSUC-alerte td {width:33%;border:solid 1px "+GMSUCfgColor+"} #GMSUC-alerte td:hover{background:"+GMSUCfgColor+"} #GMSUC-alerte td:hover a {color:"+GMSUCbgColor+"} #GMSUC-timer {font:big bolder} #GMSUC-info {text-align:right} #GMSUC-info a {font:small sans-serif;text-decoration:none}  #GMSUC-info a:hover {background:"+GMSUCfgColor+";color:"+GMSUCbgColor+"}");
@@ -134,7 +126,7 @@ var subStatus="";			// global subscription status
 /********* MAIN WINDOW ONLY ********/
 // avoid the logo to be displayed in each iframe of the page
 
- if(window.parent) {
+ if(self.location==top.location) {
 /********* CONSTANTES ****************/
 // the waiting image
 const waitLogo = 'data:image/png;base64,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';
