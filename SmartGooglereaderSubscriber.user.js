@@ -1,51 +1,73 @@
 // ==UserScript==
-// @name		Smart Google Subscriber
+// @name	Smart Google Subscriber
 // @namespace	http://sylvain.comte.online.fr
 // @description	display a small icon for subscribing to the feeds of the current page. 
-//			based upon Jasper's Google Reader subscribe.
-//			see http://browservulsel.blogspot.com/2006/05/google-reader-subscribed-indicator.html for more informations
-// @version	S-1.3
+//			based upon Jasper's Google Reader subscribe. For more informations see
+//			http://browservulsel.blogspot.com/2006/05/google-reader-subscribed-indicator.html
+// @version	S-2.0
 // @licence	ask Jasper de Vries please. I don't know...
 // ==/UserScript==.
 /******* PARAMETERS ********/
 
-/****************** About ************************
-Author: Jasper de Vries, jepsar@gmail.com	Date:   2006-04-13
+/********* About ***********
+Change for version 0.4 and S-* by Sylvain Comte :
+	see http://sylvain.comte.online.fr/AirCarnet/?post/Smart-Google-Subscriber for more informations
 Change for version 0.3 by Mihai Parparita :
 	Check if the user is already subscribed, and modify the appearance of the image accordingly.
-Change for version 0.4 and S-* by Sylvain Comte :
-	see http://userscripts.org/scripts/show/33600 for more informations
-**************************************************/
+First release by Jasper de Vries
+	jepsar@gmail.com	Date:2006-04-13
+****************************/
 
 /********* CUSTOMIZATION **************/
 // if you like to tweak your GM scripts
-/* use Diffbot to generate artificial feed for current page which don't have any other feed */
-SGSDiffbot=1;	// set to 0 if you don't want this
+
 /* colorpalettes */
 // feel free to create your own. color in this order : back, highlight, front, light.
-// You may like to share them by commenting http://userscripts.org/scripts/show/33600
-var cpChrome=new colorPalette("#E1ECFE","#FD2","#4277CF","#FFF");	// but for Firefox ;-)
-var cpUserscript=new colorPalette("#FFF","#F80","#000","#EEE");		// javascrgeek only
-var cpFlickr=new colorPalette("#FFF","#FF0084","#0063DC","#FFF");	// pink my blue
-// choose yours
-var colPal=cpChrome;
+// You may like to share them by commenting
+// http://sylvain.comte.online.fr/AirCarnet/?post/Smart-Google-Subscriber
+var SGSColPal=new Array();
+SGSColPal["Chrome"]=new colorPalette("#E1ECFE","#FD2","#4277CF","#FFF");	// but for Firefox ;-)
+SGSColPal["Userscripts"]=new colorPalette("#FFF","#F80","#000","#EEE");		// javascrgeek only
+SGSColPal["Flickr"]=new colorPalette("#FFF","#FF0084","#0063DC","#FFF");	// pink my blue
+// enable default. You don't have to touch this as there is now a setting options menu...
+var SGSdefaultPalette="Userscripts";
+// declare color palette
+var colPal=SGSColPal[GM_getValue("palette",SGSdefaultPalette)];
 
-/********** SCRIPT VERSION CONTROL *************/
-//  http://userscripts.org/scripts/show/35611 - version 0.3
-/* This script parameters */
+/********** SCRIPT VERSION CONTROL 0.5 *************/
+/* Any help about this functions can be found at
+http://sylvain.comte.online.fr/AirCarnet/?post/GreaseMonkey-Script-Update-Control
+*/
+/* parameters */
 /* SET YOUR OWN SCRIPT VALUES */
-var thisId=33600;			// your script userscript id
-var thisVersion="S-1.3";		// the @version metadata value
+var thisId=33600;		// your script userscript id
+var thisVersion="S-2.0";        // the @version metadata value
+var thisReleaseDate="20090605"; // release date of your script. Not mandatory, use this paramater
+								// only if you want to be sharp on version control frequency.
 /* script version control parameters */
-var GMSUCtime=11;			// delay before alert disapears. Set to 0 if you don't want it to disapear (might be a bit intrusive!)
-var GMSUCbgColor=colPal.front;	// background color
-var GMSUCfgColor=colPal.back;	// foreground color
-/* This script version control  */
-// avoid script execution in each frame of the page
-if(self.location==top.location) GM_scriptVersionControl(thisId,thisVersion);
+var GMSUCtime=16;   // Delay before alert disapears (seconds)
+var GMSUCfreq=9;    // Update control frequency (days)
 
-// define function
-function GM_scriptVersionControl(scriptId,version) {
+// choose your palette
+var GMSUCPal=colPal; 	// colorPalette you prefer
+
+/* launching script version control  */
+GM_scriptVersionControl();
+
+// define launch function
+function GM_scriptVersionControl() {
+	if(self.location==top.location) { // avoid script execution in each frame of the page
+		// test if script should be performed to control new release regarding frequency
+		var GMSUCreleaseDate=new Date();
+		GMSUCreleaseDate.setFullYear(eval(thisReleaseDate.substring(0,4)),eval(thisReleaseDate.substring(4,6))-1,eval(thisReleaseDate.substring(6,8)));
+		var GMSUCtoday=new Date(); var GMSUCdif=Math.floor((GMSUCtoday-GMSUCreleaseDate)/1000/60/60/24);
+		if (GMSUCdif%GMSUCfreq==0) {
+			GMSUC_Control();
+			}}}
+
+// define control function
+function GMSUC_Control() {
+	var scriptId=thisId;var version=thisVersion;
 	var scriptUrl="http://userscripts.org/scripts/source/"+scriptId+".meta.js";
 	// go to script home page to get official release number and compare it to current one
 	GM_xmlhttpRequest({
@@ -57,11 +79,14 @@ function GM_scriptVersionControl(scriptId,version) {
 			 },
 		onload: function(responseDetails) {
 			var textResp=responseDetails.responseText;
-			var offRel=/\/\/\s*@version\s*(.*)\s*\n/i.exec(textResp)[1];
-			var scriptName=/\/\/\s*@name\s*(.*)\s*\n/i.exec(textResp)[1];
+			var offRel,scriptName;
+			if(textResp.length>0) {
+				offRel=/\/\/\s*@version\s*(.*)\s*\n/i.exec(textResp)[1];
+				scriptName=/\/\/\s*@name\s*(.*)\s*\n/i.exec(textResp)[1];
+				}
 			if(offRel!=version) {
 				// Styling
-				GM_addStyle("#GMSUC-alerte {position:absolute;top:5px;left:50%;margin:20px 0 0 -128px;padding:6px;width:250px;background:"+GMSUCbgColor+";border:"+GMSUCfgColor+" 1px solid;color:"+GMSUCfgColor+";font-size:1em;text-align:center} #GMSUC-alerte a {font-weight:bold;font-size:1em} #GMSUC-alerte * {color:"+GMSUCfgColor+";} #GMSUC-alerte table {width:100%} #GMSUC-alerte td {width:33%;border:solid 1px "+GMSUCfgColor+"} #GMSUC-alerte td:hover{background:"+GMSUCfgColor+"} #GMSUC-alerte td:hover a {color:"+GMSUCbgColor+"} #GMSUC-timer {font:big bolder} #GMSUC-info {text-align:right} #GMSUC-info a {font:small sans-serif;text-decoration:none}  #GMSUC-info a:hover {background:"+GMSUCfgColor+";color:"+GMSUCbgColor+"}");
+				GM_addStyle("#GMSUC-alerte {position:absolute;top:5px;left:50%;margin:20px 0 0 -128px;padding:6px;width:250px;-moz-border-radius:6px;background:"+GMSUCPal.back+";border:"+GMSUCPal.light+" 1px solid;color:"+GMSUCPal.front+";font-size:1em;text-align:center} #GMSUC-alerte a {font-weight:bold;font-size:1em} #GMSUC-alerte * {color:"+GMSUCPal.front+";} #GMSUC-alerte table {width:100%;margin:0.5em 0 0 0} #GMSUC-alerte td {width:33%;text-align:center;border:solid 1px "+GMSUCPal.front+"} #GMSUC-alerte td:hover{background:"+GMSUCPal.high+"} #GMSUC-alerte td:hover a {color:"+GMSUCPal.front+"} #GMSUC-timer {font:2em bold;margin:0.5em 0 0 0} #GMSUC-info {text-align:right;font:0.5em serif;margin:1em 0 0 0} #GMSUC-info a {font:0.5em serif}  #GMSUC-info a:hover {background:"+GMSUCPal.front+";color:"+GMSUCPal.back+"}");
 				// Lang detection and apply
 				var Langues="en, fr";
 				var lang=navigator.language;
@@ -92,7 +117,7 @@ function GM_scriptVersionControl(scriptId,version) {
 				GMSUCtextAlerte+="";
 				GMSUCtextAlerte+="<table><tr><td><a href='http://userscripts.org/scripts/show/"+scriptId+"'>v."+offRel+"</a></td><td><a href='http://userscripts.org/scripts/review/"+scriptId+"'>"+Txt[5][lang]+"</a></td><td><a  href='http://userscripts.org/scripts/source/"+scriptId+".user.js'>"+Txt[4][lang]+"</a></td></tr></table>"
 				if(GMSUCtime>0) GMSUCtextAlerte+="<div id='GMSUC-timer'>"+GMSUCtime+" s</div>";
-				GMSUCtextAlerte+="<div id='GMSUC-info'>"+Txt[6][lang]+" <a href='http://userscripts.org/scripts/show/35611'>GM Script Update Control</a></div>";
+				GMSUCtextAlerte+="<div id='GMSUC-info'>"+Txt[6][lang]+" <a href='http://sylvain.comte.online.fr/AirCarnet/?post/GreaseMonkey-Script-Update-Control'>GM Script Update Control</a></div>";
 				document.body.appendChild(alerte);
 				document.getElementById('GMSUC-alerte').innerHTML=GMSUCtextAlerte;
 				if(GMSUCtime>0) {
@@ -107,14 +132,16 @@ function GM_scriptVersionControl(scriptId,version) {
 					disparition();
 					}
 				}
+			},
+		onerror: function(responseDetails) {
 			}
 		});
 	}
 /******* END OF SCRIPT VERSION CONTROL **********/
 
-/***********************************************************************************************************/
-/***************************************  *****  ***** MAIN PROGRAM *****  *****  ****************************/
-/***********************************************************************************************************/
+/****************/
+/* MAIN PROGRAM */
+/****************/
 /*********** VARIABLES ****************/
 var item;					// a feed found under <link>
 var control="";				// used to avoid multiple occurence for one unique feed (specialy <a href...)
@@ -149,28 +176,15 @@ while(item=xpathResult.iterateNext()) {
 	
 // check direct links to rss feeds not declared as <link>	
 if(Feeds.length==0) {
-	var xpathResult=document.evaluate('//a[contains(@href,".rss") or contains(@href,"=rss") or contains(@href, ".atom") or contains(@href, "=atom") or ((contains(@href,"feed") or contains(@href,"rss")) and (contains(@href, "rdf") or contains(@href, "xml")))]',document,null,0,null);
+	var xpathResult=document.evaluate('//a[contains(@href,".rss") or contains(@href,"=rss") or contains(@href,".atom") or contains(@href,"=atom") or ((contains(@href,"feed") or contains(@href,"rss")) and (contains(@href,"rdf") or contains(@href,"xml")))]',document,null,0,null);
 	while(item=xpathResult.iterateNext()) {
 		Feeds.push(item);
 		control+=", "+item.href;
 		}
 	}		
 
-/* COMMON STYLES */
-// styles
-GM_addStyle('#SGSmain {position:fixed;z-index:32767;top:0;right:0;padding: 0 0 0 20px;min-height:20px;background:2px 2px url('+waitLogo+') no-repeat;}');
-GM_addStyle('#SGSmain.subscribed {background:2px 2px url('+logoRssBleu+') no-repeat;}');
-GM_addStyle("#SGSmain.subscribed:hover {background: transparent;}");
-GM_addStyle('#SGSmain.notSubscribed {background:2px 2px url('+logoRssOrange+') no-repeat;}');
-GM_addStyle("#SGSmain.subscribed:hover {background: transparent;}");	
-GM_addStyle('#SGSmain:hover {padding:0;}');	
-GM_addStyle('#SGSmain > div {display:none;}');
-GM_addStyle('#SGSmain:hover > div {display:block;padding:1px 0;background:'+colPal.back+';-moz-border-radius: 0 0 0 3px;border:solid '+colPal.front+';border-width:0 0 2px 2px;}');
-GM_addStyle('#SGSmain a {display:block;margin:0 0 0 3px;padding:2px 10px 2px 7px;font-family:"Verdana";font-size:11px;line-height:14px;font-weight:normal;text-decoration:none;color:'+colPal.front+';text-align:left;background:'+colPal.back+';border:0;}');
-GM_addStyle('#SGSmain a:hover {background-color:'+colPal.high+';color:'+colPal.front+';}');
-GM_addStyle('#SGSmain a.abonne {background-color:'+colPal.front+';color:'+colPal.light+';}');
-GM_addStyle('#SGSmain a.abonne:hover {padding:0px 10px 0px 6px;background-color:'+colPal.light+';color:'+colPal.front+';border:solid '+colPal.high+'; border-width:2px 0 2px 2px}');
-GM_addStyle('@media print {#SGSmain{display:none}}');
+// styling
+applyColor();
 
 if (Feeds.length>0) {
 	/* CONTEXTUAL STYLES */
@@ -182,6 +196,10 @@ if (Feeds.length>0) {
 	document.body.appendChild(SGSmain);
 	var SGSfeeds=document.createElement('div');
 	SGSmain.appendChild(SGSfeeds);
+		var SGSheader=document.createElement('div');
+			SGSheader.setAttribute('id','SGSheader');
+			SGSheader.innerHTML="powered by <a href=\"http://sylvain.comte.online.fr/AirCarnet/?post/Smart-Google-Subscriber\">Smart Google Subscriber</a>";
+		SGSfeeds.appendChild(SGSheader);
 	for(var f in Feeds) {
 		var feed=Feeds[f];	
 		UrlList[f]=encodeURIComponent(feed.href);
@@ -195,11 +213,12 @@ if (Feeds.length>0) {
 		}
 	// verify if feed is already subscribed
 	verifyFeed(0);
+	addFooter();
 	}
 	
 else {
 // create an artificial feed
-	if(SGSDiffbot==1) {
+	if(GM_getValue("diffbot",true)==true) {
 		/* CONTEXTUAL STYLES */
 		GM_addStyle('#SGSmain.noFeed {background:2px 2px url('+logoRssTransp+') no-repeat;}');
 		GM_addStyle("#SGSmain.noFeed:hover {background: transparent;}");
@@ -209,6 +228,10 @@ else {
 		document.body.appendChild(SGSmain);
 		var SGSfeeds=document.createElement('div');
 		SGSmain.appendChild(SGSfeeds);
+			var SGSheader=document.createElement('div');
+				SGSheader.setAttribute('id','SGSheader');
+				SGSheader.innerHTML="powered by <a href=\"http://sylvain.comte.online.fr/AirCarnet/?post/Smart-Google-Subscriber\">Smart Google Subscriber</a>";
+				SGSfeeds.appendChild(SGSheader);
 	 	createdFeedUrl="http://api.diffbot.com/rss/"+window.location.href;
 		createdFeedTitle=document.title;
 		var encodedFeedUrl=encodeURIComponent(createdFeedUrl);
@@ -230,13 +253,12 @@ else {
 					}
 				SGSmain.className=subStatus;
 				},
-			});		
+			});
+		addFooter();
 		}
 	}
 	} // end of Main Window only control
 
-function colorPalette(b,h,f,l) {this.back=b;this.high=h;this.front=f;this.light=l;}
-	
 function verifyFeed(n) {
 	if(n<FeedLinks.length) {
 		GM_xmlhttpRequest({
@@ -256,3 +278,112 @@ function verifyFeed(n) {
 				verifyFeed(n);
 				SGSmain.className=subStatus;			
 				},});}}
+
+function addFooter() {
+	// create a footer zone with options and hide buttons				
+	var SGSfooter=document.createElement('div');
+		SGSfooter.setAttribute('id','SGSfooter');
+		SGSfeeds.appendChild(SGSfooter);
+	// create options button to hide and show options zone	
+	var SGSoptionsButton=document.createElement('a');
+		SGSoptionsButton.addEventListener("click",options,false);
+		SGSoptionsButton.innerHTML="options";
+		SGSfooter.appendChild(SGSoptionsButton);
+	// create button to hide SGS	
+	var SGShideButton=document.createElement('a');
+		SGShideButton.addEventListener("click",hide,false);
+		SGShideButton.innerHTML="hide";
+		SGSfooter.appendChild(SGShideButton);	
+	// create options zone	
+	var SGSoptions=document.createElement('div');
+		SGSoptions.setAttribute('id','SGSoptions');
+		//activate, deactivate feedbot
+		var SGSdbButton=document.createElement('p');
+			SGSdbButton.setAttribute('id','SGSdbButton');
+			SGSdbButton.addEventListener("click",diffbotOnOff,false);
+			if(GM_getValue("diffbot",true)==true) SGSdbButton.innerHTML="<ul><li><a href=\"http://www.diffbot.com/\">diffbot</a> is <strong>On</strong></li></ul>";
+			else SGSdbButton.innerHTML="<ul><li><a href=\"http://www.diffbot.com/\">diffbot</a> is <strong>Off</strong></li></ul>";		
+		var SGScpActive=document.createElement('div');
+			SGScpActive.innerHTML="active colorpalette is <strong>"+GM_getValue("palette",SGSdefaultPalette)+"</strong>.<br/>Select another for next time?";
+		var SGScpList=document.createElement('ul');
+		for(var cp in SGSColPal) {
+			var SGScpButton=document.createElement('li');
+				SGScpButton.setAttribute('id',cp);
+				if(cp==GM_getValue("palette",SGSdefaultPalette)) SGScpButton.setAttribute('class',cp+" active");
+				else SGScpButton.setAttribute('class',cp);
+				SGScpButton.innerHTML="<span class=\"back\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class=\"high\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class=\"front\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class=\"light\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;"+cp;
+				SGScpButton.addEventListener("click",setColor,false);
+			SGScpList.appendChild(SGScpButton);	
+			}
+		var SGSinfo=document.createElement('div');
+			SGSinfo.setAttribute("id","SGSinfo");
+			SGSinfo.setAttribute("class","hidden");
+			SGSinfo.innerHTML="nothing to tell you now";
+		SGSoptions.appendChild(SGSdbButton);
+		SGSoptions.appendChild(SGScpActive);	
+		SGSoptions.appendChild(SGScpList);
+		SGSoptions.appendChild(SGSinfo);
+		SGSfeeds.appendChild(SGSoptions);
+	// hide options zone	
+	document.getElementById("SGSoptions").setAttribute("class","hidden");
+	}
+	
+function diffbotOnOff() {
+	if(GM_getValue("diffbot",true)==true) {
+		GM_setValue("diffbot",false);
+		document.getElementById("SGSdbButton").innerHTML="<ul><li><a href=\"http://www.diffbot.com/\">diffbot</a> is <strong>Off</strong></li></ul>";
+		}
+	else {
+		GM_setValue("diffbot",true);
+		document.getElementById("SGSdbButton").innerHTML="<ul><li><a href=\"http://www.diffbot.com/\">diffbot</a> is <strong>On</strong></ul></li>";
+		}
+	aknowledged();
+	}
+	
+function setColor() {
+	GM_setValue("palette",this.getAttribute("id"));
+	aknowledged();
+	}
+	
+function aknowledged() {
+	document.getElementById("SGSinfo").innerHTML="got it. parameter will apply next time";
+	document.getElementById("SGSinfo").setAttribute("class","view");
+	setTimeout(function() {document.getElementById("SGSinfo").setAttribute("class","hidden");},3000);
+	}
+	
+function options() {
+	if(document.getElementById("SGSoptions").getAttribute("class")=="hidden") document.getElementById("SGSoptions").setAttribute("class","");
+	else document.getElementById("SGSoptions").setAttribute("class","hidden");
+	}
+	
+function hide() {
+	document.getElementById("SGSmain").setAttribute("class","hidden");
+	}
+
+/* COMMON STYLES */
+// styles	
+function applyColor() {
+	GM_addStyle('#SGSmain {position:fixed;z-index:32767;top:0;right:0;padding: 0 0 0 20px;min-height:20px;background:2px 2px url('+waitLogo+') no-repeat;}');
+	GM_addStyle('#SGSmain.subscribed {background:2px 2px url('+logoRssBleu+') no-repeat;}');
+	GM_addStyle("#SGSmain.subscribed:hover {background: transparent;}");
+	GM_addStyle('#SGSmain.notSubscribed {background:2px 2px url('+logoRssOrange+') no-repeat;}');
+	GM_addStyle("#SGSmain.subscribed:hover {background: transparent;}");	
+	GM_addStyle('#SGSmain:hover {padding:0;}');	
+	GM_addStyle('#SGSmain > div {display:none;}');
+	GM_addStyle('#SGSmain:hover > div {display:block;padding:1px 0;background:'+colPal.back+';-moz-border-radius: 0 0 0 5px;border:solid '+colPal.front+';border-width:0 0 2px 2px;}');
+	GM_addStyle('#SGSmain a {display:block;margin:0 0 0 3px;padding:2px 10px 2px 7px;font-family:"Verdana";font-size:12px;line-height:14px;font-weight:normal;text-decoration:none;color:'+colPal.front+';text-align:left;background:'+colPal.back+';border:0;}');
+	GM_addStyle('#SGSmain a:hover {background-color:'+colPal.high+';color:'+colPal.front+';}');
+	GM_addStyle('#SGSmain a.abonne {background-color:'+colPal.front+';color:'+colPal.light+';}');
+	GM_addStyle('#SGSmain a.abonne:hover {padding:0px 10px 0px 6px;background-color:'+colPal.light+';color:'+colPal.front+';border:solid '+colPal.high+'; border-width:2px 0 2px 2px}');
+	GM_addStyle('#SGSheader {margin:-2px 0 0 0;font-size:9px;font-family:sans-serif;background-color:'+colPal.front+';color:'+colPal.back+'} #SGSheader a {display:inline!important;font-size:9px;font-family:sans-serif;text-decoration:underline;padding:0;margin:0;background-color:'+colPal.front+';color:'+colPal.back+'}');
+	GM_addStyle('#SGSfooter {text-align:right;margin-right:2px;font-size:12px;font-family:sans-serif;color:'+colPal.front+'} #SGSfooter a {display:inline!important;font-size:9px;padding:1px;margin:0 2px;color:'+colPal.back+';background-color:'+colPal.front+'} #SGSfooter a:hover {color:'+colPal.front+';background-color:'+colPal.high+'}');
+	GM_addStyle('#SGSoptions {margin:0 2px;font-family:sans-serif;} #SGSoptions, #SGSoptions * {color:'+colPal.front+'} #SGSoptions div {margin:0 2px} #SGSoptions a {display:inline;text-decoration:underline;background-color:none!important;margin:0;padding:0} #SGSoptions p {color:'+colPal.front+';margin:0 2px} #SGSoptions ul {margin:0 0 0 1.25em} #SGSoptions li {margin-bottom:3px} #SGSoptions li span {height:9px} #SGSoptions p:hover, #SGSoptions p:hover a, #SGSoptions li:hover {background-color:'+colPal.high+'} #SGSoptions li.active {font-weight:bold} #SGSoptions li.active td {font-weight:normal} #SGSoptions .back, #SGSoptions .light, #SGSoptions .front, #SGSoptions .high {border:solid thin '+colPal.front+'}');
+	GM_addStyle('#SGSinfo {text-align:center!important;background-color:'+colPal.high+';color:'+colPal.front+';-moz-border-radius:2px}');
+	for(var col in SGSColPal) {
+		GM_addStyle('#'+col+' .front {background-color:'+SGSColPal[col].front+';} #'+col+' .back {background-color:'+SGSColPal[col].back+';} #'+col+' .light {background-color:'+SGSColPal[col].light+';} #'+col+' .high {background-color:'+SGSColPal[col].high+';}');
+		}
+	GM_addStyle('.hidden {display:none}');
+	GM_addStyle('@media print {#SGSmain{display:none}}');
+	}
+	
+function colorPalette(b,h,f,l) {this.back=b;this.high=h;this.front=f;this.light=l;}
