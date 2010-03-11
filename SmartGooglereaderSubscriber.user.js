@@ -4,7 +4,7 @@
 // @description	display a small icon for subscribing to the feeds of the current page. 
 //			based upon Jasper's Google Reader subscribe. For more informations see
 //			http://browservulsel.blogspot.com/2006/05/google-reader-subscribed-indicator.html
-// @version	S-2.0
+// @version	S-2.0.b
 // @licence	ask Jasper de Vries please. I don't know...
 // ==/UserScript==.
 /******* PARAMETERS ********/
@@ -41,8 +41,8 @@ http://sylvain.comte.online.fr/AirCarnet/?post/GreaseMonkey-Script-Update-Contro
 /* parameters */
 /* SET YOUR OWN SCRIPT VALUES */
 var thisId=33600;		// your script userscript id
-var thisVersion="S-2.0";        // the @version metadata value
-var thisReleaseDate="20090605"; // release date of your script. Not mandatory, use this paramater
+var thisVersion="S-2.0.b";        // the @version metadata value
+var thisReleaseDate="20100311"; // release date of your script. Not mandatory, use this paramater
 								// only if you want to be sharp on version control frequency.
 /* script version control parameters */
 var GMSUCtime=16;   // Delay before alert disapears (seconds)
@@ -363,7 +363,7 @@ function hide() {
 /* COMMON STYLES */
 // styles	
 function applyColor() {
-	GM_addStyle('#SGSmain {position:fixed;z-index:32767;top:0;right:0;padding: 0 0 0 20px;min-height:20px;background:2px 2px url('+waitLogo+') no-repeat;}');
+	GM_addStyle('#SGSmain {width:auto;position:fixed;z-index:32767;top:0;right:0;padding: 0 0 0 20px;min-height:20px;background:2px 2px url('+waitLogo+') no-repeat;}');
 	GM_addStyle('#SGSmain.subscribed {background:2px 2px url('+logoRssBleu+') no-repeat;}');
 	GM_addStyle("#SGSmain.subscribed:hover {background: transparent;}");
 	GM_addStyle('#SGSmain.notSubscribed {background:2px 2px url('+logoRssOrange+') no-repeat;}');
