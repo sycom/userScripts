@@ -3,7 +3,7 @@
 // @author			Sylvain Comte
 // @namespace		http://sylvain.comte.online.fr
 // @description		Display several informations about the twitter profile your looking at to help you decide wether or not s/he's worth following
-// @version			0.2
+// @version			0.2b
 // @licence creative-commons by-nc-sa
 // @include    http://twitter.com*
 // @include    http://www.twitter.com*
@@ -21,9 +21,9 @@ http://sylvain.comte.online.fr/AirCarnet/?post/GreaseMonkey-Script-Update-Contro
 */
 /* parameters */
 /* SET YOUR OWN SCRIPT VALUES */
-var thisId=?;		// your script userscript id
-var thisVersion="0.2";		// the @version metadata value
-var thisReleaseDate="20100420"; // release date of your script. Not mandatory, use this paramater
+var thisId=74862;		// your script userscript id
+var thisVersion="0.2b";		// the @version metadata value
+var thisReleaseDate="20100421"; // release date of your script. Not mandatory, use this paramater
 								// only if you want to be sharp on version control frequency.
 
 /* script version control parameters */
@@ -71,7 +71,7 @@ function GMSUC_Control() {
 			var scriptName=/\/\/\s*@name\s*(.*)\s*\n/i.exec(textResp)[1];
 			if(offRel!=version) {
 				// Styling
-				GM_addStyle("#GMSUC-alerte {position:absolute;top:5px;left:50%;margin:20px 0 0 -128px;padding:6px;width:250px;-moz-border-radius:6px;background:"+GMSUCPal.back+";border:"+GMSUCPal.light+" 1px solid;color:"+GMSUCPal.front+";font-size:1em;text-align:center} #GMSUC-alerte a {font-weight:bold;font-size:1em} #GMSUC-alerte * {color:"+GMSUCPal.front+";} #GMSUC-alerte table {width:100%;margin:0.5em 0 0 0} #GMSUC-alerte td {width:33%;text-align:center;border:solid 1px "+GMSUCPal.front+"} #GMSUC-alerte td:hover{background:"+GMSUCPal.high+"} #GMSUC-alerte td:hover a {color:"+GMSUCPal.front+"} #GMSUC-timer {font:2em bold;margin:0.5em 0 0 0} #GMSUC-info {text-align:right;font:0.5em serif;margin:1em 0 0 0} #GMSUC-info a {font:0.75em serif}  #GMSUC-info a:hover {background:"+GMSUCPal.front+";color:"+GMSUCPal.back+"}");
+				GM_addStyle("#GMSUC-alerte {position:absolute;top:5px;left:50%;margin:20px 0 0 -128px;padding:6px;width:250px;z-index:42;-moz-border-radius:6px;background:"+GMSUCPal.back+";border:"+GMSUCPal.light+" 1px solid;color:"+GMSUCPal.front+";font-size:1em;text-align:center} #GMSUC-alerte a {font-weight:bold;font-size:1em} #GMSUC-alerte * {color:"+GMSUCPal.front+";} #GMSUC-alerte table {width:100%;margin:0.5em 0 0 0} #GMSUC-alerte td {width:33%;text-align:center;border:solid 1px "+GMSUCPal.front+"} #GMSUC-alerte td:hover{background:"+GMSUCPal.high+"} #GMSUC-alerte td:hover a {color:"+GMSUCPal.front+"} #GMSUC-timer {font:2em bold;margin:0.5em 0 0 0} #GMSUC-info {text-align:right;font:0.5em serif;margin:1em 0 0 0} #GMSUC-info a {font:75% serif}  #GMSUC-info a:hover {background:"+GMSUCPal.front+";color:"+GMSUCPal.back+"}");
 				// Lang detection and apply
 				var Langues="en, fr";
 				var lang=navigator.language;
@@ -130,7 +130,8 @@ function colorPalette(b,h,f,l) {this.back=b;this.high=h;this.front=f;this.light=
 var you=null; 			// who are you?	
 var yFng,yFrs,yList;	// store some stats about you here. Add elsewhere with GM data storing?
 var user;				// who is the user?
-var Datas=new Array();	// a Data collector, in case you are a Data geek ;-) 
+var Datas=new Array();	// a Data collector, in case you are a Data geek ;-)
+
 
 // execution
 giveMeInfos();
@@ -147,6 +148,7 @@ function giveMeInfos() {
 		GM_addStyle('.label {font-weight:bold}');
 		GM_addStyle('#TFH-propBy {margin:-5px -10px 5px -5px;padding:2px 2px 2px 0;background:'+color+';color:#fff;font-style:italic;text-align:right;font-size:0.75em;-moz-border-radius:0 0 0 5px} #TFH-propBy a {color:white;text-decoration:underline}');
 		seekDatas();
+		
 		}
 	}
 
@@ -172,7 +174,7 @@ function seekDatas() {
 			moreInfos.appendChild(moreInfosList);
 			var propBy=document.createElement("div");
 			propBy.id="TFH-propBy";
-			propBy.innerHTML="by <a href='http://twitter.com/sycom'>@sycom</a>'s <a href=''>Twitter Follow Helper</a>";
+			propBy.innerHTML="by <a href='http://twitter.com/sycom'>@sycom</a>'s <a href='http://sylvain.comte.online.fr/AirCarnet/?post/Twitter-Follow-Helper'>Twitter Follow Helper</a>";
 			profile.append(moreInfos);
 			profile.append(propBy);
 			if(you==null && jQ("meta[name=session-user-screen_name]")) you=jQ("meta[name=session-user-screen_name]").attr("content");
@@ -183,7 +185,6 @@ function seekDatas() {
 			getFavstarData(user,3);
 			getGraderScore(user,5);
 			getSearchPop(user,6);
-			displayStats();
 			}
 		}
 	}
@@ -277,7 +278,6 @@ function getFavstarData(username,k) {
 	
 function getSocialData(user0,user1,k) {
 // common following / followers from http://twtrfrnd.com/
-
 	if(user0!=null) {
 		var htm="<span class='label'>Social graph</span> convergence <a href='http://twtrfrnd.com/"+user0+"/"+user1+"' class='url'><i>loading...</i></a>";
 		displayDatas(htm,k);
@@ -295,37 +295,40 @@ function getSocialData(user0,user1,k) {
 					// get some usefull data for you
 					yFng=/is following (\w+) (person|people)/.exec(textResp)[1];
 					yFrs=/is followed by (\w+) (person|people)/.exec(textResp)[1];
+					var cFollowers,cFriends,cIndic,convergence;
 					if(/has protected their account/.test(textResp)) {
 						var htm="no <span class='label'>Social graph</span> (protected account)";
 						}
 					else {
 						var htm="";
-						var convergence;
 						// Hey, what's this "convergence"? it's an indicator of common friends & followers
 						if(/There are no people that follow both users/.test(textResp)) {
 							htm+="<br/>&nbsp;&nbsp;- no common followers";
 							convergence=0;
+							cFollowers=0;
 							}
 						else {
-							var cFollowers=/The (\w+) (person|people) that follow[s]{0,1} both users/.exec(textResp)[1];
+							cFollowers=/The (\w+) (person|people) that follow[s]{0,1} both users/.exec(textResp)[1];
 							htm+="<br/>&nbsp;&nbsp;- <a href='http://twtrfrnd.com/"+user0+"/"+user1+"#groupFollowers' class='url'>"+cFollowers+" follower(s) in common</a>";
 							convergence=eval(Math.sqrt(cFollowers*cFollowers/yFrs/Datas[user][2]));
 							}
 						if(/There are no people that both users follow/.test(textResp)) {
 							htm+="<br/>&nbsp;&nbsp;- no common friend";
 							convergence=convergence/3;
+							cFriends=0;
 							}
 						else {
-							var cFriends=/The (\w+) (person|people) that both users follow/.exec(textResp)[1];
+							cFriends=/The (\w+) (person|people) that both users follow/.exec(textResp)[1];
 							htm+="<br/>&nbsp;&nbsp;- <a href='http://twtrfrnd.com/"+user0+"/"+user1+"#groupFriends' class='url'>"+cFriends+" friend(s) in common</a>";
 							convergence=(convergence+2*eval(Math.sqrt(cFriends*cFriends/yFng/Datas[user][1])))/3;
 							}
 						if(/There are no people @/+user0+/ follows/.test(textResp)) {
 							htm+="<br/>&nbsp;&nbsp;- no indicator";
+							cIndic=0;
 							}
 						else {
 							var regIndic=new RegExp("The (\\w+) (person|people) @"+user0+" follows that follow");
-							var cIndic=regIndic.exec(textResp)[1];
+							cIndic=regIndic.exec(textResp)[1];
 							htm+="<br/>&nbsp;&nbsp;- <a href='http://twtrfrnd.com/"+user0+"/"+user1+"#groupIndicators' class='url' alt='people you follow that follow "+user1+"'>"+cIndic+" indicators</a>";
 							}
 						convergence=Math.round(convergence*10000)/100;
@@ -375,7 +378,7 @@ function getGraderScore(username,k) {
 	}
 
 function getSearchPop(username,k) {
-	var htm="<span class='label'>Search score</span> <i>loading...</i>";
+	var htm="<span class='label'>Search score</span> <a href='http://twitter.com/#search?q=%40"+username+"'><i>loading...</i></a>";
 	displayDatas(htm,k);
 	var searchUrl="http://search.twitter.com/search.json?callback=?&q=@"+username;
 	jQ.getJSON(searchUrl,function(json) {
