@@ -3,15 +3,15 @@
 // @author			Sylvain Comte
 // @namespace		http://sylvain.comte.online.fr
 // @description		Display several informations about the twitter profile your looking at to help you decide wether or not s/he's worth following
-// @version			0.2b
+// @version			0.3
 // @licence creative-commons by-nc-sa
 // @include    http://twitter.com*
 // @include    http://www.twitter.com*
 // @include    https://twitter.com*
 // @include    https://www.twitter.com*
-
 // ==/UserScript==
-/********** TWITTER FOLLOW HELPER 0.2 *************/
+
+/********** TWITTER FOLLOW HELPER 0.3 *************/
 /* Any help about this functions can be found at
 http://sylvain.comte.online.fr/AirCarnet/?post/Twitter-Follow-Helper
 */
@@ -22,8 +22,8 @@ http://sylvain.comte.online.fr/AirCarnet/?post/GreaseMonkey-Script-Update-Contro
 /* parameters */
 /* SET YOUR OWN SCRIPT VALUES */
 var thisId=74862;		// your script userscript id
-var thisVersion="0.2b";		// the @version metadata value
-var thisReleaseDate="20100421"; // release date of your script. Not mandatory, use this paramater
+var thisVersion="0.3";		// the @version metadata value
+var thisReleaseDate="20100625"; // release date of your script. Not mandatory, use this paramater
 								// only if you want to be sharp on version control frequency.
 
 /* script version control parameters */
@@ -131,7 +131,12 @@ var you=null; 			// who are you?
 var yFng,yFrs,yList;	// store some stats about you here. Add elsewhere with GM data storing?
 var user;				// who is the user?
 var Datas=new Array();	// a Data collector, in case you are a Data geek ;-)
-
+// some style
+GM_addStyle(".showMoreWhen {display:block} .naturallyHidden {display:none} .showMoreWhen:hover .naturallyHidden {display:inline}");
+/* --- partie NON PUBLIQUE du Script... ---*/
+// for displayStats macro not public...
+var TFHmax=10,TFHcount=0; 
+/* ----------------------------------------*/
 
 // execution
 giveMeInfos();
@@ -148,7 +153,8 @@ function giveMeInfos() {
 		GM_addStyle('.label {font-weight:bold}');
 		GM_addStyle('#TFH-propBy {margin:-5px -10px 5px -5px;padding:2px 2px 2px 0;background:'+color+';color:#fff;font-style:italic;text-align:right;font-size:0.75em;-moz-border-radius:0 0 0 5px} #TFH-propBy a {color:white;text-decoration:underline}');
 		seekDatas();
-		
+// hey, if you're reading this, you know what you do. It will help you to collect datas if you like it...		
+//		displayStats();
 		}
 	}
 
@@ -166,7 +172,7 @@ function seekDatas() {
 			moreInfos.id="moreInfos";			
 			var moreInfosList=document.createElement("ul");
 			moreInfosList.id="moreInfosList";
-			for(var i=0;i<7;i++) {
+			for(var i=0;i<9;i++) {
 				var item=document.createElement("li");
 				item.id="TFH-i-"+i;
 				moreInfosList.appendChild(item);
@@ -174,7 +180,7 @@ function seekDatas() {
 			moreInfos.appendChild(moreInfosList);
 			var propBy=document.createElement("div");
 			propBy.id="TFH-propBy";
-			propBy.innerHTML="by <a href='http://twitter.com/sycom'>@sycom</a>'s <a href='http://sylvain.comte.online.fr/AirCarnet/?post/Twitter-Follow-Helper'>Twitter Follow Helper</a>";
+			propBy.innerHTML="by <a href='http://twitter.com/sycom'>@sycom</a>'s <a href=''>Twitter Follow Helper</a>";
 			profile.append(moreInfos);
 			profile.append(propBy);
 			if(you==null && jQ("meta[name=session-user-screen_name]")) you=jQ("meta[name=session-user-screen_name]").attr("content");
@@ -184,7 +190,9 @@ function seekDatas() {
 			getRepliesAndFollowCost(user,2,4);
 			getFavstarData(user,3);
 			getGraderScore(user,5);
-			getSearchPop(user,6);
+			getKloutScore(user,6)
+			getSearchPop(user,7);
+			discoverMore(user,8);
 			}
 		}
 	}
@@ -259,9 +267,9 @@ function getFavstarData(username,k) {
 				var fsStarred=/Rec'd: (\S+)<\/div>/.exec(textResp)[1];
 				var fsStarring=/<div>Favs Given: (\S+)<\/div>/.exec(textResp)[1];
 				Datas[user][9]=fsStarred;Datas[user][10]=fsStarring;
-				var htm="<span class='label' style='font-size:1.5em'>&#9733;</span> <a href='http://favstar.fm/users/"+username+"/given' class='url' rel='nofollow'>"+fsStarring+" given</a>";
-				if(fsStarred=="N/A") htm+=" (not using <a href='http://favstar.fm/users/"+username+"' class='url' rel='nofollow'>favstar</a>)";
-				else htm+=" and <a href='http://favstar.fm/users/"+username+"' class='url' rel='nofollow'>"+fsStarred+" received</a>";
+				var htm="<span class='label' style='font-size:1.5em'>&#9733;</span> <a href='http://favstar.fm/users/"+username+"/given' class='url'>"+fsStarring+" given</a>";
+				if(fsStarred=="N/A") htm+=" (not using <a href='http://favstar.fm/users/"+username+"' class='url'>favstar</a>)";
+				else htm+=" and <a href='http://favstar.fm/users/"+username+"' class='url'>"+fsStarred+" received</a>";
 				displayDatas(htm,k);
 				}
 			else {
@@ -371,7 +379,37 @@ function getGraderScore(username,k) {
 			Datas[user][15]=graderScore;
 			},
 		onerror: function(responseDetails) {
-			var htm="<span class='label'>Grader Score</span> <a href='http://twitter.grader.com/"+username+"' class='url' rel='nofollow'> not retrieved</a>";
+			var htm="<span class='label'>Grader Score</span> <a href='http://twitter.grader.com/"+username+"' class='url'> not retrieved</a>";
+			displayDatas(htm,k);
+			}
+		});
+	}
+	
+function getKloutScore(username,k) {
+// klout score from http://klout.com
+	var kloutUrl="http://klout.com/"+username;
+	var htm="<span class='label'>Klout Score</span> <a href='"+kloutUrl+"'><i>loading...</i></a>";
+	displayDatas(htm,k);
+	GM_xmlhttpRequest({
+		method: 'GET',
+		url: kloutUrl,
+		headers: {
+			 'User-agent': 'Mozilla/4.0 (compatible) Greasemonkey/0.3',
+			 'Accept': 'text/html,application/xml,text/xml',
+			 },
+		onload: function(responseDetails) {
+			var textResp=responseDetails.responseText;
+			var kloutScore, kloutType;
+			if(kloutScore=/score">(.+)<em>/g.exec(textResp)[1]) {
+				htm="<span class='label'>Klout Score</span> <a href='"+kloutUrl+"' class='url'>"+kloutScore+"</a>";
+				if(kloutType=/is a (.+)<\/h5>/g.exec(textResp)[1]) htm+=" ("+kloutType+")";
+				}
+			else htm="unable to retrieve <span class='label'><a href='"+kloutUrl+"'>Klout Score</a> (and type)</span>";
+			displayDatas(htm,k);
+			Datas[user][17]=graderScore;
+			},
+		onerror: function(responseDetails) {
+			htm="<span class='label'>Klout Score</span> <a href='"+kloutUrl+"' class='url'> not retrieved</a>";
 			displayDatas(htm,k);
 			}
 		});
@@ -382,7 +420,7 @@ function getSearchPop(username,k) {
 	displayDatas(htm,k);
 	var searchUrl="http://search.twitter.com/search.json?callback=?&q=@"+username;
 	jQ.getJSON(searchUrl,function(json) {
-		var resp,htm;
+		var resp;
 		if(json["results"].length>=14) {
 			resp=json["results"][14].created_at;
 			var timePost=new Date(resp);
@@ -400,4 +438,94 @@ function getSearchPop(username,k) {
 		else htm="<span class='label'>Search score</span> <a href='http://twitter.com/#search?q=%40"+username+"'>not enough mentioned</a>";
 		displayDatas(htm,k);
 		});	
+	}
+
+function discoverMore(username,k) {
+	// get people this user is finding interessant via http://autoff.com
+	var htm="<span class='label'>People s/he likes</span> <a href='http://autoff.com/'><i>asking autoFF...</i></a>";
+	displayDatas(htm,k);
+	var discovUrl="http://autoff.com/api/"+username;
+	// don't know why, but getJSON sending me an error. So let's hack.
+	GM_xmlhttpRequest({
+		method: 'GET',
+		url: discovUrl,
+		headers: {
+			 'User-agent': 'Mozilla/4.0 (compatible) Greasemonkey/0.3',
+			 'Accept': 'text/html,application/xml,text/xml,text/json',
+			 },
+		onload: function(responseDetails) {
+			json=eval("new Array("+responseDetails.responseText+")");
+			if(json.length>0) {
+				htm="<span class='showMoreWhen'><span class='label'>People s/he likes</span>";
+				if(json[0]) {
+					var jsonMax;
+					if(json[0].length<3) jsonMx=json[0].length; else jsonMax=3;
+					for(var i=0;i<jsonMax;i++) {
+						userId=json[0][i].split("@")[1];
+						htm+="<br/>&nbsp;&nbsp;-&nbsp;<a href='"+userId+"'>"+json[0][i]+"</a>";
+						}
+					htm+="<span class='naturallyHidden'>";
+					for(var i=jsonMax;i<json[0].length;i++) {
+						userId=json[0][i].split("@")[1];
+						htm+="<br/>&nbsp;&nbsp;-&nbsp;<a href='"+userId+"'>"+json[0][i]+"</a>";
+						}
+					htm+="</span></span>";
+					}
+				else htm="unable to find <span class='label'>People s/he likes</span> with <a href='http://autoff.com/'>autoFF</a>";
+				}
+			else htm="unable to find <span class='label'>People s/he likes</span> with <a href='http://autoff.com/'>autoFF</a>";
+			displayDatas(htm,k);
+			},
+		onerror: function(responseDetails) {
+			htm="unable to find <span class='label'>People s/he likes</span> with <a href='http://autoff.com/'>autoFF</a>";
+			displayDatas(htm,k);
+			}
+		});
+	}
+	
+/* --- partie NON PUBLIQUE du Script... ---*/
+// récupération des données collectées
+function displayStats() {
+	if(!Datas[user] && TFHcount<0.99) {
+		window.setTimeout(displayStats,42);
+		TFHcount+=0.0001;
+		}
+	else {
+		var tableau;
+		if(TFHcount<1) {
+			var table=document.createElement("div");
+			table.id="TFH-tableau";
+			jQ('.profile-controls').append(table);
+			jQ('.profile-user').css('display:block!important');
+			}
+		tableau=jQ('#TFH-tableau');		
+		TFHcount+=1;
+		//alert(tableau.innerHTML);
+		var htm="<p><table cellpadding=0 cellspacing=0 style='margin:5px 0 5px 0'><tr>"
+		for(var i=0;i<Datas[user].length;i++) {
+			if(Datas[user][i]==undefined) {
+				htm+="<td style='background:#e95;border:solid 1px #bbb;margin:0;padding:1px'>"+Datas[user][i]+"</td>";
+				if(TFHmax<20) TFHmax+=3;
+				}
+			else htm+="<td style='border:solid 1px #bbb;margin:0;padding:1px'>"+Datas[user][i]+"</td>";
+			}
+		htm+="</tr></table></p>";
+		if(TFHcount<TFHmax) {
+			tableau.html(htm);
+			window.setTimeout(displayStats,1000);
+			}
+		else {
+			var htm="<p><table cellpadding=0 cellspacing=0 style='width:100%;margin:5px 0 0 0'><tr>"
+			for(var i=0;i<18;i++) {
+				if(Datas[user][i]!=0 && !Datas[user][i]) Datas[user][i]=undefined;
+				if(Datas[user][i]==undefined) {
+					htm+="<td style='background:#e95;border:solid 1px #bbb;margin:0;padding:1px'>"+Datas[user][i]+"</td>";
+					if(TFHmax<20) TFHmax+=3;
+					}
+				else htm+="<td style='background:#dd5;border:solid 1px #bbb;margin:0;padding:1px'>"+Datas[user][i]+"</td>";
+				}
+			htm+="</tr></table>lien vers <a href='https://spreadsheets.google.com/ccc?key=t8FLXLN700Sw2aHefFOSjHA&hl=fr'>la base</a></p>";
+			tableau.html(htm);
+			}
+		}	
 	}
