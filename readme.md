@@ -1,6 +1,6 @@
 # A userscripts collection
 
-## TFH - Twitter Follow Helper (v 0.3 - 20100625)
+## TFH - Twitter Follow Helper (v 0.5 - 20101028)
 This script adds some informations on twitter profile pages (better if you're logged in)
 * is the tweepl following you?
 * is s/he in your current network? (Social Graph Score via twtrfrnd)
