@@ -3,7 +3,7 @@
 // @author			Sylvain Comte
 // @namespace		http://sylvain.comte.online.fr
 // @description		Display several informations about the twitter profile your looking at to help you decide wether or not s/he's worth following
-// @version			0.5
+// @version			0.5b
 // @licence creative-commons by-nc-sa
 // @include    http://twitter.com*
 // @include    http://www.twitter.com*
@@ -11,7 +11,7 @@
 // @include    https://www.twitter.com*
 // ==/UserScript==
 
-/********** TWITTER FOLLOW HELPER 0.5 *************/
+/********** TWITTER FOLLOW HELPER 0.5b *************/
 /* Any help about this script can be found at
 http://sylvain.comte.online.fr/AirCarnet/?post/Twitter-Follow-Helper
 */
@@ -22,8 +22,8 @@ http://sylvain.comte.online.fr/AirCarnet/?post/GreaseMonkey-Script-Update-Contro
 /* parameters */
 /* SET YOUR OWN SCRIPT VALUES */
 var thisId=74862;		// your script userscript id
-var thisVersion="0.5";		// the @version metadata value
-var thisReleaseDate="20101028"; // release date of your script. Not mandatory, use this paramater
+var thisVersion="0.5b";		// the @version metadata value
+var thisReleaseDate="20110428"; // release date of your script. Not mandatory, use this paramater
 								// only if you want to be sharp on version control frequency.
 
 /* script version control parameters */
@@ -163,9 +163,10 @@ function seekDatas() {
 			user=jQ('.screen-name')[0].innerHTML.split('@')[1];
 			Datas[user]=new Array();
 			Datas[user][0]=user;
-			Datas[user][1]=jQ('.user-stats-count')[1].innerHTML.split("<")[0];Datas[user][1]=Datas[user][1].replace(/,/g,"");
-			Datas[user][2]=jQ('.user-stats-count')[2].innerHTML.split("<")[0];Datas[user][2]=Datas[user][2].replace(/,/g,"");
-			Datas[user][3]=jQ('.user-stats-count')[3].innerHTML.split("<")[0];Datas[user][3]=Datas[user][3].replace(/,/g,"");
+			// corrigé suite à mise à jour Twitter v0.5b
+			Datas[user][1]=jQ('.user-stats-count')[3].innerHTML.split("<")[0];Datas[user][1]=Datas[user][1].replace(/[, ]/g,"");
+			Datas[user][2]=jQ('.user-stats-count')[4].innerHTML.split("<")[0];Datas[user][2]=Datas[user][2].replace(/[, ]/g,"");
+			Datas[user][3]=jQ('.user-stats-count')[5].innerHTML.split("<")[0];Datas[user][3]=Datas[user][3].replace(/[, ]/g,"");
 			var moreInfos=document.createElement("div")
 			moreInfos.id="TFH-moreInfos";
 			var moreInfosList=document.createElement("ul");
@@ -193,8 +194,8 @@ function seekDatas() {
 			jQ('#TFH-firstSpacer').after(propBy);
 			jQ('#TFH-propBy').after(moreInfos);
 			jQ('#TFH-moreInfos').after("<hr class='component-spacer'>");
-			// get your name
-			if(you==null && document.getElementById("screen-name")) you=document.getElementById("screen-name").innerHTML.replace(/[\s\n]/g,"");
+			// get your name - new at v0.5b (bug fix)
+			if(you==null && jQ("#screen-name")) you=jQ("#screen-name").text().replace(/[\s\n]/g,"");
 			// data search
 			followingYou(user,0);
 			getSocialData(you,user,1);
@@ -313,11 +314,11 @@ function followingYou(username,k) {
 					var textResp=responseDetails.responseText;
 					var doesFollow=/>yup</.test(textResp);
 					if(doesFollow==true) {
-						htm="<span class='label'>Following you?</span>&nbsp;Yes <span style='font-size:1.5em'>&#9786;</span>";
+						htm="<span class='label'>Following you?</span>&nbsp;<a href='http://www.doesfollow.com/"+username+"/"+you+"'>Yes</a> <span style='font-size:1.5em'>&#9786;</span>";
 						Datas[user][4]=1;
 						}
 					else {
-						htm="<span class='label'>Following you?</span>&nbsp;No <span style='font-size:1.5em'>&#9785;</span>";
+						htm="<span class='label'>Following you?</span>&nbsp;<a href='http://www.doesfollow.com/"+username+"/"+you+"'>No</a> <span style='font-size:1.5em'>&#9785;</span>";
 						Datas[user][4]=0;
 						}
 					displayDatas(htm,k);
@@ -363,11 +364,16 @@ function getFavstarData(username,k) {
 		onload: function(responseDetails) {
 			if(username==user) {
 				var textResp=responseDetails.responseText;
-				var fsStarred=/Rec'd: (\S+)<\/div>/.exec(textResp)[1];
-				var fsStarring=/<div>Favs Given: (\S+)<\/div>/.exec(textResp)[1];
-				Datas[user][9]=fsStarred;Datas[user][10]=fsStarring;
+				// changed in v0.5b since favstar profile page has changed
+				var regStarred=/Rec'd[\s\S]*<td class="right">(.)+<\/td>/g
+				var fsStarred=regStarred.exec(textResp)[0].replace("Rec'd","");
+				// changed in v0.5b since it's not more displayed on profile page (hidden in html code with <!--)
+				var regStarring=/Given[\s\S]*<td class="right">(\d)+<\/td>/g
+				var fsStarring=regStarring.exec(textResp)[0].replace("Given:","");
+				Datas[user][9]=fsStarred;
+				Datas[user][10]=fsStarring;
 				var htm="<span class='label' style='font-size:1.5em'>&#9733;</span> <a href='http://favstar.fm/users/"+username+"/given' class='url'>"+fsStarring+" given</a>";
-				if(fsStarred=="N/A") htm+=" (not using <a href='http://favstar.fm/users/"+username+"' class='url'>favstar</a>)";
+				if(fsStarred=="NTSI") htm+=" (not using <a href='http://favstar.fm/users/"+username+"' class='url'>favstar</a>)";
 				else htm+=" and <a href='http://favstar.fm/users/"+username+"' class='url'>"+fsStarred+" received</a>";
 				displayDatas(htm,k);
 				}
@@ -416,7 +422,7 @@ function getSocialData(user0,user1,k) {
 							}
 						else {
 							cFollowers=/The (\w+) (person|people) that follow[s]{0,1} both users/.exec(textResp)[1];
-							htm+="<br/>&nbsp;&nbsp;- <a href='http://twtrfrnd.com/"+user0+"/"+user1+"#groupFollowers' class='url'>"+cFollowers+" follower(s) in common</a>";
+							htm+="<br/>&nbsp;&nbsp;- <a href='http://twtrfrnd.com/"+user0+"/"+user1+"#groupFollowers' class='url'>"+cFollowers+" follower(s) in common</a>";						
 							convergence=eval(Math.sqrt(cFollowers*cFollowers/yFrs/Datas[user][2]));
 							}
 						if(/There are no people that both users follow/.test(textResp)) {
