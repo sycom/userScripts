@@ -3,7 +3,7 @@
 // @author			Sylvain Comte
 // @namespace		http://sylvain.comte.online.fr
 // @description		Display several informations about the twitter profile your looking at to help you decide wether or not s/he's worth following
-// @version			0.5b
+// @version			0.6
 // @licence creative-commons by-nc-sa
 // @include    http://twitter.com*
 // @include    http://www.twitter.com*
@@ -11,25 +11,27 @@
 // @include    https://www.twitter.com*
 // ==/UserScript==
 
-/********** TWITTER FOLLOW HELPER 0.5b *************/
-/* Any help about this script can be found at
-http://sylvain.comte.online.fr/AirCarnet/?post/Twitter-Follow-Helper
-*/
+/******* TFH **********/
+// all infos about tfh are at bit.ly/scolProdTFH
+
+// Styling
+GM_addStyle(".showMoreWhen {display:block} .naturallyHidden {display:none} .showMoreWhen:hover .naturallyHidden {display:inline}");
+GM_addStyle(".label {font-weight:bold}");
+GM_addStyle("#TFH-propBy {margin:0;padding:0 0.25em;font-style:italic;text-align:right;font-size:0.75em; #TFH-propBy a {text-decoration:underline}");
+
 /********** SCRIPT VERSION CONTROL 0.5 *************/
-/* Any help about this functions can be found at
-http://sylvain.comte.online.fr/AirCarnet/?post/GreaseMonkey-Script-Update-Control
-*/
+// Any help about this functions can be found at
+// http://sylvain.comte.online.fr/AirCarnet/?post/GreaseMonkey-Script-Update-Control
 /* parameters */
 /* SET YOUR OWN SCRIPT VALUES */
 var thisId=74862;		// your script userscript id
-var thisVersion="0.5b";		// the @version metadata value
-var thisReleaseDate="20110428"; // release date of your script. Not mandatory, use this paramater
+var thisVersion="0.6.1";		// the @version metadata value
+var thisReleaseDate="20120530"; // release date of your script. Not mandatory, use this paramater
 								// only if you want to be sharp on version control frequency.
-
 /* script version control parameters */
-var GMSUCtime=16;   // Delay before alert disapears (seconds)
+var GMSUCtime=14;   // Delay before alert disapears (seconds)
                     // set to 0 if you don't want it to disapear (might be a bit intrusive!)
-var GMSUCfreq=1;    // Update control frequency (days)
+var GMSUCfreq=3;    // Update control frequency (days)
 
 /* colorpalettes */
 	// feel free to create your own. color in this order : back, highlight, front, light.
@@ -38,7 +40,6 @@ var GMSUCfreq=1;    // Update control frequency (days)
 	var cpFlickr=new colorPalette("#FFF","#FF0084","#0063DC","#FFF");	// pink my blue
 // choose yours
 var GMSUCPal=cpUserscript; 	// colorPalette you prefer
-
 /* launching script version control  */
 GM_scriptVersionControl();
 
@@ -120,179 +121,118 @@ function GMSUC_Control() {
 			}
 		});
 	}
-
 /* Color palette creator */	
 function colorPalette(b,h,f,l) {this.back=b;this.high=h;this.front=f;this.light=l;}	
 /******* END OF SCRIPT VERSION CONTROL **********/
 
-/******* TFH **********/
 // variables
 var you=null; 			// who are you?	
 var yFng,yFrs,yList;	// store some stats about you here. Add elsewhere with GM data storing?
 var user;				// who is the user?
 var Datas=new Array();	// a Data collector, in case you are a Data geek ;-)
-// some style
-GM_addStyle(".showMoreWhen {display:block} .naturallyHidden {display:none} .showMoreWhen:hover .naturallyHidden {display:inline}");
 
 // execution
-if(window.location.href.match(/#/)) giveMeInfos();
-else giveMeInfosOld();
+giveMeInfos();
 
 // functions
 function giveMeInfos() {
-// let's wait for jQuery to load (Twitter does this) then launch 
-    if(typeof unsafeWindow.jQuery=='undefined') window.setTimeout(giveMeInfos,42);
+	// let's wait for jQuery to load (Twitter does this) then launch 
+    if(typeof unsafeWindow.jQuery=='undefined') window.setTimeout(giveMeInfos,10);
     else {
 		jQ=unsafeWindow.jQuery;
-		// styling
-		var color=jQ('body').css('color');
-		GM_addStyle('#TFH-moreInfos {}');
-		GM_addStyle('.TFH-moreInfosList {width:49.5%;padding:0 0.5% 0 0;float:left}');
-		GM_addStyle('#TFH-propBy {margin:-1em 0 1em 0;padding:0 0.5em;font-style:italic;text-align:right;font-size:0.75em;} #TFH-propBy a {text-decoration:underline}');
+		linkify();
 		seekDatas();
 		}
 	}
-
-// for those using shining bright new f.. ajax ui not working without js
-// ***********************************************************************	
-function seekDatas() {
-	// waiting for f... new twitter ajax ui to load
-	if(typeof jQ('.your-activity')[0]=='undefined') window.setTimeout(seekDatas,42);
-	else {
-		if(typeof jQ('.screen-name')[0]!='undefined') {
-			user=jQ('.screen-name')[0].innerHTML.split('@')[1];
-			Datas[user]=new Array();
-			Datas[user][0]=user;
-			// corrigé suite à mise à jour Twitter v0.5b
-			Datas[user][1]=jQ('.user-stats-count')[3].innerHTML.split("<")[0];Datas[user][1]=Datas[user][1].replace(/[, ]/g,"");
-			Datas[user][2]=jQ('.user-stats-count')[4].innerHTML.split("<")[0];Datas[user][2]=Datas[user][2].replace(/[, ]/g,"");
-			Datas[user][3]=jQ('.user-stats-count')[5].innerHTML.split("<")[0];Datas[user][3]=Datas[user][3].replace(/[, ]/g,"");
-			var moreInfos=document.createElement("div")
-			moreInfos.id="TFH-moreInfos";
-			var moreInfosList=document.createElement("ul");
-			moreInfosList.id="TFH-moreInfosList-g";
-			moreInfosList.setAttribute("class","TFH-moreInfosList");
-			for(var i=0;i<5;i++) {
-				var item=document.createElement("li");
-				item.id="TFH-i-"+i;
-				moreInfosList.appendChild(item);
-				}
-			moreInfos.appendChild(moreInfosList);
-			moreInfosList=document.createElement("ul");
-			moreInfosList.id="TFH-moreInfosList-d";
-			moreInfosList.setAttribute("class","TFH-moreInfosList");
-			for(var i=5;i<9;i++) {
-				var item=document.createElement("li");
-				item.id="TFH-i-"+i;
-				moreInfosList.appendChild(item);
-				}
-			moreInfos.appendChild(moreInfosList);
-			var propBy=document.createElement("div");
-				propBy.id="TFH-propBy";
-				propBy.innerHTML="informations provided by <a href='http://twitter.com/sycom'>@sycom</a>'s <a href='http://sylvain.comte.online.fr/AirCarnet/?post/Twitter-Follow-Helper'>Twitter Follow Helper</a>";
-			jQ('.component-spacer')[0].id="TFH-firstSpacer";
-			jQ('#TFH-firstSpacer').after(propBy);
-			jQ('#TFH-propBy').after(moreInfos);
-			jQ('#TFH-moreInfos').after("<hr class='component-spacer'>");
-			// get your name - new at v0.5b (bug fix)
-			if(you==null && jQ("#screen-name")) you=jQ("#screen-name").text().replace(/[\s\n]/g,"");
-			// data search
-			followingYou(user,0);
-			getSocialData(you,user,1);
-			getRepliesAndFollowCost(user,2,4);
-			getFavstarData(user,3);
-			getGraderScore(user,5);
-			getKloutScore(user,6)
-			getSearchPop(user,7);
-			discoverMore(user,8);
-			transformUrls();
-			}
-		else transformUrls();	
-		}	
-	}
-
-// tweaking /#!/ url since they are internal and don't launch GMscript when clicked...	
-function transformUrls() {
-	if(typeof jQ('a.user-profile-link','.component')[0]=='undefined') window.setTimeout(transformUrls,42);
-	else {
-		window.setTimeout(transformUrls,101);
-		jQ('a.user-profile-link','.component').each(function() {
-			if(this.href.match(/\/#!/)) {
-				newHref=this.href.replace(/\/#!/,"");
-				this.href=newHref;
-				}
-			});
-		}
-	}
-// ***********************************************************************
-
 	
-// For those using rock-solid good old version of twitter
-// -------------------------------------------------------
-function giveMeInfosOld() {
-// let's wait for jQuery to load (Twitter does this) then launch 
-    if(typeof unsafeWindow.jQuery=='undefined') window.setTimeout(giveMeInfos,42);
-    else {
-		jQ=unsafeWindow.jQuery;
-		// styling
-		var color=jQ('a').css('color');
-		GM_addStyle('#moreInfos {border:'+color+' solid 1px;border-right:none;width:auto;margin:0 -10px 5px -5px;padding:5px 0 5px 5px ;-moz-border-radius:5px 0 0 0px}');
-		GM_addStyle('.label {font-weight:bold}');
-		GM_addStyle('#TFH-propBy {margin:-5px -10px 5px -5px;padding:2px 2px 2px 0;background:'+color+';color:#fff;font-style:italic;text-align:right;font-size:0.75em;-moz-border-radius:0 0 0 5px} #TFH-propBy a {color:white;text-decoration:underline}');
-		seekDatasOld();
-		}
-	}
-
-function seekDatasOld() {
-	if(jQ('#profile')) {
-		// get some user local data
-		if(user=jQ("meta[name=page-user-screen_name]").attr("content")) {
-			Datas[user]=new Array();
-			Datas[user][0]=user;
-			Datas[user][1]=document.getElementById("following_count").innerHTML;Datas[user][1]=Datas[user][1].replace(/,/g,"");
-			Datas[user][2]=document.getElementById("follower_count").innerHTML;Datas[user][2]=Datas[user][2].replace(/,/g,"");
-			Datas[user][3]=document.getElementById("lists_count").innerHTML;Datas[user][3]=Datas[user][3].replace(/,/g,"");
-			var profile=jQ('#side').find('#profile');
-			var moreInfos=document.createElement("div")
-			moreInfos.id="moreInfos";			
-			var moreInfosList=document.createElement("ul");
-			moreInfosList.id="moreInfosList";
-			for(var i=0;i<9;i++) {
-				var item=document.createElement("li");
-				item.id="TFH-i-"+i;
-				moreInfosList.appendChild(item);
+function linkify() {
+	if(typeof jQ('.js-action-profile')[0]=='undefined') window.setTimeout(linkify,42);
+	else {
+		jQ('a').bind('click',function () {
+			if(jQ(this).hasClass('twitter-atreply')) {
+				var id=jQ(this).attr('data-screen-name');
+				window.location="https://twitter.com/"+id;
 				}
-			moreInfos.appendChild(moreInfosList);
-			var propBy=document.createElement("div");
+			if(jQ(this).hasClass('js-action-profile')) {
+				var id=jQ(this).attr('href').split("/#!/")[1];
+				window.location="https://twitter.com/"+id;
+				}	
+			});
+		}	
+	}	
+
+function seekDatas() {	
+	// waiting for f... "new" twitter ajax ui to load
+	if(typeof jQ('.screen-name')[0]=='undefined') window.setTimeout(seekDatas,10);
+	else {
+		user=jQ('.screen-name')[0].innerHTML.split('<s>@</s>')[1];
+		Datas[user]=new Array();
+		Datas[user][0]=user;
+		// corrigé suite à mise à jour Twitter v0.5c
+		var test;
+		Datas[user][1]=jQ('.stats li strong')[0].innerHTML;Datas[user][1]=Datas[user][1].replace(/[, ]/g,"");
+		Datas[user][2]=jQ('.stats li strong')[1].innerHTML;Datas[user][2]=Datas[user][2].replace(/[, ]/g,"");
+		Datas[user][3]=jQ('.stats li strong')[2].innerHTML;Datas[user][3]=Datas[user][3].replace(/[, ]/g,"");
+		var moreInfosConteneur=document.createElement("div");
+			moreInfosConteneur.id="TFH-moreInfosConteneur";
+			moreInfosConteneur.setAttribute("class","module component");
+		var moreInfos=document.createElement("div");
+			moreInfos.id="TFH-moreInfos";
+			moreInfos.setAttribute("class","flex-module");
+		var moreInfosList=document.createElement("ul");
+			moreInfosList.id="TFH-moreInfosList-g";
+		//	moreInfosList.setAttribute("class","TFH-moreInfosList");
+		for(var i=0;i<5;i++) {
+			var item=document.createElement("li");
+			item.id="TFH-i-"+i;
+			moreInfosList.appendChild(item);
+			}
+		moreInfos.appendChild(moreInfosList);
+		moreInfosList=document.createElement("ul");
+		moreInfosList.id="TFH-moreInfosList-d";
+	//	moreInfosList.setAttribute("class","TFH-moreInfosList");
+		for(var i=5;i<9;i++) {
+			var item=document.createElement("li");
+			item.id="TFH-i-"+i;
+			moreInfosList.appendChild(item);
+			}
+		moreInfos.appendChild(moreInfosList);
+		var propBy=document.createElement("div");
 			propBy.id="TFH-propBy";
-			propBy.innerHTML="by <a href='http://twitter.com/sycom'>@sycom</a>'s <a href=''>Twitter Follow Helper</a>";
-			profile.append(moreInfos);
-			profile.append(propBy);
-			if(you==null && jQ("meta[name=session-user-screen_name]")) you=jQ("meta[name=session-user-screen_name]").attr("content");
+			propBy.setAttribute("class","flex-module");
+			propBy.innerHTML="informations provided by <a href='http://twitter.com/sycom'>@sycom</a>'s <a href='http://sylvain.comte.online.fr/AirCarnet/?post/Twitter-Follow-Helper'>Twitter Follow Helper</a>";
+		with(moreInfosConteneur) {
+			appendChild(propBy);
+			appendChild(moreInfos);
+			}
+			jQ('.module')[1].id="TFH-firstSpacer";
+			jQ('#TFH-firstSpacer').after(moreInfosConteneur);
+			// get your user name
+			if(you==null && jQ(".js-mini-current-user")[0]) you=jQ(".js-mini-current-user")[0].getAttribute("data-screen-name");
 			// data search
 			followingYou(user,0);
 			getSocialData(you,user,1);
 			getRepliesAndFollowCost(user,2,4);
-			getFavstarData(user,3);
-			getGraderScore(user,5);
-			getKloutScore(user,6)
-			getSearchPop(user,7);
+		//	getFavstarData(user,3); suspended for the moment
+			getKloutScore(user,5)
+			getSearchPop(user,6);
+		//	getRtRank(user,7); not working now. Api key required...
 			discoverMore(user,8);
-			}
 		}
 	}
-// -------------------------------------------------	
-
+	
+// dispatching datas on the screen
 function displayDatas(data,j) {
 	var li=jQ('#TFH-i-'+j);
     li.html(data);
 	}
 
 function followingYou(username,k) {
-	var htm="<span class='label'>Following you?</span> <i>asking...</i>";
+	// following control. Have to change this. Might be very simpler...
+	var htm="<span class='label'>Following you?</span> <span style='font-style:italic'>asking...</span>";
 	displayDatas(htm,k);
 	if(you==null) {
-		htm="tell me <a href='login'>who you are</a>";
+		htm="tell me <a href='login'>who you are</a> please";
 		displayDatas(htm,k);
 		}
 	else {	
@@ -331,68 +271,32 @@ function followingYou(username,k) {
 			}
 		}
 	}		
-		
+
 function getRepliesAndFollowCost(username,k,l) {
 // followCost from http://followcost.com and @replay %
-	var htm="<span class='label'>@replies</span> <a href='http://followcost.com/" + username +"' class='url'><i>loading...</i></a>";
+	var htm="<span class='label'>@replies</span> <a href='http://followcost.com/" + username +"' class='url'><span style='font-style:italic'>loading...</span></a>";
 	displayDatas(htm,k);
-	htm="<span class='label'>Follow Cost</span> <i>loading...</i>";
+	htm="<span class='label'>Follow Cost</span> <span style='font-style:italic'>loading...</span>";
 	displayDatas(htm,l);
 	jQ.getJSON("http://followcost.com/"+username+".json?callback=?", function(json) {
 		Datas[user][5]=json.at_reply_index;Datas[user][6]=json.milliscobles_recently;Datas[user][7]=json.milliscobles_all_time;Datas[user][8]=json.average_tweets_per_day_recently;
+		
 		if(json.at_reply_index==null) htm="unable to retrieve <span class='label'>@replies</span> rate";
 		else htm="<span class='label'>@replies</span> <a href='http://followcost.com/" + username +"' class='url'>"+ json.at_reply_index +" %</a>";
 		displayDatas(htm,k)
+
 		if(json.milliscobles_recently==0) htm="<span class='label'>Follow Cost</span><br/>&nbsp;&nbsp;-&nbsp;<a href='http://followcost.com/" + username +"' class='url'>0 tweet a day </a>recently<br/>&nbsp;&nbsp;-&nbsp;<a href='http://followcost.com/" + username +"' class='url'>"+Math.round(json.milliscobles_recently)+" m&Sigma; ("+Math.round(json.milliscobles_all_time)+" all time)</a>";
+
 		else htm="<span class='label'>Follow Cost</span><br/>&nbsp;&nbsp;-&nbsp;<a href='http://followcost.com/" + username +"' class='url'>"+Math.round(json.average_tweets_per_day_recently)+" tweets a day </a>recently<br/>&nbsp;&nbsp;-&nbsp;<a href='http://followcost.com/" + username +"' class='url'>"+Math.round(json.milliscobles_recently)+" m&Sigma; ("+Math.round(json.milliscobles_all_time)+" all time)</a>";
+
         displayDatas(htm,l);
-      });
-    }
-	
-function getFavstarData(username,k) {
-// get datas from http://favstar.fm
-	var htm="<span class='label' style='font-size:1.5em'>&#9733;</span>  <a href='http://favstar.fm/users/"+username+"' class='url'><i>loading...</i></a>";
-	displayDatas(htm,k);
-	var favstarUrl="http://favstar.fm/users/"+username;
-	GM_xmlhttpRequest({
-		method: 'GET',
-		url: favstarUrl,
-		headers: {
-			'User-agent': 'Mozilla/4.0 (compatible)',
-			 'Accept': 'text/html,application/xml,text/xml',
-			 },
-		onload: function(responseDetails) {
-			if(username==user) {
-				var textResp=responseDetails.responseText;
-				// changed in v0.5b since favstar profile page has changed
-				var regStarred=/Rec'd[\s\S]*<td class="right">(.)+<\/td>/g
-				var fsStarred=regStarred.exec(textResp)[0].replace("Rec'd","");
-				// changed in v0.5b since it's not more displayed on profile page (hidden in html code with <!--)
-				var regStarring=/Given[\s\S]*<td class="right">(\d)+<\/td>/g
-				var fsStarring=regStarring.exec(textResp)[0].replace("Given:","");
-				Datas[user][9]=fsStarred;
-				Datas[user][10]=fsStarring;
-				var htm="<span class='label' style='font-size:1.5em'>&#9733;</span> <a href='http://favstar.fm/users/"+username+"/given' class='url'>"+fsStarring+" given</a>";
-				if(fsStarred=="NTSI") htm+=" (not using <a href='http://favstar.fm/users/"+username+"' class='url'>favstar</a>)";
-				else htm+=" and <a href='http://favstar.fm/users/"+username+"' class='url'>"+fsStarred+" received</a>";
-				displayDatas(htm,k);
-				}
-			else {
-				var htm="<a href='http://favstar.fm/users/"+username+"' class='url'>FavStar</a> server had a problem...";
-				displayDatas(htm,k);
-				}
-			},
-		onerror: function(responseDetails) {
-			var htm="Unable to retrieve <a href='http://favstar.fm/users/"+username+"' class='url'>FavStar</a> data";
-			displayDatas(htm,k);
-			}
 		});
-	}
-	
+    }
+
 function getSocialData(user0,user1,k) {
 // common following / followers from http://twtrfrnd.com/
 	if(user0!=null) {
-		var htm="<span class='label'>Social graph</span> convergence <a href='http://twtrfrnd.com/"+user0+"/"+user1+"' class='url'><i>loading...</i></a>";
+		var htm="<span class='label'>Social graph</span> convergence <a href='http://twtrfrnd.com/"+user0+"/"+user1+"' class='url'><span style='font-style:italic'>loading...</span></a>";
 		displayDatas(htm,k);
 		if(user0!=user1) {
 			var twtrfrndUrl="http://twtrfrnd.com/"+user0+"/"+user1;
@@ -414,7 +318,8 @@ function getSocialData(user0,user1,k) {
 						}
 					else {
 						var htm="";
-						// Hey, what's this "convergence"? it's an indicator of common friends & followers
+						// apprentice : "Hey, what's this 'convergence'?"
+						// me : "it's an indicator of common friends & followers"
 						if(/There are no people that follow both users/.test(textResp)) {
 							htm+="<br/>&nbsp;&nbsp;- no common followers";
 							convergence=0;
@@ -423,7 +328,7 @@ function getSocialData(user0,user1,k) {
 						else {
 							cFollowers=/The (\w+) (person|people) that follow[s]{0,1} both users/.exec(textResp)[1];
 							htm+="<br/>&nbsp;&nbsp;- <a href='http://twtrfrnd.com/"+user0+"/"+user1+"#groupFollowers' class='url'>"+cFollowers+" follower(s) in common</a>";						
-							convergence=eval(Math.sqrt(cFollowers*cFollowers/yFrs/Datas[user][2]));
+							convergence=eval(Math.sqrt(cFollowers*cFollowers/yFrs/Datas[user][3]));
 							}
 						if(/There are no people that both users follow/.test(textResp)) {
 							htm+="<br/>&nbsp;&nbsp;- no common friend";
@@ -433,15 +338,15 @@ function getSocialData(user0,user1,k) {
 						else {
 							cFriends=/The (\w+) (person|people) that both users follow/.exec(textResp)[1];
 							htm+="<br/>&nbsp;&nbsp;- <a href='http://twtrfrnd.com/"+user0+"/"+user1+"#groupFriends' class='url'>"+cFriends+" friend(s) in common</a>";
-							convergence=(convergence+2*eval(Math.sqrt(cFriends*cFriends/yFng/Datas[user][1])))/3;
+							convergence=(convergence+2*eval(Math.sqrt(cFriends*cFriends/yFng/Datas[user][2])))/3;
 							}
-						if(/There are no people @/+user0+/ follows/.test(textResp)) {
+						if(/There are no people @/.test(textResp)) {
 							htm+="<br/>&nbsp;&nbsp;- no indicator";
 							cIndic=0;
 							}
 						else {
-							var regIndic=new RegExp("The (\\w+) (person|people) @"+user0+" follows that follow");
-							cIndic=regIndic.exec(textResp)[1];
+							//var regIndic=new RegExp("The (\\w+) (person|people) @"+user0+" follows that follow @");
+							cIndic=/The (\w+) (person|people) @/.exec(textResp)[1];
 							htm+="<br/>&nbsp;&nbsp;- <a href='http://twtrfrnd.com/"+user0+"/"+user1+"#groupIndicators' class='url' alt='people you follow that follow "+user1+"'>"+cIndic+" indicators</a>";
 							}
 						convergence=Math.round(convergence*10000)/100;
@@ -463,74 +368,58 @@ function getSocialData(user0,user1,k) {
 		}	
 	}
 
-function getGraderScore(username,k) {
-	// grader score from http://twitter.grader.com/
-	var htm="<span class='label'>Grader Score</span> <a href='http://twitter.grader.com/"+username+"'><i>loading...</i></a>";
-	displayDatas(htm,k);
-	var graderUrl="http://twitter.grader.com/"+username;
-	GM_xmlhttpRequest({
-		method: 'GET',
-		url: graderUrl,
-		headers: {
-			 'User-agent': 'Mozilla/4.0 (compatible) Greasemonkey/0.3',
-			 'Accept': 'text/html,application/xml,text/xml',
-			 },
-		onload: function(responseDetails) {
-			var textResp=responseDetails.responseText;
-			var graderScore,htm;
-			if(graderScore=/<strong>(.+)<\/strong>/g.exec(/<h3>Grade<\/h3>([\s\S]+)<p>Out/g.exec(textResp)[1])[1]) htm="<span class='label'>Grader Score</span> <a href='http://twitter.grader.com/"+username+"' class='url'>"+graderScore+" %</a>";
-			else htm="unable to retrieve <span class='label'><a href='http://twitter.grader.com/"+username+"'>Grader Score</a></span>";
-			displayDatas(htm,k);
-			Datas[user][15]=graderScore;
-			},
-		onerror: function(responseDetails) {
-			var htm="<span class='label'>Grader Score</span> <a href='http://twitter.grader.com/"+username+"' class='url'> not retrieved</a>";
-			displayDatas(htm,k);
-			}
-		});
-	}
-	
 function getKloutScore(username,k) {
-// klout score from http://klout.com
-	var kloutUrl="http://klout.com/"+username;
-	var htm="<span class='label'>Klout Score</span> <a href='"+kloutUrl+"'><i>loading...</i></a>";
+	// klout score from http://klout.com you'll have to 
+	// get YOUR OWN API key to perform this (http://developer.klout.com)
+	// It's free so don't hurt mine please.
+	var kId;
+	var kKey="ed"+(9*9+1)+"vycfm"+3+"rb"+(7*9)+"yx"+3+"w4pay"+(7*9-1);
+	var htm="<span class='label'>Klout Score</span> <a href='http://klout.com'><span style='font-style:italic'>loading...</span></a>";
 	displayDatas(htm,k);
+	// retrieving klout id
+	var kloutUrl1="http://api.klout.com/v2/identity.json/twitter?screenName="+username+"&key="+kKey;
 	GM_xmlhttpRequest({
 		method: 'GET',
-		url: kloutUrl,
+		url: kloutUrl1,
 		headers: {
 			 'User-agent': 'Mozilla/4.0 (compatible) Greasemonkey/0.3',
 			 'Accept': 'text/html,application/xml,text/xml',
 			 },
 		onload: function(responseDetails) {
-			var textResp=responseDetails.responseText;
-			if(textResp.match(/This twitter profile either/)) {
-				htm="unable to retrieve <span class='label'><a href='"+kloutUrl+"'>Klout Score</a> (and type)</span>";
-				}
-			else {
-				var kloutScore, kloutType;
-				if( kloutScore=/score">(.+)<em>/g.exec(textResp)[1]) {
-					if(kloutScore==null) htm="unable to retrieve <span class='label'><a href='"+kloutUrl+"'>Klout Score</a></span>";
-					else {
-						kloutScore=/score">(.+)<em>/g.exec(textResp)[1];
-						htm="<span class='label'>Klout Score</span> <a href='"+kloutUrl+"' class='url'>"+kloutScore+"</a>";
-						if(kloutType=/is (a|an) (.+)<\/h5>/g.exec(textResp)[2]) htm+=" ("+kloutType+")";
-						}
+			eval("var jsonResp=("+responseDetails.responseText+")");
+			kId=jsonResp.id;
+			var kloutUrl2="http://api.klout.com/v2/user.json/"+kId+"/score?key="+kKey;
+			GM_xmlhttpRequest({
+				method: 'GET',
+				url: kloutUrl2,
+				headers: {
+					'User-agent': 'Mozilla/4.0 (compatible) Greasemonkey/0.3',
+					'Accept': 'text/html,application/xml,text/xml',
+					},
+				onload: function(responseDetails) {
+					eval("var jsonResp=("+responseDetails.responseText+")");
+					var kloutScore=Math.round(jsonResp.score*10)/10;
+					htm="<span class='label'>Klout Score</span> <a href='http://klout.com' class='url'>"+kloutScore+"</a>";
+					displayDatas(htm,k);
+					Datas[user][17]=kloutScore;
+					},
+				onerror: function(responseDetails) {
+					var textResp=responseDetails;
+					htm="<span class='label'>Klout Score</span> <a href='http://www.klout.com' class='url'> not retrieved</a>";
+					displayDatas(htm,k);
 					}
-				else htm="unable to retrieve <span class='label'><a href='"+kloutUrl+"'>Klout Score</a></span>";
-				}
-			displayDatas(htm,k);
-			Datas[user][17]=kloutScore;
+				});
 			},
 		onerror: function(responseDetails) {
-			htm="<span class='label'>Klout Score</span> <a href='"+kloutUrl+"' class='url'> not retrieved</a>";
+			var textResp=responseDetails;
+			htm="<span class='label'>Klout Score</span> <a href='http://www.klout.com' class='url'> not retrieved</a>";
 			displayDatas(htm,k);
 			}
 		});
 	}
 
 function getSearchPop(username,k) {
-	var htm="<span class='label'>Search score</span> <a href='http://twitter.com/#search?q=%40"+username+"'><i>loading...</i></a>";
+	var htm="<span class='label'>Search score</span> <a href='http://twitter.com/#search?q=%40"+username+"'><span style='font-style:italic'>loading...</span></a>";
 	displayDatas(htm,k);
 	var searchUrl="http://search.twitter.com/search.json?callback=?&q=@"+username;
 	jQ.getJSON(searchUrl,function(json) {
@@ -556,7 +445,7 @@ function getSearchPop(username,k) {
 
 function discoverMore(username,k) {
 	// get people this user is finding interessant via http://autoff.com
-	var htm="<span class='label'>People s/he likes</span> <a href='http://autoff.com/'><i>asking autoFF...</i></a>";
+	var htm="<span class='label'>People s/he likes</span> <a href='http://autoff.com/'><span style='font-style:italic'>asking autoFF...</span></a>";
 	displayDatas(htm,k);
 	var discovUrl="http://autoff.com/api/"+username;
 	// don't know why, but getJSON sending me an error. So let's hack.
@@ -595,4 +484,9 @@ function discoverMore(username,k) {
 			displayDatas(htm,k);
 			}
 		});
+	}
+	
+// support functions
+function hasClass(element,classe) {
+	return (' '+element.className+' ').indexOf(' '+classe+' ')>-1;
 	}
