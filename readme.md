@@ -1,4 +1,10 @@
 # A userscripts collection
+You must have greasemonkey addon installed in your browser to make those scripts work...
+
+## Out of Amazon (v0 - first launch for testing purpose)
+The idea came when speaking about amazon with a friend who is a bookseller. His clients should be able, when browsing amazon, to go straight to his online store to buy him the same book. So was born the Out of Amazon userscript.
+### What it does
+right now, it's a very young script. On french amazon store (http(s)://(www.)amazon.fr, when looking for a book, a button will be added to send you to this friend's store.
 
 ## Smart Google Reader Subscribe Button (last version 2.1b)
 As of Jul 2 2013, this script doesn't work anymore since Google shut down Google Reader. But you may find the script useful as the API is (partialy) reused by many *copycats* ;-)
