@@ -7,6 +7,7 @@ displays a small icon in the upper left corner of the page. Then, by querying Go
 * rss orange orange > to none of the feeds
 * rss vert green > to some of the feeds
 * rss bleu blue > to all feeds
+
 ## TFH - Twitter Follow Helper (v 0.6 - 20120530)
 This script adds some informations on twitter profile pages (better if you're logged in).
 Find more detailed informations on it's *[home page](bit.ly/scolProdTFH)*
