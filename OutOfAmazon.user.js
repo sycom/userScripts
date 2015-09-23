@@ -1,16 +1,16 @@
 // ==UserScript==
-// @name        OutOfAm*z*n
+// @name        Out Of Am*z*n
 // @namespace   https://git.framasoft.org/sycom/userScripts
 // @description Un script pour acheter ses livres ailleurs que chez amazon
 // @downloadURL https://git.framasoft.org/sycom/userScripts/raw/master/OutOfAmazon.user.js
-// @include     http://amazon.fr*
-// @include     https://amazon.fr*
-// @include     http://www.amazon.fr*
-// @include     https://www.amazon.fr*
+// @updateURL	https://git.framasoft.org/sycom/userScripts/raw/master/OutOfAmazon.meta.js
+// @include     *://*.amazon.fr*
+// @match     	*://*.amazon.fr*
 // @author	    Sylvain Comte
 // @version     0.2
 // @require     https://cdn.jsdelivr.net/jquery/2.1.4/jquery.min.js
 // @grant       none
+// @noframes
 // ==/UserScript==
 
 var OoAboutName="Quai des mômes",
@@ -27,11 +27,11 @@ if(rubrique=="Livres") {
   var OoAAuthor=encodeURIComponent($(".author > span > a").text());
   console.log(OoAAuthor+" - "+OoATitle);
   // prépare le lien vers la boutique locale
-  var itemSendTo='<li data-width="192" class="swatchElement selected" style="width:192px"><span id="" class="a-button a-button-selected a-spacing-mini a-button-toggle format" style="box-shadow:3px 3px 6px gray;border-color:'+OoAcolor+'"><span class="a-button-inner" style="background-image:linear-gradient(145deg,#fff,#f8fef2)"><span id="OoA-setButton" class="fa fa-wrench" style="float:right;margin:2px 2px 0 0;padding:2px;box-sizing:border-box;border-radius:50%;color:white;background-color:'+OoAcolor+';"></span><span class="a-list-item"><a id="" href="'+OoAboutLink+''+OoATitle+','+OoAAuthor+'" class="a-button-text" role="button"><span>près de chez vous</span><span class="a-color-base"><span class="a-color-price"><a href="'+OoAboutLink+''+OoATitle+','+OoAAuthor+'">'+OoAboutName+'</a></span></span></a></span></span><span class="tmm-olp-links"></span><span class="tmm-olp-links"><span class="olp-used olp-link"><a class="a-size-mini a-link-normal" href="http://sycom.github.io/outOfAm-z-n/"><span class="olp-from">Le lien ci-dessus est produit par</span></a></span><span class="olp-new olp-link" style="text-align:center"><a class="a-size-mini a-link-normal" href="http://sycom.github.io/outOfAm-z-n/">outOfAm*z*n <span class="olp-from"></span></a></span></span></span></li>';
+  var itemSendTo='<li data-width="192" class="swatchElement selected" style="width:192px"><span id="" class="a-button a-button-selected a-spacing-mini a-button-toggle format" style="box-shadow:3px 3px 6px gray;border-color:'+OoAcolor+'"><span class="a-button-inner" style="background-image:linear-gradient(145deg,#fff,#f8fef2)"><span id="OoA-setButton" class="fa fa-wrench" style="float:right;margin:2px 2px 0 0;padding:2px;box-sizing:border-box;border-radius:50%;color:white;background-color:'+OoAcolor+';"></span><span class="a-list-item"><a id="" href="'+OoAboutLink+''+OoATitle+','+OoAAuthor+'&amp;from=OoAsycom" class="a-button-text" role="button"><span>près de chez vous</span><span class="a-color-base"><span class="a-color-price"><a href="'+OoAboutLink+''+OoATitle+','+OoAAuthor+'&amp;from=OoAsycom">'+OoAboutName+'</a></span></span></a></span></span><span class="tmm-olp-links"></span><span class="tmm-olp-links"><span class="olp-used olp-link"><a class="a-size-mini a-link-normal" href="http://sycom.github.io/outOfAm-z-n/"><span class="olp-from">Le lien ci-dessus est produit par</span></a></span><span class="olp-new olp-link" style="text-align:center"><a class="a-size-mini a-link-normal" href="http://sycom.github.io/outOfAm-z-n/">outOfAm*z*n <span class="olp-from"></span></a></span></span></span></li>';
   // ajoute le lien à la liste des boutons amazon
   $("#tmmSwatches ul").append(itemSendTo);
   // ajoute la fonction d'ouverture des réglages
-    function toggleSettings () {
+  function toggleSettings () {
     console.log("toggle");
     // si ouvert, on cache
     if(OoAsetOpen==1) {
@@ -52,8 +52,8 @@ if(rubrique=="Livres") {
         $("#OoA-settings").css('display','block');
         OoAsetOpen=1
       }
-    }
-  $("#OoA-setButton").click(toggleSettings);
+   }
+ $("#OoA-setButton").click(toggleSettings);
   
 
   }
