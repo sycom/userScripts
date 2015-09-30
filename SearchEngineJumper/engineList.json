@@ -1,0 +1,145 @@
+[{
+    'type': 'autres moteurs',
+    'liste': [
+      {
+        'name': 'Searx',
+        'url': 'https://searx.com/?q='
+      },
+      {
+        'name': 'Duck Duck Go',
+        'url': 'https://duckduckgo.com/?q='
+      },
+      {
+        'name': 'Qwant',
+        'url': 'https://qwant.com/?q='
+      },
+      {
+        'name': 'Ixquick',
+        'url': 'https://ixquick.fr/do/search?q='
+      },
+      {
+        'name': 'Ask',
+        'url': 'https://ask.com/web/?q='
+      },
+      {
+        'name': 'Google',
+        'url': 'https://google.com/?q='
+      },
+      {
+        'name': 'Yahoo',
+        'url': 'https://search.yahoo.com/?p='
+      },
+      {
+        'name': 'Bing',
+        'url': 'https://bing.com/?q='
+      },
+      {
+        'name': 'Exalead',
+        'url': 'https://www.exalead.com/search/web/results/?q='
+      },
+      {
+        'name': 'Orange',
+        'url': ' https://lemoteur.orange.fr/?profil=lemoteur&module=lemoteur&bhv=web_mondial&kw='
+      }
+    ]
+  },
+  {
+    'type': 'images',
+    'liste': [
+      {
+        'name': 'Searx',
+        'url': 'https://searx.com/?category_images&q='
+      },
+      {
+        'name': 'Duck Duck Go',
+        'url': 'https://duckduckgo.com/?ia=images&q='
+      },
+      {
+        'name': 'Qwant',
+        'url': 'https://qwant.com/?t=images&q='
+      },
+      {
+        'name': 'Ask',
+        'url': 'https://ask.com/pictures/?q='
+      },
+      {
+        'name': 'Google',
+        'url': 'https://google.com/search?site=imghp&?q='
+      },
+      {
+        'name': 'Yahoo',
+        'url': 'https://images.search.yahoo.com/?p='
+      },
+      {
+        'name': 'Bing',
+        'url': 'https://bing.com/images/?q='
+      },
+      {
+        'name': 'Exalead',
+        'url': 'https://www.exalead.com/search/image/results/?q='
+      }
+    ]
+  },
+  {
+    'type': 'cartes',
+    'liste': [
+      {
+        'name': 'OpenStreetMap',
+        'url': 'https://www.openstreetmap.org/search?query='
+      },
+      {
+        'name': 'Google',
+        'url': 'https://maps.google.com/?q='
+      },
+      {
+        'name': 'Bing',
+        'url': 'https://bing.com/maps/?q='
+      }
+    ]
+  },
+  {
+    'type': 'vidéos',
+    'liste': [
+      {
+        'name': 'Duck Duck Go',
+        'url': 'https://duckduckgo.com/?ia=videos&q='
+      },
+      {
+        'name': 'Qwant',
+        'url': 'https://qwant.com/?t=videos&q='
+      },
+      {
+        'name': 'Ask',
+        'url': 'https://ask.com/youtube/?q='
+      },
+      {
+        'name': 'Google',
+        'url': 'https://google.com/search?tbm=vid&?q='
+      },
+      {
+        'name': 'Yahoo',
+        'url': 'https://video.search.yahoo.com/?p='
+      },
+      {
+        'name': 'Bing',
+        'url': 'https://bing.com/videos/?q='
+      },
+      {
+        'name': 'Exalead',
+        'url': 'https://www.exalead.com/search/video/results/?q='
+      }
+    ]
+  },
+  {
+    'type': 'personnes',
+    'liste': [
+      {
+        'name': 'Qwant',
+        'url': 'https://www.qwant.com/people?q='
+      },
+      {
+        'name': 'Yatedo',
+        'url': 'https://www.yatedo.fr/search/profil?q='
+      }
+    ]
+  }]
