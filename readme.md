@@ -1,11 +1,11 @@
-*Le [projet original](https://git.framasoft.org/sycom/userScripts) est hébergé sur [l'instance gitlab de Framasoft](https://git.framasoft.org). D'autres versions peuvent être déployées, notamment sur github, mais il s'agit de mirroirs...*
+*[Main repository](https://git.framasoft.org/sycom/userScripts) is hosted by [Framasoft Gitlab instance](https://git.framasoft.org). You may find replicant, as on github, but they're mirrored... Please, [report bug and comment on framagit](https://git.framasoft.org/sycom/userScripts/issues)*
 ## A userscripts collection
-You must have greasemonkey addon installed in your Firefox browser in order to make those scripts work (Tampermonkey in Chrome may work also)...
+You must have [greasemonkey addon](https://addons.mozilla.org/en/firefox/addon/greasemonkey/) installed in your Firefox browser in order to make those scripts work ([Tampermonkey in Chrome](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo) may work also)...
 
-### Search Engine Jumper (v0.1 - first launch) - SEJ branch
+### [Search Engine Jumper](https://git.framasoft.org/sycom/userScripts/raw/master/SearchEngineJumper.user.js) (v0.1 - first launch) - [SEJ branch](https://git.framasoft.org/sycom/userScripts/tree/SEJ)
 Did you know Google is not the only search engine around there? With Search Engine Jumper, when you perform a search on the internet, you will be provided a lot of links to search same terms on other search engines. Currently works (more or less) on Searx (some instances), Google, Yahoo and Bing. No data collected or anything, of course. Stay tuned...
 
-### Out of Amazon (v0 - first launch for testing purpose)
+### [Out of Amazon](https://git.framasoft.org/sycom/userScripts/raw/master/OutOfAmazon.user.js) (v0.1) - [OoA branch](https://git.framasoft.org/sycom/userScripts/tree/OoA)
 The idea came when speaking about amazon with a friend who is a bookseller. His clients should be able, when browsing amazon, to go straight to his online store to buy him the same book. So was born the [Out of Am*z*n userscript](http://sycom.github.io/outOfAm-z-n).
 #### What it does
 right now, it's a very young script. On french amazon store `http(s)://(www.)amazon.fr`, when looking for a book, a button will be added to send you to this friend's store.
