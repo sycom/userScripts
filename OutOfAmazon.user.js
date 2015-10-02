@@ -1,4 +1,4 @@
-// ==UserScript==
+﻿// ==UserScript==
 // @name        Out Of Am*z*n
 // @namespace   https://git.framasoft.org/sycom/userScripts
 // @description Un script pour acheter ses livres ailleurs que chez amazon
