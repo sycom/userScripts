@@ -6,13 +6,16 @@
 // @include     https://*
 // @include     http://*
 // @author	    Sylvain Comte
-// @version     0.1
+// @version     0.1.1
 // @require     https://cdn.jsdelivr.net/jquery/2.1.4/jquery.min.js
 // @grant       none
 // @noframes
 // ==/UserScript==
 
-var SEJ_q; /* search query */
+this.$ = this.jQuery = jQuery.noConflict(true); // avoid conflict on pages already running jQuery
+
+var SEJ_q; 										// search query
+
 /* alternative search engine list - see ./SearchEngineJumper/engineList.json */
 var SEJ_SeList = [
   {
@@ -217,34 +220,35 @@ var SEJ_destList = [
   }
 ];
 /* getting current search engine */
-var SEJ_url=location.hostname;
-var SEJm;
+var SEJ_url=location.hostname;	// get current page hspace
+var SEJm;						// current search engine (if we are there)
 for (var m in SEJ_destList) {
-  if (SEJ_destList[m].url.search(SEJ_url) > -1) SEJm = m;
+  if (SEJ_destList[m].url.search(SEJ_url) > -1) SEJm = m; // check if we have the code to run in this search engine
 }
 
 /* creating links to alt search engines */
 function SEJ_suggest(s) {
-	if (SEJ_destList[s]) {
+  console.log("SEJ > moteur : "+SEJ_destList[s].name);
+	if(document.getElementById("#"+SEJ_destList[s].searchField)!==undefined) {
 		SEJ_q = $("#"+SEJ_destList[s].searchField).attr("value");
 		$("#"+SEJ_destList[s].includeId).ready(function() {
-      console.log("#"+SEJ_destList[s].includeId);
-			var SEJ_Se_div = $("#"+SEJ_destList[s].includeId);
-      console.log(SEJ_Se_div);
-      var html= '<div class=\''+SEJ_destList[s].containerClass+'\' style=\''+SEJ_destList[s].containerStyle+'\'>';
+      		var SEJ_Se_div = $("#"+SEJ_destList[s].includeId);
+			var html= '<div class=\''+SEJ_destList[s].containerClass+'\' style=\''+SEJ_destList[s].containerStyle+'\'>';
 			html += SEJ_destList[s].htmlBefore;
-			   for (var m in SEJ_SeList) {
-					  html += '<h5>' + SEJ_SeList[m].type + '</h5>';
-					  var SEJmot = SEJ_SeList[m].liste;
-					  for (var i in SEJmot) {
-						if(i>0) html+=SEJ_destList[s].linkSepar;
-						html += '<a href=\'' + SEJmot[i].url + '' + SEJ_q + '\' class=\'' + SEJ_destList[s].linkClass + '\' style=\'' + SEJ_destList[s].linkStyle + '\'>' + SEJmot[i].name + '</a>';
-						}
-					  }
-					html += SEJ_destList[s].htmlAfter;
-					SEJ_Se_div.prepend(html);
-		})
+			for (var m in SEJ_SeList) {
+				html += '<h5>' + SEJ_SeList[m].type + '</h5>';
+				var SEJmot = SEJ_SeList[m].liste;
+				for (var i in SEJmot) {
+					if(i>0) html+=SEJ_destList[s].linkSepar;
+					html += '<a href=\'' + SEJmot[i].url + '' + SEJ_q + '\' class=\'' + SEJ_destList[s].linkClass + '\' style=\'' + SEJ_destList[s].linkStyle + '\'>' + SEJmot[i].name + '</a>';
+					}
+				}
+				html += SEJ_destList[s].htmlAfter;
+				SEJ_Se_div.prepend(html);
+			})
+		}
+	else console.log("SEJ > impossible de trouver la requête");
 	}
-  else console.log("moteur pas dans la liste");
-}
-if (SEJm) SEJ_suggest(SEJm);
+
+if (SEJm!==undefined) SEJ_suggest(SEJm);
+else console.log("SEJ > site pas dans la liste des moteurs");
