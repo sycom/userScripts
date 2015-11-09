@@ -6,7 +6,7 @@
 // @include   *://*.amazon.fr*
 // @match      *
 // @author     Sylvain Comte
-// @version   0.2.9
+// @version   0.2.1
 // @require   https://cdn.jsdelivr.net/jquery/2.1.4/jquery.min.js
 // @grant     GM_getValue
 // @grant     GM_setValue
@@ -22,7 +22,7 @@ var OoAdefName = "Quai des mômes",
    OoAsetOpen,
    OoAStores = [];
 
-GM_addStyle("#OoA-settings{z-index:200;width:100%;background-color:white;opacity:0.8;height:150%;position:fixed;top:0;left:auto}#OoA-list{width:600px;max-width:100%;margin:100px auto;min-height:450px;background-color:"+OoAcolor+";box-shadow:15px 15px 5px gray}#OoA-closeSetButton{float:right;margin:10px 10px 0 0;padding:0px 4px 2px;box-sizing:border-box;border-radius:50%;color:white;background-color:white;color:"+OoAcolor+"}#OoA-stores{margin:50px 5px 5px 5px}.OoA-store input{}");
+GM_addStyle("#OoA-settings{z-index:200;width:100%;background-color:rgba(255,255,255,0.8);height:150%;position:fixed;top:0;left:auto}#OoA-list{width:600px;max-width:100%;margin:100px auto;min-height:450px;background-color:"+OoAcolor+";opacity:0.8;box-shadow:15px 15px 5px gray}#OoA-closeSetButton{float:right;margin:10px 10px 0 0;padding:0px 4px 2px;box-sizing:border-box;border-radius:50%;color:white;background-color:white;color:"+OoAcolor+"}#OoA-stores{padding:50px 5px 5px 5px}.OoA-store{color:white}.OoA-store *{vertical-align:middle;padding:0 2px}");
    
 // vérifie qu'on est dans la rubrique livre sur amazon.fr
 var rubrique = $(".nav-b").text();
@@ -68,7 +68,7 @@ if (rubrique === "Livres") {
             for (var i in OoAStores) {
                var OoAli = "<li class='OoA-store'>";
                if (OoAStores[i].active == true) OoAli += "<span class='fa fa-2x fa-check-square'></span>"
-               else OoAli += "<span class='fa fa-2x fa-square'></span>";
+               else OoAli += "<span class='fa fa-2x fa-square'></span>&nbsp;";
                OoAli += "<input type='text' value='" + OoAStores[i].name + "'></input>&nbsp;";
                OoAli += "<input type='text' value='" + OoAStores[i].url + "'></input>&nbsp;";
                OoAli += "<span class='fa fa-2x fa-trash'></span></li>";
