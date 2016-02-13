@@ -1,12 +1,11 @@
-﻿// ==UserScript==
+// ==UserScript==
 // @name      Out Of Am*z*n
 // @namespace   https://git.framasoft.org/sycom/userScripts
 // @description Un script pour acheter ses livres ailleurs que chez amazon
 // @downloadURL https://git.framasoft.org/sycom/userScripts/raw/master/OutOfAmazon.user.js
 // @include   *://*.amazon.fr*
-// @match      *
 // @author     Sylvain Comte
-// @version   0.2.1
+// @version   0.2.2
 // @require   https://cdn.jsdelivr.net/jquery/2.1.4/jquery.min.js
 // @grant     GM_getValue
 // @grant     GM_setValue
@@ -32,21 +31,25 @@ if (rubrique === "Livres") {
    $('head').append('<link href="https://cdn.jsdelivr.net/fontawesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">');
    // vérifie les paramètres de l'utilisateur
    // 1. a-t-il défini une (ou plusieurs) boutique
-   if (GM_getValue("Stores")) {
+  if (GM_getValue("Stores")) {
       OoAStores = GM_getValue("Stores");
    }
    // si ce n'est pas le cas, on met quai des momes    
    else {
-      console.log(OoAStores);
       OoAStores.push({active: true, name: OoAdefName, url: OoAdefUrl});
+	// on sauvegarde dans GM
+	GM_setValue("Stores",OoAStores);
    }
    // récupère le titre du livre et le prépare pour le mettre dans le lien de la boutique locale
-   var OoATitle = encodeURIComponent($("#productTitle").text());
-   var OoAAuthor = encodeURIComponent($(".author > span > a").text());
+   var OoATitle = escape($("#productTitle").text());
+   var OoAAuthor = "";
+   $(".author > span > a").each(function() {OoAAuthor+=$(this).text() + "+"});
+   OoAAuthor = escape(OoAAuthor);
    console.log(OoAAuthor + " - " + OoATitle);
    // prépare le lien vers la boutique locale
+   
    for (var s in OoAStores) {
-      var itemSendTo = '<li data-width="192" class="swatchElement selected" style="width:192px"><span id="" class="a-button a-button-selected a-spacing-mini a-button-toggle format" style="box-shadow:3px 3px 6px gray;border-color:' + OoAcolor + '"><span class="a-button-inner" style="background-image:linear-gradient(145deg,#fff,#f8fef2)"><span id="OoA-setButton" class="fa fa-wrench" style="float:right;margin:2px 2px 0 0;padding:2px;box-sizing:border-box;border-radius:50%;color:white;background-color:' + OoAcolor + ';"></span><span class="a-list-item"><a id="" href="' + OoAStores[s].url + '' + OoATitle + ',' + OoAAuthor + '&amp;from=OoAsycom" class="a-button-text" role="button"><span>près de chez vous</span><span class="a-color-base"><span class="a-color-price"><a href="' + OoAStores[s].url + '' + OoATitle + ',' + OoAAuthor + '&amp;from=OoAsycom">' + OoAStores[s].name + '</a></span></span></a></span></span><span class="tmm-olp-links"></span><span class="tmm-olp-links"><span class="olp-used olp-link"><a class="a-size-mini a-link-normal" href="http://sycom.github.io/outOfAm-z-n/"><span class="olp-from">Le lien ci-dessus est produit par</span></a></span><span class="olp-new olp-link" style="text-align:center"><a class="a-size-mini a-link-normal" href="http://sycom.github.io/outOfAm-z-n/">outOfAm*z*n <span class="olp-from"></span></a></span></span></span></li>';
+      var itemSendTo = '<li data-width="192" class="swatchElement selected" style="width:192px"><span id="" class="a-button a-button-selected a-spacing-mini a-button-toggle format" style="box-shadow:3px 3px 6px gray;border-color:' + OoAcolor + '"><span class="a-button-inner" style="background-image:linear-gradient(145deg,#fff,#f8fef2)"><span id="OoA-setButton" class="fa fa-wrench" style="float:right;margin:2px 2px 0 0;padding:2px;box-sizing:border-box;border-radius:50%;color:white;background-color:' + OoAcolor + ';"></span><span class="a-list-item"><a id="" href="' + OoAStores[s].url + '' + OoATitle + ',' + OoAAuthor  + '&amp;from=OoAsycom" class="a-button-text" role="button"><span>près de chez vous</span><span class="a-color-base"><span class="a-color-price"><a href="' + OoAStores[s].url + '' + OoATitle + ',' + OoAAuthor  + '&amp;from=OoAsycom">' + OoAStores[s].name + '</a></span></span></a></span></span><span class="tmm-olp-links"></span><span class="tmm-olp-links"><span class="olp-used olp-link"><a class="a-size-mini a-link-normal" href="http://sycom.github.io/outOfAm-z-n/"><span class="olp-from">Le lien ci-dessus est produit par</span></a></span><span class="olp-new olp-link" style="text-align:center"><a class="a-size-mini a-link-normal" href="http://sycom.github.io/outOfAm-z-n/">outOfAm*z*n <span class="olp-from"></span></a></span></span></span></li>';
       // ajoute le lien à la liste des boutons amazon
       $("#tmmSwatches ul").append(itemSendTo);
    }
