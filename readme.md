@@ -2,8 +2,8 @@
 ## A userscripts collection
 You must have [greasemonkey addon](https://addons.mozilla.org/en/firefox/addon/greasemonkey/) installed in your Firefox browser in order to make those scripts work ([Tampermonkey in Chrome](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo) may work also)...
 
-### [Search Engine Jumper](https://git.framasoft.org/sycom/userScripts/raw/master/SearchEngineJumper.user.js) (v0.1 - first launch) - [SEJ branch](https://git.framasoft.org/sycom/userScripts/tree/SEJ)
-Did you know Google is not the only search engine around there? With Search Engine Jumper, when you perform a search on the internet, you will be provided a lot of links to search same terms on other search engines. Currently works (more or less) on Searx (some instances), Google, Yahoo and Bing. No data collected or anything, of course. Stay tuned...
+### [Search Engine Jumper](https://git.framasoft.org/sycom/userScripts/raw/master/SearchEngineJumper.user.js) (v0.1.2) - [SEJ branch](https://git.framasoft.org/sycom/userScripts/tree/SEJ)
+Did you know Google is not the only search engine around there? With Search Engine Jumper, when you perform a search on the internet, you will be provided a lot of links to search same terms on other search engines. Currently works (more or less) on Searx (some instances), Google, Yahoo, Bing and DuckDuckGo. No data collected or anything, of course. Stay tuned...
 
 ### [Out of Amazon](https://git.framasoft.org/sycom/userScripts/raw/master/OutOfAmazon.user.js) (v0.2.2) - [OoA branch](https://git.framasoft.org/sycom/userScripts/tree/OoA)
 The idea came when speaking about amazon with a friend who is a bookseller. His clients should be able, when browsing amazon, to go straight to his online store to buy him the same book. So was born the [Out of Am*z*n userscript](http://sycom.github.io/outOfAm-z-n).
