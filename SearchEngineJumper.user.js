@@ -6,7 +6,7 @@
 // @include     https://*
 // @include     http://*
 // @author	    Sylvain Comte
-// @version     0.1.1
+// @version     0.1.2
 // @require     https://cdn.jsdelivr.net/jquery/2.1.4/jquery.min.js
 // @grant       none
 // @noframes
@@ -14,7 +14,8 @@
 
 this.$ = this.jQuery = jQuery.noConflict(true); // avoid conflict on pages already running jQuery
 
-var SEJ_q; 										// search query
+var SEJ_q, // search query
+    SEJ_homepage_text="powered by <a href='#' target='_blank'>Search Engine Jumper userscript</a>"; // this will be the script homepage										
 
 /* alternative search engine list - see ./SearchEngineJumper/engineList.json */
 var SEJ_SeList = [
@@ -171,52 +172,70 @@ var SEJ_destList = [
     'url': '//framabee.org,//searx.me,www.privatesearch.io,searx.laquadrature.net,//trouvons.org,//tontonroger.org',
     'searchField': 'q',
     'includeId': 'sidebar_results',
+    'includeClass': '',
     'containerClass': 'panel panel-default',
     'containerStyle':'',
     'htmlBefore': '<div class=\'panel-heading\'><h4 class=\'panel-title\'>Chercher ailleurs</h4></div><div class=\'panel-body\'>',
     'linkClass': 'btn btn-default btn-xs',
     'linkStyle': 'margin:0px 5px 3px 0',
     'linkSepar':'',
-    'htmlAfter': '<div style=\'width:100%;text-align:right;font-size:.85rem;font-style:italic\'>powered by Search Engine Jumper userscript</div></div></div>'
+    'htmlAfter': '<div style=\'width:100%;text-align:right;font-size:.85rem;font-style:italic\'>'+SEJ_homepage_text+'</div></div></div>'
   },
   {
     'name': 'Google',
     'url': 'www.google.com,www.google.fr',
     'searchField': 'lst-ib',
     'includeId': 'rhs_block',
+    'includeClass': '',
     'containerClass': 'rhstc5 xpdopen',
     'containerStyle':'margin:5px;padding:5px;border-color:gray;border:solid .5px #ddd;border-radius:3px;box-shadow: 0px .75px 1px lightgray;',
     'htmlBefore': '<div class=\'panel-heading\'><h4 class=\'panel-title\'>Chercher ailleurs</h4></div><div class=\'panel-body\'>',
     'linkClass': 'btn btn-default btn-xs',
     'linkStyle': 'margin:0px 5px 3px 0',
     'linkSepar':' | ',
-    'htmlAfter': '<div style=\'width:100%;text-align:right;font-size:.85rem;font-style:italic\'>powered by Search Engine Jumper userscript</div></div></div>'
+    'htmlAfter': '<div style=\'width:100%;text-align:right;font-size:.85rem;font-style:italic\'>'+SEJ_homepage_text+'</div></div></div>'
   },
   {
     'name': 'Yahoo',
     'url': 'search.yahoo.com,search.yahoo.fr',
     'searchField': 'yschsp',
     'includeId': 'right div',
+    'includeClass': '',
     'containerClass': '',
     'containerStyle':'margin:5px;padding:5px;border-color:gray;border:solid .5px #ddd;border-radius:3px;box-shadow: 0px .75px 1px lightgray;',
     'htmlBefore': '<div class=\'\'><h4 class=\'\'>Chercher ailleurs</h4></div><div class=\'\'>',
     'linkClass': 'btn btn-default btn-xs',
     'linkStyle': 'margin:0px 5px 3px 0',
     'linkSepar':' | ',
-    'htmlAfter': '<div style=\'width:100%;text-align:right;font-size:.85rem;font-style:italic\'>powered by Search Engine Jumper userscript</div></div></div>'
+    'htmlAfter': '<div style=\'width:100%;text-align:right;font-size:.85rem;font-style:italic\'>'+SEJ_homepage_text+'</div></div></div>'
   },
   {
     'name': 'Bing',
     'url': 'www.bing.com,www.bing.fr',
     'searchField': 'sb_form_q',
     'includeId': 'b_context',
+    'includeClass': '',
     'containerClass': '',
     'containerStyle':'',
     'htmlBefore': '<div class=\'\'><h2 class=\'\'>Chercher ailleurs</h4></div><div class=\'\'>',
     'linkClass': '',
     'linkStyle': 'margin:0px 5px 3px 0',
     'linkSepar':' | ',
-    'htmlAfter': '<div style=\'width:100%;text-align:right;font-size:.7rem;font-style:italic\'>powered by Search Engine Jumper userscript</div></div></div>'
+    'htmlAfter': '<div style=\'width:100%;text-align:right;font-size:.7rem;font-style:italic\'>'+SEJ_homepage_text+'</div></div></div>'
+  },
+  {
+    'name': 'DuckDuckgo',
+    'url': 'duckduckgo.com,www.duckduckgo.com',
+    'searchField': 'search_form_input',
+    'includeId': '',
+    'includeClass': 'results--sidebar',
+    'containerClass': 'tile tile__body',
+    'containerStyle':'text-align:left',
+    'htmlBefore': '<div class=\'\'><h2 class=\'\'>Chercher ailleurs</h4></div><div class=\'\'>',
+    'linkClass': '',
+    'linkStyle': 'margin:0px 5px 3px 0',
+    'linkSepar':' | ',
+    'htmlAfter': '<div style=\'width:100%;text-align:right;font-size:.7rem;font-style:italic\'>'+SEJ_homepage_text+'</div></div></div>'
   }
 ];
 /* getting current search engine */
@@ -230,22 +249,41 @@ for (var m in SEJ_destList) {
 function SEJ_suggest(s) {
   console.log("SEJ > moteur : "+SEJ_destList[s].name);
 	if(document.getElementById("#"+SEJ_destList[s].searchField)!==undefined) {
-		SEJ_q = $("#"+SEJ_destList[s].searchField).attr("value");
-		$("#"+SEJ_destList[s].includeId).ready(function() {
-      		var SEJ_Se_div = $("#"+SEJ_destList[s].includeId);
-			var html= '<div class=\''+SEJ_destList[s].containerClass+'\' style=\''+SEJ_destList[s].containerStyle+'\'>';
-			html += SEJ_destList[s].htmlBefore;
-			for (var m in SEJ_SeList) {
-				html += '<h5>' + SEJ_SeList[m].type + '</h5>';
-				var SEJmot = SEJ_SeList[m].liste;
-				for (var i in SEJmot) {
-					if(i>0) html+=SEJ_destList[s].linkSepar;
-					html += '<a href=\'' + SEJmot[i].url + '' + SEJ_q + '\' class=\'' + SEJ_destList[s].linkClass + '\' style=\'' + SEJ_destList[s].linkStyle + '\'>' + SEJmot[i].name + '</a>';
-					}
-				}
-				html += SEJ_destList[s].htmlAfter;
-				SEJ_Se_div.prepend(html);
-			})
+    SEJ_q = escape($("#"+SEJ_destList[s].searchField).attr("value"));
+    if(SEJ_destList[s].includeId!=='') {
+      $("#"+SEJ_destList[s].includeId).ready(function() {
+            var SEJ_Se_div = $("#"+SEJ_destList[s].includeId);
+        var html= '<div class=\''+SEJ_destList[s].containerClass+'\' style=\''+SEJ_destList[s].containerStyle+'\'>';
+        html += SEJ_destList[s].htmlBefore;
+        for (var m in SEJ_SeList) {
+          html += '<h5>' + SEJ_SeList[m].type + '</h5>';
+          var SEJmot = SEJ_SeList[m].liste;
+          for (var i in SEJmot) {
+            if(i>0) html+=SEJ_destList[s].linkSepar;
+            html += '<a href=\'' + SEJmot[i].url + '' + SEJ_q + '\' class=\'' + SEJ_destList[s].linkClass + '\' style=\'' + SEJ_destList[s].linkStyle + '\'>' + SEJmot[i].name + '</a>';
+            }
+          }
+          html += SEJ_destList[s].htmlAfter;
+          SEJ_Se_div.prepend(html);
+        })
+      }
+   if(SEJ_destList[s].includeClass!=='') {
+      $("."+SEJ_destList[s].includeClass).ready(function() {
+        var SEJ_Se_div = $("."+SEJ_destList[s].includeClass+"");
+        var html= '<div class=\''+SEJ_destList[s].containerClass+'\' style=\''+SEJ_destList[s].containerStyle+'\'>';
+        html += SEJ_destList[s].htmlBefore;
+        for (var m in SEJ_SeList) {
+          html += '<h5>' + SEJ_SeList[m].type + '</h5>';
+          var SEJmot = SEJ_SeList[m].liste;
+          for (var i in SEJmot) {
+            if(i>0) html+=SEJ_destList[s].linkSepar;
+            html += '<a href=\'' + SEJmot[i].url + '' + SEJ_q + '\' class=\'' + SEJ_destList[s].linkClass + '\' style=\'' + SEJ_destList[s].linkStyle + '\'>' + SEJmot[i].name + '</a>';
+            }
+          }
+          html += SEJ_destList[s].htmlAfter;
+          SEJ_Se_div.prepend(html);
+        })
+      }
 		}
 	else console.log("SEJ > impossible de trouver la requête");
 	}
