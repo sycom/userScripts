@@ -8,6 +8,6 @@ So you SHOULD create a secondary account with only GUEST PRIVILEGE and grab corr
 // gitlab repo url
 var gitlab="git.framasoft.org";
 // project id in gitlab
-var project="territoires%2FcartoVilleDurable";
+var project="sycom%2FuserScripts";
 // token !WARNING!
 var token="this_is_your_SECONDARY_gitlab_token_with_ONLY_GUEST_PRIVILEGE";

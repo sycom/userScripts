@@ -1,5 +1,5 @@
-// récupération des informations sur les sources de données	
-var sources='sources : '+data.source+" - "+data.date;
+// récupération des informations sur les sources de données
+var sources='sources : '+data.source+' - '+data.date;
 var context='map';
 
 // ajout des couches de fonds dans la liste des couches disponibles
@@ -56,7 +56,7 @@ function letsStart() {
 	// remplissage de la liste
 	for(i in fonds) {
 		var couche=new L.TileLayer(fonds[i].url, {
-			attribution: sources+fonds[i].attrib,
+			attribution: sources+' | '+fonds[i].attrib,
 			minZoom : fonds[i].zMin,
 			maxZoom : fonds[i].zMax,
 			unloadInvisibleTiles:true
@@ -68,7 +68,20 @@ function letsStart() {
 	if(knwrmdFond==null) knwrmdFond=fonds[0].id;
 	Couches[knwrmdFond].addTo(carte);
 
-// Construction des légendes
+    /* Création de l'icone */
+    var bsIcon = L.icon({
+        iconUrl: './img/bsIcon.png',
+        iconRetinaUrl: './img/bsIcon.png',
+        iconSize: [20, 38],
+        iconAnchor: [15, 38],
+        popupAnchor: [-5, -39],
+        shadowUrl: './img/bs-ombre.png',
+        shadowRetinaUrl: './img/bs-ombre.png',
+        shadowSize: [40, 20],
+        shadowAnchor: [0,20]
+        });
+
+/* Construction des légendes
 	// contenus des légendes - initialisation
 	var HtmlLeg=new Array();
 		HtmlLeg['Labellisation']='<div style="background-color:white;border:1px solid #ddd;opacity:0.8;padding:5px">';
@@ -121,11 +134,11 @@ function letsStart() {
 			});
 		HtmlLeg["Avancement"]+='<img src="./img/'+url+'" style="height:20px"/>&nbsp;'+Avancement[i].string+'<br/>';
 		}
-	HtmlLeg["Avancement"]+='</div>';
+	HtmlLeg["Avancement"]+='</div>';*/
 // Clusterisation des couches
 	// Couche labellisation
-	var ecoQlabel=L.markerClusterGroup({
-		name:"ecoQlabel",
+	var bookStoresL=L.markerClusterGroup({
+		name:"Librairies",
 		maxClusterRadius:69,
 		iconCreateFunction:function (cluster) {
 			var cC=cluster.getChildCount(); //cluster number of entities
@@ -138,8 +151,8 @@ function letsStart() {
 				iconSize: new L.Point(cS,cS)
 				})},
 		});
-	ecoQlabel.name="ecoQlabel";
-	// Couche avancement
+	bookStoresL.name="Librairies";
+	/* Couche avancement
 	var ecoQavancement=L.markerClusterGroup({
 		name:"ecoQavancement",
 		maxClusterRadius:72,
@@ -155,27 +168,27 @@ function letsStart() {
 				})
 			}
 		});
-	ecoQavancement.name="ecoQavancement";
+	ecoQavancement.name="ecoQavancement";*/
 // insertion des points dans les deux couches
-	var dataEQ=data.liste;
-	for(i in dataEQ) {
-		var html='<h6>'+dataEQ[i].commune+' - '+dataEQ[i].projet+'</h6>';
-		html+='<i class="avct '+dataEQ[i].phase+'">'+dataEQ[i].phase+'</i>';
-			var ha=dataEQ[i].surface,
-			logts=dataEQ[i].logts;
+	var dataLib=data.liste;
+	for(i in dataLib) {
+		var html='<h6 id="'+dataLib[i].url+'" class="L'+i+'">'+dataLib[i].name+' - '+dataLib[i].city+'</h6>';
+		/*html+='<i class="bookstore">'+dataLib[i].+'</i>';
+			var ha=dataLib[i].surface,
+			logts=dataLib[i].logts;
 			if(ha==0) {} else {html+='<br/>'+ha+' ha, '}
-			if(logts==0) {} else {html+='<br/>'+logts+' logements,'}
-			var inter=dataEQ[i].Internet,
-				intra=dataEQ[i].Intranet;
-			if(inter==0) {} else {html+='<br/>-&nbsp;<a href="'+inter+'">internet</a>'}
-			if(intra==0) {} else {html+='<span class="intranet"><br/>-&nbsp;<a href="'+intra+'">intranet</a></span>'}
-		var iconeCat,iconeAv;
-		if(PinCat[dataEQ[i].aap]==undefined) {iconeCat=PinCat["la9-autre"]} else {iconeCat=PinCat[dataEQ[i].aap]}
-		if(PinAv[dataEQ[i].phase]==undefined) {iconeAv=PinAv["av0-int"]} else {iconeAv=PinAv[dataEQ[i].phase]}
-		var pointCat = new L.marker([dataEQ[i].lat,dataEQ[i].long],{icon:iconeCat}).bindPopup(html);
-		ecoQlabel.addLayer(pointCat);
-		var pointAv = new L.marker([dataEQ[i].lat,dataEQ[i].long],{icon:iconeAv}).bindPopup(html);
-		ecoQavancement.addLayer(pointAv);
+			if(logts==0) {} else {html+='<br/>'+logts+' logements,'}*/
+			var site=dataLib[i].url,
+				search=dataLib[i].search;
+			if(site==0) {} else {html+='<br/>-&nbsp;<a id="'+i+'-url" href="'+site+'">site internet</a>'}
+			if(search==0) {} else {html+='<span class="hidden"><br/>-&nbsp;<a id="'+i+'-search" href="'+search+'">intranet</a></span>'}
+		/*var iconeCat,iconeAv;
+		if(PinCat[dataLib[i].aap]==undefined) {iconeCat=PinCat["la9-autre"]} else {iconeCat=PinCat[dataLib[i].aap]}
+		if(PinAv[dataLib[i].phase]==undefined) {iconeAv=PinAv["av0-int"]} else {iconeAv=PinAv[dataLib[i].phase]}*/
+		var pointLib = new L.marker([dataLib[i].lat,dataLib[i].long],{icon: bsIcon}).bindPopup(html);
+		bookStoresL.addLayer(pointLib);
+		// var pointAv = new L.marker([dataLib[i].lat,dataLib[i].long],{icon:iconeAv}).bindPopup(html);
+		// ecoQavancement.addLayer(pointAv);
 		}
 
 // création de la légende
@@ -190,8 +203,8 @@ function letsStart() {
 
 // controle des couches
 	var couchesControl = {
-		"Labellisation": ecoQlabel,
-		"Avancement": ecoQavancement
+		"Labellisation": bookStoresL,
+	//	"Avancement": ecoQavancement
 		};
 // interactions couches / légendes
 var WMultip=new Array;
@@ -199,75 +212,6 @@ var WMultip=new Array;
 	WMultip["Avancement"]=6;
 var coucheActive="vide";
 
-/*carte.on("overlayremove", function(layer) {
-	if(whileAdding==0) {
-		document.getElementById('legende').innerHTML = '';
-		coucheActive="vide";
-		}
-	});*/
-
-/* ajouts de fonctions, uniquement sur le réseau local. */
-if(document.location.href.match(/file:\/\/\//g)) {
-	// récupération des coordonnées d'un point
-	var popup = L.popup();
-	var listCoord = "";
-	function onMapClick(e) {
-		var coo=e.latlng;
-		var cooTxt=coo.toString().split("(")[1].split(")")[0];
-		if(listCoord=="") {listCoord="Derniers points cliqués :<br/>";}
-		listCoord+=cooTxt+";";
-		document.getElementById("listCoord").innerHTML=listCoord;
-		popup
-			.setLatLng(coo)
-			.setContent("point : "+cooTxt)
-			.openOn(carte);
-		}
-	carte.on('click', onMapClick);
-	carte.on('dblclick', function() {listCoord = ""});
-	// couche IGN WMS sur i²
-		var RgeIgn = L.tileLayer.wms("http://georef.application.i2/cartes/mapserv?", {
-			layers: 'fonds_nb',
-			format: 'image/png',
-			transparent: true,
-			attribution: "&copy; IGN 2014"
-			});
-		Couches["RgeIgn"]=RgeIgn;
-		tiles["IGN (réseau i²)"]=RgeIgn;
-	// possibilité de choisir sa couche de fond
-	//installation du contrôle
-	var selecteur1=L.control.layers(tiles);
-		selecteur1.addTo(carte);
-	var selecteur2=L.control.layers(couchesControl);
-		selecteur2.addTo(carte);
-	//affichage de l'aide
-	document.getElementById("aide").setAttribute("style","display:block");
-	}
-// si sur internet affichage uniquement du choix entre les couches écoquartiers
-else {
-	var selecteur=L.control.layers(couchesControl);
-	selecteur.addTo(carte);
-	}
-
-	function affLegende(nom) {
-		document.getElementById('legende').innerHTML=HtmlLeg[nom];
-		}
-
-	// ajout d'une couche
-	var Overlays=new Array();
-		Overlays["Labellisation"]=0;
-		Overlays["Avancement"]=0;
-
-	carte.on("baselayerchange", function(layer) {
-		// nettoyage des couches affichées
-		for(var i in couchesControl) {
-			if(i!=layer.name && carte.hasLayer(couchesControl[i])) {
-				carte.removeLayer(couchesControl[i]);
-				//justRemoved=i;
-				}
-			}
-		coucheActive=layer.name;
-		affLegende(layer.name);
-		});
 	// fonctions de bascule entre les couches
-	carte.addLayer(ecoQlabel);
+	carte.addLayer(bookStoresL);
 	};
