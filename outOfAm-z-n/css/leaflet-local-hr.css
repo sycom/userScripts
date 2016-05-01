@@ -8,13 +8,16 @@ L A Y O U T
    T Y P O
 ************/
 /* elements */
-.leaflet-popup-content h6 {font-size:.7rem;margin:0 0 .2rem 0}
+.leaflet-popup-content-wrapper {opacity:.85;padding:1px 1.5em}
+.leaflet-popup-content {font-size:1rem;padding:0 .5em 1em .85em;margin:0}
+.leaflet-popup-content h6 {font-size:.85rem;color:#FA943F;margin:.75em 0}
 
 /************
  C O L O R S
 ************/
 /* image location tweak : don't forget to fix image location in leaflet.css */
-
+svg path {stroke:#FA943F;fill:#FA943F;stroke-width:2px}
+.leaflet-popup-content h6 {color:#FA943F}
 
 /************
  R E S P O N S I V E

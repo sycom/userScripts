@@ -28,7 +28,7 @@ function letsStart() {
 	/* affichage de la carte uniquement avec l'ajout de ?carteSeule */
 	if(document.location.href.match(/\?carteSeule/g)) {
 		context='full';
-		$('#header,#footer,h2').css('display','none');
+		$('#title').css('display','none');
 		$('#main, #page').css('width','100%');
 		$('#page').css('max-width','none');
 		$('#main, #page').css('margin','0');
@@ -51,7 +51,7 @@ function letsStart() {
 		.css('height',rH);
 	// mise à une échelle permettant de voir la Haute-Normandie en entier
 	if(knwrmdZoom==null) knwrmdZoom=Math.sqrt(rW)/3.75;
-	carte=L.map('map').setView([knwrmdLat,knwrmdLong],Math.round(knwrmdZoom));
+	carte=L.map('map');//.setView([knwrmdLat,knwrmdLong],Math.round(knwrmdZoom));
 	// ajout des couches de fonds dans la liste des couches disponibles
 	// remplissage de la liste
 	for(i in fonds) {
@@ -136,7 +136,7 @@ function letsStart() {
 		}
 	HtmlLeg["Avancement"]+='</div>';*/
 // Clusterisation des couches
-	// Couche labellisation
+	// Couche Librairies
 	var bookStoresL=L.markerClusterGroup({
 		name:"Librairies",
 		maxClusterRadius:69,
@@ -169,19 +169,21 @@ function letsStart() {
 			}
 		});
 	ecoQavancement.name="ecoQavancement";*/
-// insertion des points dans les deux couches
+// insertion des points dans la couche
 	var dataLib=data.liste;
 	for(i in dataLib) {
-		var html='<h6 id="'+dataLib[i].url+'" class="L'+i+'">'+dataLib[i].name+' - '+dataLib[i].city+'</h6>';
+		var html='<h6 id="'+dataLib[i].url+'" class="L'+i+'">'+dataLib[i].name+' - '+dataLib[i].city+'<span class="hidden">'+dataLib[i].country+'</span></h6>';
 		/*html+='<i class="bookstore">'+dataLib[i].+'</i>';
 			var ha=dataLib[i].surface,
 			logts=dataLib[i].logts;
 			if(ha==0) {} else {html+='<br/>'+ha+' ha, '}
 			if(logts==0) {} else {html+='<br/>'+logts+' logements,'}*/
 			var site=dataLib[i].url,
-				search=dataLib[i].search;
-			if(site==0) {} else {html+='<br/>-&nbsp;<a id="'+i+'-url" href="'+site+'">site internet</a>'}
-			if(search==0) {} else {html+='<span class="hidden"><br/>-&nbsp;<a id="'+i+'-search" href="'+search+'">intranet</a></span>'}
+				search=dataLib[i].search,
+    			phone=dataLib[i].phone;
+			if(site==0) {} else {html+='<span class="fa fa-globe"></span>&nbsp;<a id="'+i+'-url" href="'+site+'">site internet</a>'}
+			if(search==0) {} else {html+='<span class="hidden fa fa-question">&nbsp;<a id="'+i+'-search" href="'+search+'">adresse de recherche</a></span>'}
+            if(phone==0) {} else {html+='<br/><span class="fa fa-phone"></span>&nbsp;<a id="'+i+'-phone" href="tel:'+phone+'">'+phone+'</a></span>'}
 		/*var iconeCat,iconeAv;
 		if(PinCat[dataLib[i].aap]==undefined) {iconeCat=PinCat["la9-autre"]} else {iconeCat=PinCat[dataLib[i].aap]}
 		if(PinAv[dataLib[i].phase]==undefined) {iconeAv=PinAv["av0-int"]} else {iconeAv=PinAv[dataLib[i].phase]}*/
@@ -191,7 +193,7 @@ function letsStart() {
 		// ecoQavancement.addLayer(pointAv);
 		}
 
-// création de la légende
+/* création de la légende
 	var legende  = L.control({position: 'bottomleft'});
 	legende.onAdd = function (map) {
 		var div = L.DomUtil.create('div','info legend');
@@ -199,19 +201,9 @@ function letsStart() {
 		div.innerHTML = '';
 		return div;
 		};
-	legende.addTo(carte);
+	legende.addTo(carte);*/
 
-// controle des couches
-	var couchesControl = {
-		"Labellisation": bookStoresL,
-	//	"Avancement": ecoQavancement
-		};
-// interactions couches / légendes
-var WMultip=new Array;
-	WMultip["Labellisation"]=4;
-	WMultip["Avancement"]=6;
-var coucheActive="vide";
-
-	// fonctions de bascule entre les couches
 	carte.addLayer(bookStoresL);
+    carte.fitBounds(bookStoresL.getBounds());
+    carte.setZoom(carte.getZoom()-2);
 	};

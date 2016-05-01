@@ -22,8 +22,9 @@ var rW=10,rH=5,rW0,rWg,rWi; // largeur et hauteur de la zone de tracé + variabl
 	getWidth=function(usage) {
 		switch(usage) {
 			case 'map' :
-				rW=$('#main').width()-10;
-				rH=$(window).height()-120;
+				rW=$('#main').width();
+                console.log('title height : '+$('#title').height());
+				rH=$(window).height()-$('#title').height();
 				break;
 			case 'graph' :
 				rW=$('#main').width();
@@ -39,6 +40,11 @@ var rW=10,rH=5,rW0,rWg,rWi; // largeur et hauteur de la zone de tracé + variabl
 				if(rW0==null) rW0=rW;
 			}
 	}
+
+    // detect new suggested bookstore in url (from bookstore website)
+    if(document.location.href.match(/\?bookstore=/g)) {
+
+    }
 
 /* Comments and bug report */
 	// require data in ../user/token.js
@@ -59,43 +65,38 @@ var rW=10,rH=5,rW0,rWg,rWi; // largeur et hauteur de la zone de tracé + variabl
 	   }
 
 	// add functions to links and buttons
-	$('#letsComment').click(letsSendComment);
+	$('.letsComment').click(letsSendComment);
 	$('#comment-close').click(letsCloseComment);
-	// add function to submit button
-	$('#submit').click(FormSubmit);
 
-	// submission function
-	function FormSubmit() {
-		// define target url
-		var formUrl= 'https://'+gitlab+'/api/v3/projects/'+project+'/issues?private_token='+token;
-		// set some attributes to form
-		var $form=$('#form');
+    // form submission
+    var $form=$('#form');
+	// post data
+	$form.submit(function(evt) {
+        // define target url
+    	var formUrl= 'https://'+gitlab+'/api/v3/projects/'+project+'/issues?private_token='+token;
+    	// set some attributes to form
+        var formData = $form.serialize();
+    	var subBookTitle='[OoA] bookstore :'+$('#name').val()+', ' +$('#city').val();
+        var subBookDesc='{name:'+$('#name').val()+',url:'+$('#url').val()+',search:'+$('#search').val()+',city:'+$('#city').val()+',country:'+$('#country').val()+',latlong'+$('#latlong').val()+'} - '+$('#rem').val();
 		$form.attr('target','sender');
-		$form.attr('action',formUrl);
-		$form.attr('method','POST');
-		// get form data before posting
-		var formData = $form.serialize();
-		console.log('FORM DATA:\n' + formData);
-		// post data
-		$form.submit(function(evt) {
-			var titCom=$('#commentaires input[type=text]');
-			var comCom=$('#commentaires textarea');
-			console.log(titCom.val()+" - "+comCom.text());
-			console.log(titCom.attr('default')+" - "+comCom.attr('default'));
-			if(titCom.val()===titCom.attr('default')) {titCom.val('');evt.preventDefault();}
-			else {
-				if(comCom.text()===comCom.attr('default')) {
-					comCom.text('');evt.preventDefault();}
-				else {
-					// hide form, display thanks
-					$('#form').fadeOut();
-					$('#thanks').fadeIn('slow');
-					// close comments
-					window.setTimeout(letsCloseComment,3000);
-					// clean form : reset to default value
-					}
-				}
-			});
-		}
+		//$form.attr('action',formUrl);
+		//$form.attr('method','POST');
+        // get form data before posting
+		//var titCom=$('#commentaires input[type=text]');
+		//var comCom=$('#commentaires textarea');
+        //$('#title').text(subBookTitle);
+        //$('#description').attr('value',subBookDesc);
+        $.post(formUrl,
+            {title:subBookTitle,description:subBookDesc,labels:"OoA,bookstore"},
+            function(data) {
+                console.log("Response: " + data);
+                });
+        // display thanks
+		$('#form').fadeOut();
+		$('#thanks').fadeIn('slow');
+		// close comments
+		window.setTimeout(letsCloseComment,10000);
+		// clean form : reset to default value
+		});
 	})
 })(jQuery);

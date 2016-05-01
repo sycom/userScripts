@@ -1,5 +1,5 @@
 # Sycom/userScripts
-this [page](http://sycom.github.io/userScripts/outOfAm-z-n/) is the github.io home for my [userscripts collection](https://git.framasoft.org/sycom/userScripts) which is hosted by [Framasoft Gitlab instance](https://git.framasoft.org).
+this [page](http://sycom.github.io/userScripts/outOfAm-z-n/) is the github.io home for my [userscripts collection](https://framagit.org/sycom/userScripts) which is hosted by [Framagit](https://framagit.org) (framasoft Gitlab instance).
 
 ## credits
 Hand coded with some libraries support :
