@@ -2,12 +2,19 @@
 /*  L A Y O U T   */
 /******************/
 * {box-sizing:border-box}
+
+#title {height:120px !important}
+#title .row {height:40px}
+#title .high {height:80px}
+
 .high h1 {float:left;padding:2em 1em}
 .high h1, .high nav, .header {padding:.25em .5em}
 .high nav {text-align:right}
 .high nav .buttons li {display: inline-block;margin:0 .25em;padding:.5em;border-radius:3px}
 
 .header, .footer {padding:.7em}
+
+.row {padding:0 16px}
 .contact {padding:1.5em 0 2em 0}
 
 .c3 {margin:1.5em .25em;padding:1em;vertical-align:top;border-radius:2px}
@@ -25,104 +32,6 @@
 
 #addButton {position:absolute;bottom:1em;left:1em;z-index:42}
 .hidden {display:none}
-
-/* Form */
-#comment-fond {
-   display:none;
-   position:absolute;top:0;left:0;z-index:1024;
-   width:100%;height:100%;
-   }
-
-#commentaires {
-   width:100%;max-width:450px;
-   margin:30px auto;
-   padding:2rem;
-   border-radius:4px;
-  box-shadow:15px 15px 10px rgba(200,200,200,.9)
-   }
-
-#comment-close {float: right;
-	border-radius:50%;
-	width:2em;height:2em;
-	margin:-15px;
-	padding:.45em 0 0 .55em;
-	box-sizing: border-box;
-cursor: pointer; cursor: hand;}
-
-input[type="button"],
-	input[type="submit"],
-	input[type="reset"],
-input[type="url"],
-	.button {
-  position: relative;
-  display: inline-block;
-  border-radius: 0.25em;
-  text-decoration: none;
-	margin:.5em 0 0 0;
-  padding: 0.75em 2.5em 0.75em 2.5em;
-  border: 0;
-  cursor: pointer;
-  -moz-transition: all 0.35s ease-in-out;
-  -webkit-transition: all 0.35s ease-in-out;
-  -o-transition: all 0.35s ease-in-out;
-  -ms-transition: all 0.35s ease-in-out;
-  transition: all 0.35s ease-in-out;
-	}
-
-input  textarea {width:100%;border-radius:5px;border:0;padding:.5em 1em;box-sizing:border-box}
-
-#thanks,#send {display:none}
-
-form label {
-  display: block;
-  margin-bottom: 0.5em;
-}
-
-form input[type="text"],
-		form input[type="email"],
-		form input[type="password"],
-form input[type="url"],
-		form select,
-		form textarea {
-  box-sizing: border-box;
-  position: relative;
-  -moz-appearance: none;
-  -webkit-appearance: none;
-  appearance: none;
-  display: block;
-  border: 0;
-  outline: 0;
-  width: 100%;
-  border-radius: 0.35em;
-  padding: 0.5em .5em 0.5em .75em;
-  -moz-transition: all 0.35s ease-in-out;
-  -webkit-transition: all 0.35s ease-in-out;
-  -o-transition: all 0.35s ease-in-out;
-  -ms-transition: all 0.35s ease-in-out;
-  transition: all 0.35s ease-in-out;
-}
-
-form input[type="text"],
-			form input[type="email"],
-			form input[type="password"],
-			form input[type="radio"],
-			form select,
-			form textarea {
-	margin:.33em 0;
-  line-height: 1.25em;
-}
-
-form input[type="radio"] {
-	margin-right:5px;
-}
-
-form label span:before {
-	margin-right:5px;
-}
-
-form textarea {
-  min-height: 8em;
-}
 
 /*****************/
 /*    T Y P O     */
@@ -211,12 +120,14 @@ a {color:#A3AC01}
   .header p, .footer p {max-width:800px;margin:1em auto;}
 
   .right {text-align:right;padding}
+  
+  .c3 {width:49%;display: inline-block;margin:1em .5%}
+  .c3:nth-child(3) {margin-left:25%}
   }
 
 /* Smoothing intervalue */
 @media (min-width: 900px) {
-   .c3 {width:49%;display: inline-block;margin:1em .5%}
-   .c3:nth-child(3) {margin-left:25%}
+   
 
   }
 

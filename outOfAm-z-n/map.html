@@ -24,6 +24,8 @@
 	<script src="./lib/jquery.js"></script>
 		<script src="./lib/leaflet.js"></script>
 		<script src="./lib/leaflet-markercluster.js"></script>
+        <script src="./user/pgi_config.js"></script>
+        <script src="./lib/pgi.js"></script>
 		<script src="./js/init-hr.js"></script>
 		<script src="./js/init-map.js"></script>
 
@@ -31,22 +33,23 @@
 
 <body>
 	<div id="title">
-    <div class="row high">
-		<h1>Out of am*z*n stores map</h1>
-        <nav id="navigation" role="navigation" class="nav">
-			<ul class="buttons">
-                <li><a class="fa fa-2x fa-home" href="./"></a></li>
-		    </ul>
-		</nav>
-    </div>
-    <div class="row">
-        <div class="header center">Votre librairie préférée ne figure pas sur la carte? <a id="letsComment" class="letsComment" href="#">proposez la</a>!</div>
+        <div class="row high">
+    		<h1>Out of am*z*n stores map</h1>
+            <nav id="navigation" role="navigation" class="nav">
+    			<ul class="buttons">
+                    <li><a class="fa fa-2x fa-home" href="./"></a></li>
+    		    </ul>
+    		</nav>
+        </div>
+        <div class="row">
+            <div class="header center">Votre librairie préférée ne figure pas sur la carte? <a id="letsComment" class="pgiButton" href="#">proposez la</a>!</div>
 
-	</div></div>
+    	</div>
+    </div>
 	<div id="main" role="main">
         <div id="map">
         </div>
-        <div id="addButton" class="letsComment">
+        <div id="addButton" class="pgiButton">
             <span class="fa-stack fa-lg">
                 <i class="fa fa-circle fa-stack-2x"></i>
                 <span class="fa fa-plus fa-stack-1x fa-inverse" href="#" title="ajouter une librairie"><span class=
@@ -54,33 +57,6 @@
             </span>
         </div>
     </div>
-    <div id="comment-fond" class="hidden">
-		<div id="commentaires">
-			<span id="comment-close" class="fa icon fa-close"></span>
-			<p>Vous pouvez demander l'ajout de votre libraire préféré sur la carte (ou proposer une correction)</p>
-			<form id="form" class="bookStoreForm">
-			    <input name="name" id="name" required="" default="Nom de la boutique" type="text"></input>
-                <input name="url" id="url" required="" default="http://site.internet.de.la.boutique" type="url"></input>
-                <input name="search" id="search" required="" default="http://site.internet.de.la.boutique/recherche?q=" type="url"></input>
-                <input name="city" id="city" required="" default="ville" type="text"></input>
-                <input name="country" id="country" required="" default="pays" type="text"></input>
-                <input name="latlong" id="latlong" value="coordonnées" default="lattitude,longitude" type="text"></input>
-			   <textarea name="rem" id="rem" default="Remarques complémentaires... attention, elles seront publiques" type="textarea" form="form">Remarques complémentaires...
-			   </textarea>
-               <input style="display:none" name="labels" id="labelsBook" value="OoA,bookstore" type="text" default="OoA,bookstore"></input>
-               <input style="display:none" name="title" id="title" type="text"></input>
-               <input style="display:none" name="description" id="description" type="text"></input>
-			   <div class="center"><button class="button" name="submit" id="submit" type="submit">Envoyer</button></div>
-			</form>
-			<div id="thanks">
-			   <p>Vos propositions ont (normalement) été envoyées.<br/>Merci encore pour votre aide.</p>
-			</div>
-			<div style="visibility:hidden !important">
-			   <iframe id="sender" name="sender" width="0" height="0">
-			   </iframe>
-			</div>
-		</div>
-	</div>
 
 <script>
 	(function(i, s, o, g, r, a, m) {
