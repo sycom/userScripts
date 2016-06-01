@@ -1,6 +1,8 @@
-*[Main repository](https://git.framasoft.org/sycom/userScripts) is hosted by [Framasoft Gitlab instance](https://git.framasoft.org). You may find replicant, as on github, but they're mirrored... Please, [report bug and comment on framagit](https://git.framasoft.org/sycom/userScripts/issues)*
+*[Main repository](https://git.framasoft.org/sycom/userScripts) is hosted by [Framasoft Gitlab instance](https://git.framasoft.org). You may find replicant, as on github or gitlab, but they're mirrored... Please, [report bug and comment on framagit](https://git.framasoft.org/sycom/userScripts/issues). Feel free to visit the [homepage] for more friendly explanations.*
 ## A userscripts collection
 You must have [greasemonkey addon](https://addons.mozilla.org/en/firefox/addon/greasemonkey/) installed in your Firefox browser in order to make those scripts work ([Tampermonkey in Chrome](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo) may work also)...
+
+
 
 ### [Search Engine Jumper](https://git.framasoft.org/sycom/userScripts/raw/master/SearchEngineJumper.user.js) (v0.1.3) - [SEJ branch](https://git.framasoft.org/sycom/userScripts/tree/SEJ)
 Did you know Google is not the only search engine around there? With Search Engine Jumper, when you perform a search on the internet, you will be provided a lot of links to search same terms on other search engines. Currently works (more or less) on Searx (some instances), Google, Yahoo, Bing and DuckDuckGo. No data collected or anything, of course. Stay tuned...
@@ -30,3 +32,5 @@ Find more detailed informations on it's *[home page](bit.ly/scolProdTFH)*
 * who does the tweepl like? (via autoFF)
 
 It does also exist in Chrome extension flavour
+
+[homepage]: https://sycom.gitlab.io/userScripts
