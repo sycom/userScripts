@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html class="no-js" lang="fr">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Bienvenue dans ma librairie</title>
+	<meta name="HandheldFriendly" content="True">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="../css/normalize-min.css" media="all" type="text/css">
+	<link rel="stylesheet" href="../css/font-awesome-min.css" media="all" type="text/css">
+	<link rel="stylesheet" href="./css/styles.css" media="all" type="text/css">
+</head>
+
+<body>
+	<div id="title" class="row high">
+		<h1>Une bien belle librairie</h1>
+		<nav id="navigation" role="navigation" class="nav">
+			<ul class="buttons">
+                <li><a class="fa fa-2x fa-home" href="../"></a></li>
+				<li class=""><a href="#BD">BD</a></li>
+				<li class=""><a href="#Romans">Romans</a></li>
+			</ul>
+		</nav>
+	</div>
+	<header id="header" role="banner" class="header">
+		<p>Cette page est une page de démonstration du "<a href="#boutonLib">bouton libraire</a>".<br/>
+        Ce bouton peut être ajouté par tout libraire qui veut proposer l'utilisation du script Out Of Am*z*n à ses visiteurs.</p>
+	</header>
+	<div id="main" role="main">
+        <div class="row">
+            <div class="c3"><h2 id="boutonLib">Le bouton</h2>
+                <ul><li>Pour ceux qui n'ont pas le script installé, le bouton renvoie vers la page du script.
+                </li>
+                <li>Pour ceux qui ont le script installé, le bouton propose l'ajout de la boutique dans la liste des librairies préférées de l'utilisateur.</li></ul>
+            </div>
+            <div class="c3">
+                <div class="OoAButton">
+                    <a href="http://sycom.github.io/userScripts/outOfAm-z-n/">
+                        Aimez votre libraire, préférez le au monstre
+                    </a>
+                    <a style="display:none" href="#">
+                        Ajoutez moi à Out Of Am*z*n
+                        <span style="display:none" id="OoA-data">
+                            <name>Quai des mômes</name>
+                            <url>http://www.librairie-quaidesmomes.com</url>
+                            <search>http://www.librairie-quaidesmomes.com/vel/recherche/resultats-recherche-rapide.html?search_keys=</search>
+                            <lat>49.2132699</lat>
+                            <long>1.1703296</long>
+                            <city>Louviers</city>
+                            <country>France</country>
+                            <phone>+33 2 32 50 25 25</phone>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+		<div class="row">
+			<div class="c3" id="BD">
+				<h3>La rubrique BD</h3>
+			</div>
+			<div class="c3" id="Romans">
+				<h3>La rubrique Romans</h3>
+			</div>
+        </div>
+        <div class="row">
+            <div><h2 id="Libraire">Libraire</h2>
+                <p>Ami libraire, tu as décidé de faire concurrence à l'ogre. C'est bien. Nous allons essayer de te faciliter la vie. Tu pourras dans quelques temps accéder à une page qui te permettra de configurer un bout de code à mettre sur ta boutique en ligne. Tu pourras aussi aller proposer l'ajout de ta librairie sur <a href="./map.html">la carte des boutiques</a>.
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div>
+                <h2 id="contribuer">Contribuer</h2>
+                <p>Vous pouvez tester le script. Un système simple permettra prochainement de dire ce que vous en pensez et de signaler des problèmes éventuels. D'ici là, le <a href="#contact">contact</a> humain fonctionne.</p>
+                <p>Si vous aimez mettre les mains dans le camboui, ne vous gênez pas, le code est libre et disponible. Les forks, rapports de bugs et autres commentaires <a href="https://git.framasoft.org/sycom/userScripts/issues">se font sur l'instance gitlab de framasoft</a>.</p>
+                <h2>Et ensuite? feuille de route</h2>
+                <p>A ce stade, il s'agit plus d'une liste d'idées en vrac que d'une vraie feuille de route.<ul>
+                	<li>permettre à l'utilisateur de changer (assez) facilement la boutique de son choix</li>
+                	<li>permettre à un libraire d'installer sur son site en ligne un bouton qui ajoutera la boutique au script</li>
+                	<li>étendre le concept à d'autres boutiques que les livres</li>
+                	<li>transformer le script en extensions pour les navigateurs</li>
+                	<li>créer une version mobile, des extensions...</li>
+                </ul>
+                Bref, du boulot pour 10 ans ;-)
+                </p>
+            </div>
+        </div>
+
+		<div class="row contact">
+			<div class="right" id="contact">
+				<h3>Contact</h3>
+				<span class="fa-stack fa-lg">
+					<i class="fa fa-circle fa-stack-2x"></i>
+					<a class="fa fa-google-plus fa-stack-1x fa-inverse" href="https://plus.google.com/u/0/+SylvainComte/about" title="Google +"
+target="_blank"><span class="label">Google +</span></a>
+				</span>
+				<span class="fa-stack fa-lg">
+					<i class="fa fa-circle fa-stack-2x"></i>
+					<a class="fa fa-twitter fa-stack-1x fa-inverse" href="http://twitter/sycom" title="Twitter" target="_blank"><span class=
+"label">Twitter</span></a>
+				</span>
+                <span class="fa-stack fa-lg">
+					<i class="fa fa-circle fa-stack-2x"></i>
+					<a class="fa fa-gitlab fa-stack-1x fa-inverse" href="https://git.framasoft.org/u/sycom" title="Github" target="_blank"><span class="label">Gitlab</span></a>
+				</span>
+				<span class="fa-stack fa-lg">
+					<i class="fa fa-circle fa-stack-2x"></i>
+					<a class="fa fa-github fa-stack-1x fa-inverse" href="https://github.com/sycom" title="Github" target="_blank"><span class="label">Github</span></a>
+				</span>
+				<span class="fa-stack fa-lg">
+					<i class="fa fa-circle fa-stack-2x"></i>
+					<a class="fa fa-linkedin fa-stack-1x fa-inverse" href="http://www.linkedin.com/in/sylvaincomte" title="Linked in" target="_blank"><span class="label">Linked in</span></a>
+				</span>
+			</div>
+		</div>
+	</div>
+	<footer id="footer" role="contentinfo" class="footer">
+        <p>Ce projet n'a rien à voir avec les boutiques concernées. Pas celle de l'ogre bien sûr, mais pas non plus <a href="http://www.librairie-quaidesmomes.com/">celle de Stéphane</a>, même si c'est au cours d'une discussion avec lui que l'idée est née...</p>
+		<p>page propulsée à l'aide de <a href="http://necolas.github.io/normalize.css/" target="_blank">normalize</a>, <a href="http://fontawesome.io" target="_blank">font-awesome</a> et un peu d'huile de doigts</p>
+	</footer>
+<script>
+	(function(i, s, o, g, r, a, m) {
+		i['GoogleAnalyticsObject'] = r;
+		i[r] = i[r] || function() {
+			(i[r].q = i[r].q || []).push(arguments)
+		}, i[r].l = 1 * new Date();
+		a = s.createElement(o),
+			m = s.getElementsByTagName(o)[0];
+		a.async = 1;
+		a.src = g;
+		m.parentNode.insertBefore(a, m)
+	})(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+	ga('create', 'UA-109815-12', {
+		'name': 'githubTracking',
+		'cookieDomain': 'github.io'
+	});
+	ga('send', 'pageview');
+</script>
+</body>
+</html>

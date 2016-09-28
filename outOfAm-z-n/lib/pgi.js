@@ -1,4 +1,4 @@
-﻿
+﻿/*! Post Gitlab Issues | 2016 | Sylvain Comte | https://sycom.gitlab.io/post-Gitlab-issues */
 (function($) {
     $(function() {
         /* CREATING STYLES */
