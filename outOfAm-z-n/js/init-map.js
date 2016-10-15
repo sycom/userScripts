@@ -172,7 +172,7 @@ function letsStart() {
 // insertion des points dans la couche
 	var dataLib=data.liste;
 	for(i in dataLib) {
-		var html='<h6 id="'+dataLib[i].url+'" class="L'+i+'">'+dataLib[i].name+' - '+dataLib[i].city+'<span class="hidden">'+dataLib[i].country+'</span></h6>';
+		var html='<div class="OoAdata" id="'+dataLib[i].url+'"><h6><span class="name">'+dataLib[i].name+'<span> - <span class="city">'+dataLib[i].city+'<span><span class="hidden country">'+dataLib[i].country+'</span></h6>';
 		/*html+='<i class="bookstore">'+dataLib[i].+'</i>';
 			var ha=dataLib[i].surface,
 			logts=dataLib[i].logts;
@@ -181,9 +181,10 @@ function letsStart() {
 			var site=dataLib[i].url,
 				search=dataLib[i].search,
     			phone=dataLib[i].phone;
-			if(site==0) {} else {html+='<span class="fa fa-globe"></span>&nbsp;<a id="'+i+'-url" href="'+site+'">site internet</a>'}
-			if(search==0) {} else {html+='<span class="hidden fa fa-question">&nbsp;<a id="'+i+'-search" href="'+search+'">adresse de recherche</a></span>'}
-            if(phone==0) {} else {html+='<br/><span class="fa fa-phone"></span>&nbsp;<a id="'+i+'-phone" href="tel:'+phone+'">'+phone+'</a></span>'}
+			if(site==0) {} else {html+='<span class="fa fa-globe"></span>&nbsp;<a href="'+site+'" class="url">site internet</a>'}
+			if(search==0) {} else {html+='<span class="hidden fa fa-question">&nbsp;<a class="search" href="'+search+'">adresse de recherche</a></span>'}
+            if(phone==0) {} else {html+='<br/><span class="fa fa-phone"></span>&nbsp;<a class="phone" href="tel:'+phone+'">'+phone+'</a></span>'}
+        html+="</div>";
 		/*var iconeCat,iconeAv;
 		if(PinCat[dataLib[i].aap]==undefined) {iconeCat=PinCat["la9-autre"]} else {iconeCat=PinCat[dataLib[i].aap]}
 		if(PinAv[dataLib[i].phase]==undefined) {iconeAv=PinAv["av0-int"]} else {iconeAv=PinAv[dataLib[i].phase]}*/
