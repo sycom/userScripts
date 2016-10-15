@@ -4,9 +4,10 @@
 // @description Un script pour acheter ses livres ailleurs que chez amazon
 // @downloadURL https://git.framasoft.org/sycom/userScripts/raw/master/OutOfAmazon.user.js
 // @include   *://*.amazon.fr*
-// @include   https://sycom.github.io/userScripts/outOfAm-z-n/bookStores*
+// @include   https://sycom.github.io/userScripts/outOfAm-z-n/*
+// @include   https://sycom.gitlab.io/userScripts/outOfAm-z-n/*
 // @author    Sylvain Comte
-// @version   0.2.3
+// @version   0.2.4
 // @require   https://cdn.jsdelivr.net/jquery/2.1.4/jquery.min.js
 // @grant     GM_getValue
 // @grant     GM_setValue
@@ -44,23 +45,31 @@ var OaAnbStores = 0, // nombre de boutiques actives
 // construction des styles
 GM_addStyle("#OoA-settings{z-index:200;width:100%;background-color:rgba(255,255,255,0.8);height:150%;position:fixed;top:0;left:auto}#OoA-list{width:600px;max-width:100%;margin:100px auto;min-height:8em;background-color:" + OoAcolor + ";opacity:0.8;box-shadow:15px 15px 5px gray;color:white;padding:.5em}#OoA-list h3{color:white;text-align:center}#OoA-list a{color:white}#OoA-closeSetButton{float:right;margin:10px 10px 0 0;padding:0px 4px 2px;box-sizing:border-box;border-radius:50%;color:white;background-color:white;color:" + OoAcolor + "}#OoA-stores{padding:50px 5px 1em 5px}.OoA-store{color:white}.OoA-store>a{font-size:1.75em}.OoA-store *{vertical-align:middle;padding:0 2px}.OoA-help{color:white;padding:1.5em 0 0 0;text-align:right;font-size:.9em;font-style:italic}");
 
+// installe font-awesome
+$('head').append('<link href="https://cdn.jsdelivr.net/fontawesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">');
+// vérifie les paramètres de l'utilisateur
+// 1. a-t-il défini une (ou plusieurs) boutique
+if (GM_getValue("Stores")) {
+    OoAStores = GM_getValue("Stores");
+}
+// si ce n'est pas le cas, on met la valeur par défaut (quai des mômes)
+if (OoAStores.length === 0) {
+    OoAStores.push(OoAdefault);
+    // on sauvegarde dans GM
+    GM_setValue("Stores", OoAStores);
+}
+
+// ajout du bouton réglage sur la page map
+if (window.location.href.match(/(lab\.io\/userScripts\/outOfAm-z-n\/map\.html)/) != null ) {
+    var OoASettingsButton = '<li><a class="fa fa-2x fa-book OoA-setButton" href="#"></a></li>';
+    $('#navigation .buttons').append(OoASettingsButton);
+}
+
+
 // vérifie qu'on est dans la rubrique livre sur amazon.fr
 var rubrique = $(".nav-b").text();
 if (rubrique === "Livres") {
     console.log("OoA > On est bien dans les livres");
-    // installe font-awesome
-    $('head').append('<link href="https://cdn.jsdelivr.net/fontawesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">');
-    // vérifie les paramètres de l'utilisateur
-    // 1. a-t-il défini une (ou plusieurs) boutique
-    if (GM_getValue("Stores")) {
-        OoAStores = GM_getValue("Stores");
-    }
-    // si ce n'est pas le cas, on met la valeur par défaut (quai des mômes)
-    if (OoAStores.length === 0) {
-        OoAStores.push(OoAdefault);
-        // on sauvegarde dans GM
-        GM_setValue("Stores", OoAStores);
-    }
     // récupère le titre du livre et le prépare pour le mettre dans le lien de la boutique locale
     var OoATitle = escape($("#productTitle").text());
     var OoAAuthor = "";
@@ -93,12 +102,13 @@ if (rubrique === "Livres") {
             $("#tmmSwatches ul").append(itemSendTo);
         }
     }
-    $(".OoA-setButton").click(toggleSettings);
 }
 // on est pas dans la bonne rubrique
 else console.log("OoA > on n'est pas dans les livres...");
 
-// ajoute la fonction d'ouverture des réglages
+// ajoute la fonction d'ouverture des réglages aux boutons associés
+$(".OoA-setButton").click(toggleSettings);
+// fonction d'ouverture des réglages
 function toggleSettings() {
     // si ouvert, on cache
     if (OoAsetOpen == 1) {
