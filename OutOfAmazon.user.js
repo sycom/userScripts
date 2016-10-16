@@ -7,7 +7,7 @@
 // @include   https://sycom.github.io/userScripts/outOfAm-z-n/*
 // @include   https://sycom.gitlab.io/userScripts/outOfAm-z-n/*
 // @author    Sylvain Comte
-// @version   0.2.5
+// @version   0.2.6
 // @require   https://cdn.jsdelivr.net/jquery/3.1.1/jquery.min.js
 // @grant     GM_getValue
 // @grant     GM_setValue
@@ -19,6 +19,7 @@ console.log("OoA > started");
 this.$ = this.jQuery = jQuery.noConflict(true); // avoid conflict on pages already running jQuery
 
 // boutique par défaut
+
 var OoAdefault = {
     "active": true,
     "name": "Quai des mômes",
@@ -30,24 +31,41 @@ var OoAdefault = {
     "city": "Louviers",
     "country": "France"
 };
-/*var OoAdefName = "Quai des mômes",
-    OoAdefUrl = "http://www.librairie-quaidesmomes.com",
-    OoAdefSearch = "http://www.librairie-quaidesmomes.com/vel/recherche/resultats-recherche-rapide.html?search_keys=",
-    OoAdefLat = "49.2132699",
-    OoAdefLong = "1.1703296",
-    OoAdefCity = "Louviers",
-    OoAdef*/
+
 // réglage et variables
 var OaAnbStores = 0, // nombre de boutiques actives
     OoAcolor = "#008A00", // couleur des boutons
     OoAsetOpen, // indicateur d'ouverture des réglages
-    OoAStores = []; // liste des boutiques
+    OoAStores = [
+        {
+            "active": true,
+            "name": "Quai des mômes",
+            "url": "http://www.librairie-quaidesmomes.com",
+            "search": "http://www.librairie-quaidesmomes.com/vel/recherche/resultats-recherche-rapide.html?search_keys=",
+            "phone": "+33 2 32 50 25 25",
+            "lat": "49.2132699",
+            "long": "1.1703296",
+            "city": "Louviers",
+            "country": "France"
+        },
+        {
+            "active": false,
+            "name": "Autre boutique",
+            "url": "http://www.librairie-quaidesmomes.com",
+            "search": "http://www.librairie-quaidesmomes.com/vel/recherche/resultats-recherche-rapide.html?search_keys=",
+            "phone": "+33 2 32 50 25 25",
+            "lat": "49.2132699",
+            "long": "1.1703296",
+            "city": "Louviers",
+            "country": "France"
+        }
+    ]; // liste des boutiques
 
 // construction des styles
 GM_addStyle("#OoA-settings{z-index:200;width:100%;background-color:rgba(255,255,255,0.8);height:150%;position:fixed;top:0;left:auto}#OoA-list{width:600px;max-width:100%;margin:100px auto;min-height:8em;background-color:" + OoAcolor + ";opacity:0.8;box-shadow:15px 15px 5px gray;color:white;padding:.5em}#OoA-list h3{color:white;text-align:center}#OoA-list a{color:white}#OoA-closeSetButton{float:right;margin:10px 10px 0 0;padding:0px 4px 2px;box-sizing:border-box;border-radius:50%;color:white;background-color:white;color:" + OoAcolor + "}#OoA-stores{padding:50px 5px 1em 5px}.OoA-store{color:white}.OoA-store>a{font-size:1.75em}.OoA-store *{vertical-align:middle;padding:0 2px}.OoA-help{color:white;padding:1.5em 0 0 0;text-align:right;font-size:.9em;font-style:italic}.hidden{display:none}");
 
 // installe font-awesome
-$('head').append('<link href="https://cdn.jsdelivr.net/fontawesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">');
+$('head').append('<link href="https://cdn.jsdelivr.net/fontawesome/4.4.1/css/font-awesome.min.css" rel="stylesheet">');
 // vérifie les paramètres de l'utilisateur
 // 1. a-t-il défini une (ou plusieurs) boutique
 if (GM_getValue("Stores")) {
@@ -61,13 +79,18 @@ if (OoAStores.length === 0) {
 }
 
 // Ce qui se passe quand on est sur la page de la carte...
-if (window.location.href.match(/(b\.io\/userScripts\/outOfAm-z-n\/map\.html)/) != null ) {
+//if (window.location.href.match(/(b\.io\/userScripts\/outOfAm-z-n\/map\.html)/) != null ) {
     console.log("OoA > on est sur la page carte des libraires");
     // ajout du bouton réglage sur la page map
     var OoASettingsButtons = '<li><a class="fa fa-2x fa-list OoA-setButton" href="#"></a></li>';
-    OoASettingsButtons += '<li><a class="fa fa-2x fa-plus OoA-addButton" href="#" title="selectionnez une boutique pour l\'ajouter à votre liste"></a></li>';
-    $('#navigation .buttons').append(OoASettingsButtons);
-    $(".OoA-addButton").click(function() {
+    //OoASettingsButtons += '<li><a class="fa fa-2x fa-plus OoA-addButton" href="#" title="selectionnez une boutique pour l\'ajouter à votre liste"></a></li>';
+    $("#navigation .buttons").append(OoASettingsButtons);
+    //$(".OoA-addButton").click(OoAaddStore);
+    // laisse apparaitre les boutons dans les popupopen : on change la classe du div de dialogue (masqué)
+    console.log("OoA > relache les boutons dans les popup");
+    $("#OoAdialogDiv").addClass("OoArunning");
+    $("#OoAdialogDiv").click(OoAaddStore);
+    function OoAaddStore() {
         $(".OoAdata").each(function() {
             console.log("OoA > ajout d'une boutique")
             var theBout = {
@@ -81,12 +104,12 @@ if (window.location.href.match(/(b\.io\/userScripts\/outOfAm-z-n\/map\.html)/) !
                 "city": $(this).find(".city").html(),
                 "country": $(this).find(".country").html()
             };
-            console.log("OoA > "+theBout);
+            console.log(theBout);
             OoAStores.push(theBout);
             GM_setValue("Stores", OoAStores);
         });
-    })
-}
+    }
+//}
 
 // Ce qui se passe quand on est sur Amazon...
 if (window.location.href.match(/(\/\/www\.amazon\.fr\/)/) != null ) {
