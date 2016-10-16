@@ -31,6 +31,12 @@
 .float {float:left}
 
 #addButton {position:absolute;bottom:1em;left:1em;z-index:42}
+.addThisStore {
+    float:right;
+    border-radius:50%;
+    padding:0 5px;
+    cursor: pointer; cursor: hand;
+}
 .hidden {display:none !important}
 
 /*****************/
@@ -62,8 +68,7 @@ a {color:#A3AC01}
    .high nav .buttons li a {color:#A3AC01}
   .high nav .buttons li:hover {background:#ddd}
 
-
-.header,.footer {color:#ddd;background:#333;background-image: linear-gradient(33deg,#FA943F,#A3AC01);}
+.header,.footer,.addThisStore {color:#ddd;background:#333;background-image: linear-gradient(33deg,#FA943F,#A3AC01);}
   .header a, .footer a {color:white;font-weight:bold;text-decoration:none}
 
 
@@ -75,8 +80,6 @@ a {color:#A3AC01}
   .fa-stack:hover a {color:#A3AC01}
 
 .center {text-align:center}
-
-.marker-cluster>div {background:#A3AC01;background-image: linear-gradient(33deg,#FA943F,#A3AC01);}
 
 #comment-fond {
   background:rgba(255,255,255,0.7);

@@ -21,6 +21,8 @@ L A Y O U T
 svg path {stroke:#FA943F;fill:#FA943F;stroke-width:2px}
 .leaflet-popup-content h6 {color:#FA943F}
 
+.marker-cluster>div {background:#A3AC01;background-image: linear-gradient(33deg,#FA943F,#A3AC01);}
+
 /************
  R E S P O N S I V E
 *************/

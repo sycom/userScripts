@@ -3,14 +3,14 @@
 	"source":"<a href='https://sycom.github.io/userScripts/outOfAm-z-n'>Out of Am*z*n userscript</a> community",
 	"liste":[
         {
-        "name": "",
-        "url": "",
-        "search": "",
-        "lat": "",
-        "long": "",
-        "city": "",
-        "country": "",
-        "phone": ""
-        }
+        "name": "Quai des mômes",
+        "url": "http://www.librairie-quaidesmomes.com",
+        "search": "http://www.librairie-quaidesmomes.com/vel/recherche/resultats-recherche-rapide.html?search_keys=",
+        "lat": "49.2132699",
+        "long": "1.1703296",
+        "city": "Louviers",
+        "country": "France",
+        "phone": "+33 2 32 50 25 25"
+    }
     ]
 }

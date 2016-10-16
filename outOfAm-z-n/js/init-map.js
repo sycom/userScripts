@@ -152,27 +152,11 @@ function letsStart() {
 				})},
 		});
 	bookStoresL.name="Librairies";
-	/* Couche avancement
-	var ecoQavancement=L.markerClusterGroup({
-		name:"ecoQavancement",
-		maxClusterRadius:72,
-		iconCreateFunction:function (cluster) {
-			var cC=cluster.getChildCount(); //clusterCount
-			var cS=Math.sqrt(cC*450);		//clusterSize
-			var cF=4*Math.log(cC*100);		//clusterFont
-			if(cF<12) cF=12;
-			return new L.DivIcon({
-				html:'<div style="border:2px dotted;width:'+cS+'px;height:'+cS+'px;border-radius:'+cS+'px;font-size:'+cF+'px;"><div><span style="line-height:'+cS+'px">'+cC+'</span></div></div>',
-				className:'marker-cluster marker-cluster-'+cC,
-				iconSize: new L.Point(cS,cS)
-				})
-			}
-		});
-	ecoQavancement.name="ecoQavancement";*/
+
 // insertion des points dans la couche
 	var dataLib=data.liste;
 	for(i in dataLib) {
-		var html = '<div class="OoAdata" id="'+dataLib[i].url+'"><h6><span class="name">'+dataLib[i].name+'</span> - <span class="city">'+dataLib[i].city+'</span><span class="hidden country">'+dataLib[i].country+'</span></h6>';
+		var html = '<div class="OoAdata" id="'+dataLib[i].url+'"><div class="addThisStore hidden"><span class="fa fa-plus"></span></div><h6><span class="name">'+dataLib[i].name+'</span> - <span class="city">'+dataLib[i].city+'</span><span class="hidden country">'+dataLib[i].country+'</span></h6>';
         html += '<div class="hidden">lat:<span class="lat">'+dataLib[i].lat+'</span>,long:<span class="lat">'+dataLib[i].long+'</span></div>';
 		var site=dataLib[i].url,
 			search=dataLib[i].search,
@@ -190,7 +174,16 @@ function letsStart() {
 		if(PinCat[dataLib[i].aap]==undefined) {iconeCat=PinCat["la9-autre"]} else {iconeCat=PinCat[dataLib[i].aap]}
 		if(PinAv[dataLib[i].phase]==undefined) {iconeAv=PinAv["av0-int"]} else {iconeAv=PinAv[dataLib[i].phase]}*/
 		var pointLib = new L.marker([dataLib[i].lat,dataLib[i].long],{icon: bsIcon}).bindPopup(html);
-		bookStoresL.addLayer(pointLib);
+		pointLib.on("popupopen",function() {
+            if($("#OoAdialogDiv").hasClass("OoArunning")) {
+                $(".addThisStore").toggleClass("hidden");
+                $(".addThisStore").click(function() {
+                    $("#OoAdialogDiv").click();
+                });
+            }
+        });
+        bookStoresL.addLayer(pointLib);
+
 		// var pointAv = new L.marker([dataLib[i].lat,dataLib[i].long],{icon:iconeAv}).bindPopup(html);
 		// ecoQavancement.addLayer(pointAv);
 		}
