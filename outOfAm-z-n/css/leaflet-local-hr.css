@@ -13,6 +13,7 @@ L A Y O U T
 .leaflet-popup-content h6 {font-size:.85rem;color:#FA943F;margin:.75em 0 .25em 0}
 .leaflet-popup-content ul {padding :0;margin:.5em 0}
 .leaflet-popup-content li.fa {display:block;margin:.5em 0}
+.leaflet-popup-content li.fa:before {margin-right:.5em}
 
 /************
  C O L O R S

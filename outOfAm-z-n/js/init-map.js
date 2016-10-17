@@ -158,17 +158,20 @@ function letsStart() {
 	for(i in dataLib) {
 		var html = '<div class="OoAdata" id="'+dataLib[i].url+'"><div class="addThisStore hidden"><span class="fa fa-plus"></span></div><h6><span class="name">'+dataLib[i].name+'</span> - <span class="city">'+dataLib[i].city+'</span><span class="hidden country">'+dataLib[i].country+'</span></h6>';
         html += '<div class="hidden">lat:<span class="lat">'+dataLib[i].lat+'</span>,long:<span class="lat">'+dataLib[i].long+'</span></div>';
-		var site=dataLib[i].url,
+		var addresse=dataLib[i].addresse,
+            site=dataLib[i].url,
+            mail=dataLib[i].mail,
 			search=dataLib[i].search,
 			phone=dataLib[i].phone,
             coord="";
-		if(site==0) {}
-            else {coord+='<li class="fa fa-globe"><a href="'+site+'" class="url">site internet</a></li>'}
-		if(search==0) {}
-            else {coord+='<li class="fa fa-question hidden"><a class="search" href="'+search+'">adresse de recherche</a></li>'}
-        if(phone==0) {}
-            else {coord+='<li class="fa fa-phone"><a class="phone" href="tel:'+phone+'">'+phone+'</a></li>'}
-        if(coord !== "") {html += "<ul>"+coord+"</ul>"}
+        if(addresse!=="") {
+            html+="<span class='addresse'>"+addresse+"</span>";
+        }
+		if(site!=="") {coord+='<li class="fa fa-globe"><a href="'+site+'" class="url">'+site.replace("http://","").replace("https://","").replace("www.","")+'</a></li>'}
+        if(mail!=="") {coord+='<li class="fa fa-envelope"><a href="mailto:'+mail+'" class="mail">'+mail.replace("@","(à)")+'</a></li>'}
+		if(search!=="") {coord+='<li class="fa fa-question hidden"><a class="search" href="'+search+'">adresse de recherche</a></li>'}
+        if(phone!=="") {coord+='<li class="fa fa-phone"><a class="phone" href="tel:'+phone+'">'+phone+'</a></li>'}
+        if(coord!=="") {html+="<ul>"+coord+"</ul>"}
         html+="</div>";
 		/*var iconeCat,iconeAv;
 		if(PinCat[dataLib[i].aap]==undefined) {iconeCat=PinCat["la9-autre"]} else {iconeCat=PinCat[dataLib[i].aap]}
@@ -176,7 +179,23 @@ function letsStart() {
 		var pointLib = new L.marker([dataLib[i].lat,dataLib[i].long],{icon: bsIcon}).bindPopup(html);
 		pointLib.on("popupopen",function() {
             if($("#OoAdialogDiv").hasClass("OoArunning")) {
+                var theId=$(".OoAdata").attr("id");
+                console.log("OoA page : theId="+theId);
+                var hasBoutique=false;
+                $("#OoAdialogDiv .librairie").each(function() {
+                    console.log("OoA page : title="+$(this).attr("title"));
+                    if($(this).attr("title") == theId) hasBoutique = true;
+                })
                 $(".addThisStore").toggleClass("hidden");
+                console.log("OoA page : hasBoutique="+hasBoutique);
+                if (hasBoutique == true) {
+                    $(".addThisStore .fa-plus").addClass("fa-minus");
+                    $(".addThisStore .fa-plus").removeClass("fa-plus");
+                }
+                else {
+                    $(".addThisStore .fa-minus").addClass("fa-plus");
+                    $(".addThisStore .fa-minus").removeClass("fa-minus");
+                }
                 $(".addThisStore").click(function() {
                     $("#OoAdialogDiv").click();
                 });
