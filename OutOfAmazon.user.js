@@ -7,7 +7,7 @@
 // @include   https://sycom.github.io/userScripts/outOfAm-z-n/*
 // @include   https://sycom.gitlab.io/userScripts/outOfAm-z-n/*
 // @author    Sylvain Comte
-// @version   0.2.6
+// @version   0.2.7
 // @require   https://cdn.jsdelivr.net/jquery/3.1.1/jquery.min.js
 // @grant     GM_getValue
 // @grant     GM_setValue
@@ -21,45 +21,23 @@ this.$ = this.jQuery = jQuery.noConflict(true); // avoid conflict on pages alrea
 // boutique par défaut
 
 var OoAdefault = {
-    "active": true,
+    "active":true,
     "name": "Quai des mômes",
     "url": "http://www.librairie-quaidesmomes.com",
     "search": "http://www.librairie-quaidesmomes.com/vel/recherche/resultats-recherche-rapide.html?search_keys=",
-    "phone": "+33 2 32 50 25 25",
+    "mail":"",
     "lat": "49.2132699",
     "long": "1.1703296",
     "city": "Louviers",
-    "country": "France"
+    "country": "France",
+    "phone": "+33 2 32 50 25 25"
 };
 
 // réglage et variables
 var OaAnbStores = 0, // nombre de boutiques actives
     OoAcolor = "#008A00", // couleur des boutons
     OoAsetOpen, // indicateur d'ouverture des réglages
-    OoAStores = [
-        {
-            "active": true,
-            "name": "Quai des mômes",
-            "url": "http://www.librairie-quaidesmomes.com",
-            "search": "http://www.librairie-quaidesmomes.com/vel/recherche/resultats-recherche-rapide.html?search_keys=",
-            "phone": "+33 2 32 50 25 25",
-            "lat": "49.2132699",
-            "long": "1.1703296",
-            "city": "Louviers",
-            "country": "France"
-        },
-        {
-            "active": false,
-            "name": "Autre boutique",
-            "url": "http://www.librairie-quaidesmomes.com",
-            "search": "http://www.librairie-quaidesmomes.com/vel/recherche/resultats-recherche-rapide.html?search_keys=",
-            "phone": "+33 2 32 50 25 25",
-            "lat": "49.2132699",
-            "long": "1.1703296",
-            "city": "Louviers",
-            "country": "France"
-        }
-    ]; // liste des boutiques
+    OoAStores = []; // liste des boutiques
 
 // construction des styles
 GM_addStyle("#OoA-settings{z-index:200;width:100%;background-color:rgba(255,255,255,0.8);height:150%;position:fixed;top:0;left:auto}#OoA-list{width:600px;max-width:100%;margin:100px auto;min-height:8em;background-color:" + OoAcolor + ";opacity:0.8;box-shadow:15px 15px 5px gray;color:white;padding:.5em}#OoA-list h3{color:white;text-align:center}#OoA-list a{color:white}#OoA-closeSetButton{float:right;margin:10px 10px 0 0;padding:0px 4px 2px;box-sizing:border-box;border-radius:50%;color:white;background-color:white;color:" + OoAcolor + "}#OoA-stores{padding:50px 5px 1em 5px}.OoA-store{color:white}.OoA-store>a{font-size:1.75em}.OoA-store *{vertical-align:middle;padding:0 2px}.OoA-help{color:white;padding:1.5em 0 0 0;text-align:right;font-size:.9em;font-style:italic}.hidden{display:none}");
@@ -80,39 +58,73 @@ if (OoAStores.length === 0) {
 
 // Ce qui se passe quand on est sur la page de la carte...
 //if (window.location.href.match(/(b\.io\/userScripts\/outOfAm-z-n\/map\.html)/) != null ) {
-    console.log("OoA > on est sur la page carte des libraires");
-    // ajout du bouton réglage sur la page map
-    var OoASettingsButtons = '<li><a class="fa fa-2x fa-list OoA-setButton" href="#"></a></li>';
-    //OoASettingsButtons += '<li><a class="fa fa-2x fa-plus OoA-addButton" href="#" title="selectionnez une boutique pour l\'ajouter à votre liste"></a></li>';
-    $("#navigation .buttons").append(OoASettingsButtons);
-    //$(".OoA-addButton").click(OoAaddStore);
-    // laisse apparaitre les boutons dans les popupopen : on change la classe du div de dialogue (masqué)
-    console.log("OoA > relache les boutons dans les popup");
-    $("#OoAdialogDiv").addClass("OoArunning");
-    $("#OoAdialogDiv").click(OoAaddStore);
-    function OoAaddStore() {
-        $(".OoAdata").each(function() {
-            console.log("OoA > ajout d'une boutique")
+console.log("OoA > on est sur la page carte des libraires");
+// ajout du bouton réglage sur la page map
+var OoASettingsButtons = '<li><a class="fa fa-2x fa-list OoA-setButton" href="#"></a></li>';
+//OoASettingsButtons += '<li><a class="fa fa-2x fa-plus OoA-addButton" href="#" title="selectionnez une boutique pour l\'ajouter à votre liste"></a></li>';
+$("#navigation .buttons").append(OoASettingsButtons);
+//$(".OoA-addButton").click(OoAaddStore);
+// laisse apparaitre les boutons dans les popupopen : on change la classe du div de dialogue (masqué)
+console.log("OoA > relache les boutons dans les popup");
+$("#OoAdialogDiv").addClass("OoArunning");
+for (var b in OoAStores) {
+    console.log("OoA > url("+ b +")="+OoAStores[b].url);
+    var spanBout = "<span class='librairie' title='" + OoAStores[b].url + "'></span>";
+    $("#OoAdialogDiv").append(spanBout);
+}
+$("#OoAdialogDiv").click(OoAaddStore);
+
+function OoAaddStore() {
+    $(".OoAdata").each(function() {
+        var theBoutId = $(this).attr("id");
+        var hasBout = false;
+        for (var b in OoAStores) {
+            console.log("!!!- "+OoAStores[b].url+" - "+theBoutId);
+            if (OoAStores[b].url == theBoutId) hasBout = true;
+        }
+        // si on n'a pas la boutique dans notre liste. On ajoute.
+        if (hasBout == false) {
+            console.log("OoA > ajout de la boutique :"+theBoutId);
             var theBout = {
-                "active" : true,
+                "active": true,
                 "name": $(this).find(".name").html(),
-                "url": $(this).attr("id"),
+                "addresse": $(this).find(".addresse").html(),
+                "mail": $(this).find(".mail").html(),
+                "url": theBoutId,
                 "search": $(this).find(".search").attr("href"),
                 "phone": $(this).find(".phone").html(),
-                "lat": "",
-                "long": "",
+                "lat": $(this).find(".lat").html(),
+                "long": $(this).find(".long").html(),
                 "city": $(this).find(".city").html(),
                 "country": $(this).find(".country").html()
             };
-            console.log(theBout);
+            // console.log(theBout);
             OoAStores.push(theBout);
+            var spanBout = "<span class='librairie' title='" + theBoutId + "'></span>";
+            $("#OoAdialogDiv").append(spanBout);
+            $(".addThisStore .fa-plus").addClass("fa-minus");
+            $(".addThisStore .fa-plus").removeClass("fa-plus");
             GM_setValue("Stores", OoAStores);
-        });
-    }
+        }
+        // ou si on l'a, on l'enlève
+        else {
+            console.log("OoA > suppression de la boutique :"+theBoutId);
+            for (var b in OoAStores) {
+                if (OoAStores[b].url == theBoutId) delete OoAStores[b];
+            }
+            $("#OoAdialogDiv .librairie").each(function() {
+                if($(this).attr("title") == theBoutId) $(this).remove();
+            });
+            $(".addThisStore .fa-minus").addClass("fa-plus");
+            $(".addThisStore .fa-minus").removeClass("fa-minus");
+            GM_setValue("Stores", OoAStores);
+        }
+    });
+}
 //}
 
 // Ce qui se passe quand on est sur Amazon...
-if (window.location.href.match(/(\/\/www\.amazon\.fr\/)/) != null ) {
+if (window.location.href.match(/(\/\/www\.amazon\.fr\/)/) != null) {
     // vérifie qu'on est dans la rubrique livre sur amazon.fr
     var rubrique = $(".nav-b").text();
     if (rubrique === "Livres") {
@@ -159,19 +171,19 @@ $(".OoA-setButton").click(toggleSettings);
 function toggleSettings() {
     // si ouvert, on cache
     if (OoAsetOpen == 1) {
-        console.log(">> je cache (" + OoAsetOpen + ")");
+        // console.log("OoA >> je cache (" + OoAsetOpen + ")");
         $("#OoA-settings").css('display', 'none');
         OoAsetOpen = 0;
     } else {
         // si n'existe pas, on crée
         if (OoAsetOpen === undefined) {
-            console.log(">> je crée");
+            // console.log("OoA >> je crée");
             var OoAsettings = '<div id="OoA-settings"><div id="OoA-list"><span id="OoA-closeSetButton" class="fa fa-2x fa-times"></span><h3>Vos boutiques</h3></div></div>';
             $("body").append(OoAsettings);
             $("#OoA-list").append("<ul id='OoA-stores'></ul>");
-            }
+        }
         // populate store list with users store list
-        var html="";
+        var html = "";
         for (var i in OoAStores) {
             var OoAli = "<li class='OoA-store fa' id='OoA-store-" + i + "'>";
             if (OoAStores[i].active === true) OoAli += "<span class='fa fa-2x fa-check-square' id='active-" + i + "'></span>&nbsp;&nbsp;&nbsp;&nbsp;";
@@ -181,7 +193,7 @@ function toggleSettings() {
             /*if (OoAStores.length > 1) */
             OoAli += "<span class='fa fa-2x fa-trash' id='trash-" + i + "'></span>";
             OoAli += "</li>";
-            html+=OoAli;
+            html += OoAli;
         }
         html += "<div class='OoA-help'>Trouver <a href='https://sycom.github.io/userScripts/outOfAm-z-n/map.html' target='_blank'>d\'autres boutiques</a></div>";
         $("#OoA-stores").html(html);
@@ -192,7 +204,7 @@ function toggleSettings() {
         $("#OoA-closeSetButton").click(toggleSettings);
         // dans tous les cas, on le fait apparaitre
         OoAsetOpen = 1;
-        console.log(">> je montre (" + OoAsetOpen + ")");
+        // console.log("OoA >> je montre (" + OoAsetOpen + ")");
         $("#OoA-settings").css('display', 'block');
     }
 }
