@@ -167,10 +167,10 @@ function letsStart() {
         if(addresse!=="") {
             html+="<span class='addresse'>"+addresse+"</span>";
         }
-		if(site!=="") {coord+='<li class="fa fa-globe"><a href="'+site+'" class="url">'+site.replace("http://","").replace("https://","").replace("www.","")+'</a></li>'}
-        if(mail!=="") {coord+='<li class="fa fa-envelope"><a href="mailto:'+mail+'" class="mail">'+mail.replace("@","(à)")+'</a></li>'}
-		if(search!=="") {coord+='<li class="fa fa-question hidden"><a class="search" href="'+search+'">adresse de recherche</a></li>'}
-        if(phone!=="") {coord+='<li class="fa fa-phone"><a class="phone" href="tel:'+phone+'">'+phone+'</a></li>'}
+		if(site!==0) {coord+='<li class="fa fa-globe"><a href="'+site+'" class="url">'+site.replace("http://","").replace("https://","").replace("www.","")+'</a></li>'}
+        if(mail!==0) {coord+='<li class="fa fa-envelope"><a href="mailto:'+mail+'" class="mail">'+mail.replace("@","(à)")+'</a></li>'}
+		if(search!==0) {coord+='<li class="fa fa-question hidden"><a class="search" href="'+search+'">adresse de recherche</a></li>'}
+        if(phone!==0) {coord+='<li class="fa fa-phone"><a class="phone" href="tel:'+phone+'">'+phone+'</a></li>'}
         if(coord!=="") {html+="<ul>"+coord+"</ul>"}
         html+="</div>";
 		/*var iconeCat,iconeAv;
