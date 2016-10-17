@@ -7,7 +7,7 @@
 // @include   https://sycom.github.io/userScripts/outOfAm-z-n/*
 // @include   https://sycom.gitlab.io/userScripts/outOfAm-z-n/*
 // @author    Sylvain Comte
-// @version   0.2.7
+// @version   0.3.0
 // @require   https://cdn.jsdelivr.net/jquery/3.1.1/jquery.min.js
 // @grant     GM_getValue
 // @grant     GM_setValue
@@ -21,11 +21,12 @@ this.$ = this.jQuery = jQuery.noConflict(true); // avoid conflict on pages alrea
 // boutique par défaut
 
 var OoAdefault = {
-    "active":true,
+    "active": true,
     "name": "Quai des mômes",
     "url": "http://www.librairie-quaidesmomes.com",
     "search": "http://www.librairie-quaidesmomes.com/vel/recherche/resultats-recherche-rapide.html?search_keys=",
-    "mail":"",
+    "addresse":"3, rue du quai",
+    "mail":"contact@librairie-quaidesmomes.com",
     "lat": "49.2132699",
     "long": "1.1703296",
     "city": "Louviers",
@@ -45,12 +46,13 @@ GM_addStyle("#OoA-settings{z-index:200;width:100%;background-color:rgba(255,255,
 // installe font-awesome
 $('head').append('<link href="https://cdn.jsdelivr.net/fontawesome/4.4.1/css/font-awesome.min.css" rel="stylesheet">');
 // vérifie les paramètres de l'utilisateur
-// 1. a-t-il défini une (ou plusieurs) boutique
+// a-t-il défini une (ou plusieurs) boutique
 if (GM_getValue("Stores")) {
     OoAStores = GM_getValue("Stores");
+    console.log(OoAStores);
 }
 // si ce n'est pas le cas, on met la valeur par défaut (quai des mômes)
-if (OoAStores.length === 0) {
+if (OoAStores.length == 0) {
     OoAStores.push(OoAdefault);
     // on sauvegarde dans GM
     GM_setValue("Stores", OoAStores);
@@ -61,14 +63,13 @@ if (OoAStores.length === 0) {
 console.log("OoA > on est sur la page carte des libraires");
 // ajout du bouton réglage sur la page map
 var OoASettingsButtons = '<li><a class="fa fa-2x fa-list OoA-setButton" href="#"></a></li>';
-//OoASettingsButtons += '<li><a class="fa fa-2x fa-plus OoA-addButton" href="#" title="selectionnez une boutique pour l\'ajouter à votre liste"></a></li>';
 $("#navigation .buttons").append(OoASettingsButtons);
-//$(".OoA-addButton").click(OoAaddStore);
 // laisse apparaitre les boutons dans les popupopen : on change la classe du div de dialogue (masqué)
 console.log("OoA > relache les boutons dans les popup");
 $("#OoAdialogDiv").addClass("OoArunning");
+console.log(OoAStores);
 for (var b in OoAStores) {
-    console.log("OoA > url("+ b +")="+OoAStores[b].url);
+    console.log("OoA > ajout de url("+ b +")="+OoAStores[b].url);
     var spanBout = "<span class='librairie' title='" + OoAStores[b].url + "'></span>";
     $("#OoAdialogDiv").append(spanBout);
 }
