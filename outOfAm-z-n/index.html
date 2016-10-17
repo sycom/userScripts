@@ -9,7 +9,12 @@
 	<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="../lib/normalize-min.css" media="all" type="text/css">
 	<link rel="stylesheet" href="../lib/font-awesome-min.css" media="all" type="text/css">
+	<!-- <link href="https://cdn.jsdelivr.net/fontawesome/4.4.0/css/font-awesome.min.css" rel="stylesheet"> -->
 	<link rel="stylesheet" href="./css/styles.css" media="all" type="text/css">
+
+	<script src="./lib/jquery.js"></script>
+		<script src="./user/pgi_config.js"></script>
+		<script src="./lib/pgi.js"></script>
 </head>
 
 <body>
@@ -17,36 +22,45 @@
 		<h1>Out of am*z*n</h1>
 		<nav id="navigation" role="navigation" class="nav">
 			<ul class="buttons">
-                <li><a class="fa fa-2x fa-home" href="../"></a></li>
+				<li>
+					<a class="fa fa-2x fa-home" href="../"></a>
+				</li>
 				<li class=""><a href="#Lecteur">Lecteurs</a></li>
 				<li class=""><a href="#Libraire">Libraires</a></li>
+				<li class=""><a class="fa fa-2x fa-bug pgiButton" href="#title" title="signaler un bug"></a></li>
 			</ul>
 		</nav>
 	</div>
 	<header id="header" role="banner" class="header">
 		<p>bienvenue sur la page du userscript Out Of Am*z*n - <i>achetez vos livres localement</i></p>
-        <p>Out Of Am*z*n est un petit programme qui vous permettra lorsque vous cherchez un livre de le retrouver sur le site de votre libraire local. Ce qui vous permettra de lui commander, voire de lui rendre une petite visite pour aller cherchez votre livre. Et de le nourrir lui plutôt que <i>l'ogre</i>. Pour l'instant à la version 0, votre libraire c'est Stéphane ;-) mais il est facile de mettre le vôtre en bricolant un peu...</p>
+		<p>Out Of Am*z*n est un petit programme qui vous permettra lorsque vous cherchez un livre sur le site de cette plateforme de vous rappeler que vous pouvez l'acheter chez votre libraire local :</p>
+		<p>
+			<span class="fa fa-globe"></span>&nbsp;&nbsp;si il a un site web de vente en ligne en vous renvoyant sur ce site<br/>
+			<span class="fa fa-comment"></span>&nbsp;&nbsp;à défaut, en vous rappelant ses coordonnées mail et/ou téléphone
+		</p>
+		<p>Après, à vous de jouer...</p>
 	</header>
 	<div id="main" role="main">
-        <div class="row">
-            <div><h2 id="Lecteur">Lecteur</h2>
-                <p>Ami lecteur, tu as décidé de cesser de nourrir le monstre, malgré le grand confort que cela procure habituellement. C'est bien. Nous allons essayer de te rendre ça pas trop difficile...
-                </p>
-            </div>
-        </div>
+		<div class="row">
+			<div>
+				<h2 id="Lecteur">Lecteur</h2>
+				<p>Ami lecteur, tu as décidé de cesser de nourrir le monstre, malgré le grand confort que cela procure habituellement. C'est bien. Nous allons essayer de te rendre ça pas trop difficile...
+				</p>
+			</div>
+		</div>
 		<div class="row">
 			<div class="c3">
 				<h3>1. Préparer le navigateur</h3>
-                <p>
-        			<i class="fa fa-firefox fa-1x"></i>&nbsp;installez <a href="https://addons.mozilla.org/fr/firefox/addon/greasemonkey/">Greasemonkey</a> sur Firefox<br/>
-        			&nbsp;&nbsp;&nbsp;&nbsp;ou<br/>
-        			<i class="fa fa-chrome fa-1x"></i>&nbsp;<i class="fa fa-safari fa-1x"></i>&nbsp;<i class="fa fa-opera fa-1x"></i>&nbsp;installez <a href="https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo">
-        	Tampermonkey</a> sur Chrome (ou Safari ou Opera)
-        		</p>
+				<p>
+					<i class="fa fa-firefox fa-1x"></i>&nbsp;installez <a href="https://addons.mozilla.org/fr/firefox/addon/greasemonkey/">Greasemonkey</a> sur Firefox<br/> &nbsp;&nbsp;&nbsp;&nbsp;ou
+					<br/>
+					<i class="fa fa-chrome fa-1x"></i>&nbsp;<i class="fa fa-safari fa-1x"></i>&nbsp;<i class="fa fa-opera fa-1x"></i>&nbsp;installez <a href="https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo">
+           Tampermonkey</a> sur Chrome (ou Safari ou Opera)
+				</p>
 				<p class="right dense">
 					<span class="fa-stack fa-lg">
-						<i class="fa fa-circle fa-stack-2x"></i>
-						<a class="fa fa-info fa-stack-1x fa-inverse" href="https://framasoft.org/article3877.html" title="en savoir plus"><span class=
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <a class="fa fa-info fa-stack-1x fa-inverse" href="https://framasoft.org/article3877.html" title="en savoir plus"><span class=
 "label">en savoir plus</span></a>
 					</span>
 				</p>
@@ -56,102 +70,106 @@
 				<p>Il suffit de cliquer sur le lien de <a href="https://git.framasoft.org/sycom/userScripts/raw/master/OutOfAmazon.user.js"><i class="fa fa-download"> </i>&nbsp;téléchargement du script</a> et d'accepter l'installation
 				</p>
 				<p class="right dense">
-                    <span class="fa-stack fa-lg">
+					<span class="fa-stack fa-lg">
                         <i class="fa fa-circle fa-stack-2x"></i>
-                        <a class="fa fa-code-fork fa-stack-1x fa-inverse" href="https://git.framasoft.org/sycom/userScripts/blob/master/OutOfAmazon.user.js" title="source code"><span class="label">code</span></a>
-                    </span>
-                    <span class="fa-stack fa-lg">
-						<i class="fa fa-circle fa-stack-2x"></i>
-						<a class="fa fa-download fa-stack-1x fa-inverse" href="https://git.framasoft.org/sycom/userScripts/raw/master/OutOfAmazon.user.js" title="install"><span class="label">install</span></a>
+                        <a class="fa fa-code-fork fa-stack-1x fa-inverse" href="https://framagit.org/sycom/userScripts/blob/master/OutOfAmazon.user.js" title="source code"><span class="label">code source</span></a>
+					</span>
+					<span class="fa-stack fa-lg">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <a class="fa fa-download fa-stack-1x fa-inverse" href="https://framagit.org/sycom/userScripts/raw/master/OutOfAmazon.user.js" title="installation"><span class="label">installation</span></a>
 					</span>
 				</p>
 			</div>
-            <div class="c3">
+			<div class="c3">
 				<h3>3. selectionner le libraire</h3>
-				<p>Pour l'heure, cette étape est totalement virtuelle vu que je n'ai qu'un libraire à te proposer. Mais bientôt, on pourra choisir son libraire préféré sur <a href="./map.html">une carte</a>. Et s'il n'y est pas, l'ajouter et proposer un nouveau point sur la carte</p>
-                <p class="right dense">
-                    <span class="fa-stack fa-lg">
-						<i class="fa fa-circle fa-stack-2x"></i>
-						<a class="fa fa-map fa-stack-1x fa-inverse" href="https://git.framasoft.org/sycom/userScripts/raw/master/OutOfAmazon.user.js" title="carte des libraires"><span class="label">carte des libraires</span></a>
+				<p>Chercher son libraire préféré sur <a href="./map.html">la carte</a>. Si il n'y est pas, proposer l'ajout en cliquant sur le bouton <span class="fa fa-paper-plane"></span> en bas à gauche. On peut gérer sa liste de libraire sur cette même page :
+					<span	class="fa fa-list"></span> en haut à droite.</p>
+				<p class="right dense">
+					<span class="fa-stack fa-lg">
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <a class="fa fa-map fa-stack-1x fa-inverse" href="./map.html" title="carte des libraires"><span class="label">carte des libraires</span></a>
 					</span>
 				</p>
 			</div>
-        </div>
-        <div class="row">
-            <div><h2 id="Libraire">Libraire</h2>
-                <p>Ami libraire, tu as décidé de faire concurrence à l'ogre. C'est bien. Nous allons essayer de te faciliter la vie. Tu pourras dans quelques temps accéder à une page qui te permettra de configurer un bout de code à mettre sur ta boutique en ligne. Tu pourras aussi aller proposer l'ajout de ta librairie sur <a href="./map.html">la carte des boutiques</a>.
-                </p>
-            </div>
-        </div>
+		</div>
+		<div class="row">
+			<div>
+				<h2 id="Libraire">Libraire</h2>
+				<p>Ami libraire, tu as décidé de faire concurrence à l'ogre. C'est bien. Nous allons essayer de te faciliter la vie. Tu pourras dans quelques temps accéder à une page qui te permettra de configurer un bout de code à mettre sur ta boutique en ligne. Tu
+					peux déjà aller proposer l'ajout de ta librairie sur <a href="./map.html">la carte des boutiques</a>.
+				</p>
+			</div>
+		</div>
 
-        <div class="row">
-            <div>
-                <h2 id="contribuer">Contribuer</h2>
-                <p>Vous pouvez tester le script. Un système simple permettra prochainement de dire ce que vous en pensez et de signaler des problèmes éventuels. D'ici là, le <a href="#contact">contact</a> humain fonctionne.</p>
-                <p>Si vous aimez mettre les mains dans le camboui, ne vous gênez pas, le code est libre et disponible. Les forks, rapports de bugs et autres commentaires <a href="https://git.framasoft.org/sycom/userScripts/issues">se font sur l'instance gitlab de framasoft</a>.</p>
-                <h2>Et ensuite? feuille de route</h2>
-                <p>A ce stade, il s'agit plus d'une liste d'idées en vrac que d'une vraie feuille de route.<ul>
-                	<li>permettre à l'utilisateur de changer (assez) facilement la boutique de son choix</li>
-                	<li>permettre à un libraire d'installer sur son site en ligne un bouton qui ajoutera la boutique au script</li>
-                	<li>étendre le concept à d'autres boutiques que les livres</li>
-                	<li>transformer le script en extensions pour les navigateurs</li>
-                	<li>créer une version mobile, des extensions...</li>
-                </ul>
-                Bref, du boulot pour 10 ans ;-)
-                </p>
-            </div>
-        </div>
+		<div class="row">
+			<div>
+				<h2 id="contribuer">Contribuer</h2>
+				<p>Vous pouvez tester le script. Vous pouvez signaler tout problème ou faire des suggestion en cliquant là : <a href="#title" class="fa fa-bug pgiButton"></a>. Le <a href="#contact">contact</a> humain fonctionne également.</p>
+				<p>Si vous aimez mettre les mains dans le camboui, ne vous gênez pas, le code est libre et disponible. Les forks, rapports de bugs et autres commentaires <a href="https://framagit.org/sycom/userScripts/issues">se font sur l'instance gitlab de framasoft</a>.</p>
+				<h2>Et ensuite? feuille de route</h2>
+				<p>A ce stade, il s'agit plus d'une liste d'idées en vrac que d'une vraie feuille de route.
+					<ul>
+						<li>permettre à un libraire d'installer sur son site en ligne un bouton qui ajoutera la boutique au script</li>
+						<li>étendre le concept à d'autres boutiques que les livres</li>
+						<li>transformer le script en extensions pour les navigateurs</li>
+						<li>créer une version mobile, des extensions...</li>
+					</ul>
+					Bref, du boulot pour 10 ans ;-)
+				</p>
+			</div>
+		</div>
 
 		<div class="row contact">
 			<div class="right" id="contact">
 				<h3>Contact</h3>
 				<span class="fa-stack fa-lg">
-					<i class="fa fa-circle fa-stack-2x"></i>
-					<a class="fa fa-google-plus fa-stack-1x fa-inverse" href="https://plus.google.com/u/0/+SylvainComte/about" title="Google +"
+               <i class="fa fa-circle fa-stack-2x"></i>
+               <a class="fa fa-google-plus fa-stack-1x fa-inverse" href="https://plus.google.com/u/0/+SylvainComte/about" title="Google +"
 target="_blank"><span class="label">Google +</span></a>
 				</span>
 				<span class="fa-stack fa-lg">
-					<i class="fa fa-circle fa-stack-2x"></i>
-					<a class="fa fa-twitter fa-stack-1x fa-inverse" href="http://twitter/sycom" title="Twitter" target="_blank"><span class=
+               <i class="fa fa-circle fa-stack-2x"></i>
+               <a class="fa fa-twitter fa-stack-1x fa-inverse" href="http://twitter/sycom" title="Twitter" target="_blank"><span class=
 "label">Twitter</span></a>
 				</span>
-                <span class="fa-stack fa-lg">
-					<i class="fa fa-circle fa-stack-2x"></i>
-					<a class="fa fa-gitlab fa-stack-1x fa-inverse" href="https://git.framasoft.org/u/sycom" title="Github" target="_blank"><span class="label">Gitlab</span></a>
+				<span class="fa-stack fa-lg">
+               <i class="fa fa-circle fa-stack-2x"></i>
+               <a class="fa fa-gitlab fa-stack-1x fa-inverse" href="https://framagit.org/u/sycom" title="Framagit" target="_blank"><span class="label">Gitlab</span></a>
 				</span>
 				<span class="fa-stack fa-lg">
-					<i class="fa fa-circle fa-stack-2x"></i>
-					<a class="fa fa-github fa-stack-1x fa-inverse" href="https://github.com/sycom" title="Github" target="_blank"><span class="label">Github</span></a>
+               <i class="fa fa-circle fa-stack-2x"></i>
+               <a class="fa fa-github fa-stack-1x fa-inverse" href="https://github.com/sycom" title="Github" target="_blank"><span class="label">Github</span></a>
 				</span>
 				<span class="fa-stack fa-lg">
-					<i class="fa fa-circle fa-stack-2x"></i>
-					<a class="fa fa-linkedin fa-stack-1x fa-inverse" href="http://www.linkedin.com/in/sylvaincomte" title="Linked in" target="_blank"><span class="label">Linked in</span></a>
+               <i class="fa fa-circle fa-stack-2x"></i>
+               <a class="fa fa-linkedin fa-stack-1x fa-inverse" href="http://www.linkedin.com/in/sylvaincomte" title="Linked in" target="_blank"><span class="label">Linked in</span></a>
 				</span>
 			</div>
 		</div>
 	</div>
 	<footer id="footer" role="contentinfo" class="footer">
-        <p>Ce projet n'a rien à voir avec les boutiques concernées. Pas celle de l'ogre bien sûr, mais pas non plus <a href="http://www.librairie-quaidesmomes.com/">celle de Stéphane</a>, même si c'est au cours d'une discussion avec lui que l'idée est née...</p>
+		<p>Ce projet n'a rien à voir avec les boutiques concernées. Pas celle de l'ogre bien sûr, mais pas non plus <a href="http://www.librairie-quaidesmomes.com/">celle de Stéphane</a>, même si c'est au cours d'une discussion avec lui que l'idée est née...</p>
 		<p>page propulsée à l'aide de <a href="http://necolas.github.io/normalize.css/" target="_blank">normalize</a>, <a href="http://fontawesome.io" target="_blank">font-awesome</a> et un peu d'huile de doigts</p>
 	</footer>
-<script>
-	(function(i, s, o, g, r, a, m) {
-		i['GoogleAnalyticsObject'] = r;
-		i[r] = i[r] || function() {
-			(i[r].q = i[r].q || []).push(arguments)
-		}, i[r].l = 1 * new Date();
-		a = s.createElement(o),
-			m = s.getElementsByTagName(o)[0];
-		a.async = 1;
-		a.src = g;
-		m.parentNode.insertBefore(a, m)
-	})(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+	<script>
+		(function(i, s, o, g, r, a, m) {
+			i['GoogleAnalyticsObject'] = r;
+			i[r] = i[r] || function() {
+				(i[r].q = i[r].q || []).push(arguments)
+			}, i[r].l = 1 * new Date();
+			a = s.createElement(o),
+				m = s.getElementsByTagName(o)[0];
+			a.async = 1;
+			a.src = g;
+			m.parentNode.insertBefore(a, m)
+		})(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
-	ga('create', 'UA-109815-12', {
-		'name': 'githubTracking',
-		'cookieDomain': 'github.io'
-	});
-	ga('send', 'pageview');
-</script>
+		ga('create', 'UA-109815-12', {
+			'name': 'githubTracking',
+			'cookieDomain': 'github.io'
+		});
+		ga('send', 'pageview');
+	</script>
 </body>
+
 </html>

@@ -12,11 +12,19 @@ var pGi={
    token:"84AixuCbHNbTx36_gmUw",               // token !WARNING! this_is_your_SECONDARY_gitlab_token_with_ONLY_GUEST_PRIVILEGE
 /* F I E L D S list*/
    form:[
-       {name:"objet",type:"text",dest:"title",def:"objet de votre rapport",req:true,hid:false},
-       {name:"description",type:"textarea",dest:"description",def:"merci de décrire tout ça le plus précisémment possible. Pour un suivi personnalisé, laissez des informations de contact. Attention, tout est publiquement accessible.",req:false,hid:false}
+       {name:"nom",type:"text",dest:"title",def:"nom de la boutique",req:true,hid:false},
+       {name:"urlBout",type:"url",dest:"description",def:"http://site.internet",req:false,hid:false},
+       {name:"urlRech",type:"url",dest:"description",def:"http://site.internet.boutique.pour.chercher.les.livres?",req:false,hid:false},
+       {name:"ville pays",type:"text",dest:"title",def:"ville",req:true,hid:false},
+       {name:"addresse",type:"text",dest:"description",def:"adresse",req:false,hid:false},
+       {name:"phone",type:"text",dest:"description",def:"téléphone",req:false,hid:false},
+       {name:"mail",type:"email",dest:"description",def:"addresse email",req:false,hid:false},
+       {name:"coord",type:"text",dest:"description",def:"coordonnées GPS",req:false,hid:false},
+       {name:"sujet",type:"text",dest:"labels",def:"OoA,bookstore",req:false,hid:true},
+       {name:"comment",type:"textarea",dest:"description",def:"ajoutez tout commentaire qui vous paraitra utile. Attention, tout est publiquement accessible.",req:false,hid:false}
    ],
-   intro:"Pour proposer une amélioration à Out of Am*z*n ou signaler un bug, merci de remplir le formulaire...",
-   thanks:"Merci pour pour votre participation. Restez connecté...",
+   intro:"Pour proposer une nouvelle boutique ou demander des corrections sur une boutique existante, merci de remplir le formulaire...",
+   thanks:"Merci pour cette proposition. Restez connecté...",
    autoclose:30000
 }
 /* H E L P
