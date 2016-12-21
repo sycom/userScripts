@@ -1,150 +1,61 @@
 // ==UserScript==
-// @name			Twitter Follow Helper
+// @name				Twitter Follow Helper
 // @author			Sylvain Comte
 // @namespace		http://sylvain.comte.online.fr
-// @description		Display several informations about the twitter profile your looking at to help you decide wether or not s/he's worth following
-// @version			0.6
-// @licence creative-commons by-nc-sa
-// @include    http://twitter.com*
-// @include    http://www.twitter.com*
-// @include    https://twitter.com*
-// @include    https://www.twitter.com*
+// @description	Display several informations about the twitter profile your looking at to help you decide wether or not s/he's worth following
+// @version			0.7.0
+// @licence 	---creative-commons by-nc-sa---
+// @include    	http://twitter.com*
+// @include    	http://www.twitter.com*
+// @include    	https://twitter.com*
+// @include    	https://www.twitter.com*
+// @require    	https://cdn.jsdelivr.net/jquery/3.1.1/jquery.min.js
+// @grant      	GM_getValue
+// @grant      	GM_setValue
+// @grant      	GM_addStyle
 // ==/UserScript==
 
-/******* TFH **********/
-// all infos about tfh are at bit.ly/scolProdTFH
+// all infos about tfh are at ---bit.ly/scolProdTFH---
 
 // Styling
 GM_addStyle(".showMoreWhen {display:block} .naturallyHidden {display:none} .showMoreWhen:hover .naturallyHidden {display:inline}");
 GM_addStyle(".label {font-weight:bold}");
 GM_addStyle("#TFH-propBy {margin:0;padding:0 0.25em;font-style:italic;text-align:right;font-size:0.75em; #TFH-propBy a {text-decoration:underline}");
 
-/********** SCRIPT VERSION CONTROL 0.5 *************/
-// Any help about this functions can be found at
-// http://sylvain.comte.online.fr/AirCarnet/?post/GreaseMonkey-Script-Update-Control
-/* parameters */
-/* SET YOUR OWN SCRIPT VALUES */
-var thisId=74862;		// your script userscript id
-var thisVersion="0.6.1";		// the @version metadata value
-var thisReleaseDate="20120530"; // release date of your script. Not mandatory, use this paramater
-								// only if you want to be sharp on version control frequency.
-/* script version control parameters */
-var GMSUCtime=14;   // Delay before alert disapears (seconds)
-                    // set to 0 if you don't want it to disapear (might be a bit intrusive!)
-var GMSUCfreq=3;    // Update control frequency (days)
-
-/* colorpalettes */
-	// feel free to create your own. color in this order : back, highlight, front, light.
-	var cpChrome=new colorPalette("#E1ECFE","#FD2","#4277CF","#FFF");	// but for Firefox ;-)
-	var cpUserscript=new colorPalette("#000","#F80","#FFF","#EEE");		// javascrgeek only
-	var cpFlickr=new colorPalette("#FFF","#FF0084","#0063DC","#FFF");	// pink my blue
-// choose yours
-var GMSUCPal=cpUserscript; 	// colorPalette you prefer
-/* launching script version control  */
-GM_scriptVersionControl();
-
-// define launch function
-function GM_scriptVersionControl() {
-	if(self.location==top.location) { // avoid script execution in each frame of the page
-		// test if script should be performed to control new release regarding frequency
-		var GMSUCreleaseDate=new Date();
-		GMSUCreleaseDate.setFullYear(eval(thisReleaseDate.substring(0,4)),eval(thisReleaseDate.substring(4,6))-1,eval(thisReleaseDate.substring(6,8)));
-		var GMSUCtoday=new Date(); var GMSUCdif=Math.floor((GMSUCtoday-GMSUCreleaseDate)/1000/60/60/24);
-		if (GMSUCdif%GMSUCfreq==0) {
-			GMSUC_Control();
-			}}}
-
-// define control function
-function GMSUC_Control() {
-	var scriptId=thisId;var version=thisVersion;
-	var scriptUrl="http://userscripts.org/scripts/source/"+scriptId+".meta.js";
-	// go to script home page to get official release number and compare it to current one
-	GM_xmlhttpRequest({
-		method: 'GET',
-		url: scriptUrl,
-		headers: {
-			 'User-agent': 'Mozilla/4.0 (compatible) Greasemonkey/0.3',
-			 'Accept': 'text/html,application/xml,text/xml',
-			 },
-		onload: function(responseDetails) {
-			var textResp=responseDetails.responseText;
-			var offRel=/\/\/\s*@version\s*(.*)\s*\n/i.exec(textResp)[1];
-			var scriptName=/\/\/\s*@name\s*(.*)\s*\n/i.exec(textResp)[1];
-			if(offRel!=version) {
-				// Styling
-				GM_addStyle("#GMSUC-alerte {position:absolute;top:5px;left:50%;margin:20px 0 0 -128px;padding:6px;width:250px;z-index:42;-moz-border-radius:6px;background:"+GMSUCPal.back+";border:"+GMSUCPal.light+" 1px solid;color:"+GMSUCPal.front+";font-size:1em;text-align:center} #GMSUC-alerte a {font-weight:bold;font-size:1em} #GMSUC-alerte * {color:"+GMSUCPal.front+";} #GMSUC-alerte table {width:100%;margin:0.5em 0 0 0} #GMSUC-alerte td {width:33%;text-align:center;border:solid 1px "+GMSUCPal.front+"} #GMSUC-alerte td:hover{background:"+GMSUCPal.high+"} #GMSUC-alerte td:hover a {color:"+GMSUCPal.front+"} #GMSUC-timer {font:2em bold;margin:0.5em 0 0 0} #GMSUC-info {text-align:right;font:0.5em serif;margin:1em 0 0 0} #GMSUC-info a {font:75% serif}  #GMSUC-info a:hover {background:"+GMSUCPal.front+";color:"+GMSUCPal.back+"}");
-				// Lang detection and apply
-				var Langues="en, fr";
-				var lang=navigator.language;
-				var reg=new RegExp(lang,"g");
-				if(!Langues.match(lang)) lang="en";
-				/* traductions / translations */
-					var Txt=new Array();
-					for(i=1;i<7;i++) {Txt[i]=new Array();} 
-					// français
-					Txt[1]["fr"]="Vous utilisez la version";
-					Txt[2]["fr"]="du script";
-					Txt[3]["fr"]="La version officielle est différente";
-					Txt[4]["fr"]="installer";
-					Txt[5]["fr"]="voir le code";
-					Txt[6]["fr"]="propulsé par";
-					// english
-					Txt[1]["en"]="You're using";
-					Txt[2]["en"]="version of";
-					Txt[3]["en"]="script. Official release version is different";
-					Txt[4]["en"]="install";
-					Txt[5]["en"]="view code";
-					Txt[6]["en"]="powered by";
-				/* ------------------------------- */	
-				var alerte=document.createElement('div');
-				alerte.setAttribute('id','GMSUC-alerte');
-				var GMSUCtextAlerte=Txt[1][lang]+" "+version+" "+Txt[2][lang]+" <i><b>"+scriptName+"</b></i>";
-				GMSUCtextAlerte+=". "+Txt[3][lang]+" (<a href='http://userscripts.org/scripts/show/"+scriptId+"'>"+offRel+"</a>)";
-				GMSUCtextAlerte+="";
-				GMSUCtextAlerte+="<table><tr><td><a href='http://userscripts.org/scripts/show/"+scriptId+"'>v."+offRel+"</a></td><td><a href='http://userscripts.org/scripts/review/"+scriptId+"'>"+Txt[5][lang]+"</a></td><td><a  href='http://userscripts.org/scripts/source/"+scriptId+".user.js'>"+Txt[4][lang]+"</a></td></tr></table>"
-				if(GMSUCtime>0) GMSUCtextAlerte+="<div id='GMSUC-timer'>"+GMSUCtime+" s</div>";
-				GMSUCtextAlerte+="<div id='GMSUC-info'>"+Txt[6][lang]+" <a href='http://sylvain.comte.online.fr/AirCarnet/?post/GreaseMonkey-Script-Update-Control'>GM Script Update Control</a></div>";
-				document.body.appendChild(alerte);
-				document.getElementById('GMSUC-alerte').innerHTML=GMSUCtextAlerte;
-				if(GMSUCtime>0) {
-					function disparition() {
-						if(GMSUCtime>0) {
-							document.getElementById("GMSUC-timer").innerHTML=GMSUCtime+" s";
-							GMSUCtime+=-1;
-							setTimeout(disparition,1000)
-							}
-						else document.getElementById("GMSUC-alerte").setAttribute("style","display:none");
-						}
-					disparition();
-					}
-				}
-			}
-		});
-	}
-/* Color palette creator */	
-function colorPalette(b,h,f,l) {this.back=b;this.high=h;this.front=f;this.light=l;}	
-/******* END OF SCRIPT VERSION CONTROL **********/
-
 // variables
-var you=null; 			// who are you?	
-var yFng,yFrs,yList;	// store some stats about you here. Add elsewhere with GM data storing?
-var user;				// who is the user?
-var Datas=new Array();	// a Data collector, in case you are a Data geek ;-)
+var you = null; // who are you?
+var yFng, yFrs, yList; // store some stats about you here. Add elsewhere with GM data storing?
+var user; // who is the user?
+var Datas = new Array(); // a Data collector, in case you are a Data geek ;-)
 
+// avoid conflict on pages already running jQuery
+this.$ = this.jQuery = jQuery.noConflict(true);
+
+(function($) {
+	$(function() {
+		console.log($(".js-mini-current-user").attr("data-user-id"));
+})(jQuery);
+
+/* functions
 // execution
-giveMeInfos();
 
-// functions
+
+
+
+
+
+
+
 function giveMeInfos() {
-	// let's wait for jQuery to load (Twitter does this) then launch 
-    if(typeof unsafeWindow.jQuery=='undefined') window.setTimeout(giveMeInfos,10);
+	// let's wait for jQuery to load (Twitter does this) then launch
+    if(!$) window.setTimeout(giveMeInfos,10);
     else {
-		jQ=unsafeWindow.jQuery;
-		linkify();
-		seekDatas();
+			alert("ok y a jquery");
+		   //linkify();
+		   //seekDatas();
 		}
 	}
-	
+
 function linkify() {
 	if(typeof jQ('.js-action-profile')[0]=='undefined') window.setTimeout(linkify,42);
 	else {
@@ -156,12 +67,12 @@ function linkify() {
 			if(jQ(this).hasClass('js-action-profile')) {
 				var id=jQ(this).attr('href').split("/#!/")[1];
 				window.location="https://twitter.com/"+id;
-				}	
+				}
 			});
-		}	
-	}	
+		}
+	}
 
-function seekDatas() {	
+function seekDatas() {
 	// waiting for f... "new" twitter ajax ui to load
 	if(typeof jQ('.screen-name')[0]=='undefined') window.setTimeout(seekDatas,10);
 	else {
@@ -211,7 +122,7 @@ function seekDatas() {
 			if(you==null && jQ(".js-mini-current-user")[0]) you=jQ(".js-mini-current-user")[0].getAttribute("data-screen-name");
 			// data search
 			followingYou(user,0);
-			getSocialData(you,user,1);
+		//	getSocialData(you,user,1);
 			getRepliesAndFollowCost(user,2,4);
 		//	getFavstarData(user,3); suspended for the moment
 			getKloutScore(user,5)
@@ -220,7 +131,7 @@ function seekDatas() {
 			discoverMore(user,8);
 		}
 	}
-	
+
 // dispatching datas on the screen
 function displayDatas(data,j) {
 	var li=jQ('#TFH-i-'+j);
@@ -235,13 +146,13 @@ function followingYou(username,k) {
 		htm="tell me <a href='login'>who you are</a> please";
 		displayDatas(htm,k);
 		}
-	else {	
+	else {
 		if(you==user) {
 			htm="<li><span class='label'>Following yourself</span> :-)</li>";
 			displayDatas(htm,k);
 			Datas[user][4]=1;
 			}
-		else {		
+		else {
 			var doesFollowUrl="http://www.doesfollow.com/"+username+"/"+you;
 			GM_xmlhttpRequest({
 				method: 'GET',
@@ -270,7 +181,7 @@ function followingYou(username,k) {
 				});
 			}
 		}
-	}		
+	}
 
 function getRepliesAndFollowCost(username,k,l) {
 // followCost from http://followcost.com and @replay %
@@ -280,7 +191,7 @@ function getRepliesAndFollowCost(username,k,l) {
 	displayDatas(htm,l);
 	jQ.getJSON("http://followcost.com/"+username+".json?callback=?", function(json) {
 		Datas[user][5]=json.at_reply_index;Datas[user][6]=json.milliscobles_recently;Datas[user][7]=json.milliscobles_all_time;Datas[user][8]=json.average_tweets_per_day_recently;
-		
+
 		if(json.at_reply_index==null) htm="unable to retrieve <span class='label'>@replies</span> rate";
 		else htm="<span class='label'>@replies</span> <a href='http://followcost.com/" + username +"' class='url'>"+ json.at_reply_index +" %</a>";
 		displayDatas(htm,k)
@@ -327,7 +238,7 @@ function getSocialData(user0,user1,k) {
 							}
 						else {
 							cFollowers=/The (\w+) (person|people) that follow[s]{0,1} both users/.exec(textResp)[1];
-							htm+="<br/>&nbsp;&nbsp;- <a href='http://twtrfrnd.com/"+user0+"/"+user1+"#groupFollowers' class='url'>"+cFollowers+" follower(s) in common</a>";						
+							htm+="<br/>&nbsp;&nbsp;- <a href='http://twtrfrnd.com/"+user0+"/"+user1+"#groupFollowers' class='url'>"+cFollowers+" follower(s) in common</a>";
 							convergence=eval(Math.sqrt(cFollowers*cFollowers/yFrs/Datas[user][3]));
 							}
 						if(/There are no people that both users follow/.test(textResp)) {
@@ -352,7 +263,7 @@ function getSocialData(user0,user1,k) {
 						convergence=Math.round(convergence*10000)/100;
 						Datas[user][11]=convergence;Datas[user][12]=cFollowers;Datas[user][13]=cFriends;Datas[user][14]=cIndic;
 						htm="<span class='label'>Social graph</span> convergence : "+convergence+"%"+htm;
-						}	
+						}
 					displayDatas(htm,k);
 					},
 				onerror: function(responseDetails) {
@@ -365,11 +276,11 @@ function getSocialData(user0,user1,k) {
 			htm="<span class='label'>Social graph</span> convergence for yourself is 100% of course";
 			displayDatas(htm,k);
 			}
-		}	
+		}
 	}
 
 function getKloutScore(username,k) {
-	// klout score from http://klout.com you'll have to 
+	// klout score from http://klout.com you'll have to
 	// get YOUR OWN API key to perform this (http://developer.klout.com)
 	// It's free so don't hurt mine please.
 	var kId;
@@ -440,7 +351,7 @@ function getSearchPop(username,k) {
 			}
 		else htm="<span class='label'>Search score</span> <a href='http://twitter.com/#search?q=%40"+username+"'>not enough mentioned</a>";
 		displayDatas(htm,k);
-		});	
+		});
 	}
 
 function discoverMore(username,k) {
@@ -485,8 +396,8 @@ function discoverMore(username,k) {
 			}
 		});
 	}
-	
+
 // support functions
 function hasClass(element,classe) {
 	return (' '+element.className+' ').indexOf(' '+classe+' ')>-1;
-	}
+	}*/
