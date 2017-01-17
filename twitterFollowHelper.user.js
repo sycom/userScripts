@@ -5,38 +5,99 @@
 // @description	Display several informations about the twitter profile your looking at to help you decide wether or not s/he's worth following
 // @version			0.7.0
 // @licence 	---creative-commons by-nc-sa---
-// @include    	http://twitter.com*
-// @include    	http://www.twitter.com*
-// @include    	https://twitter.com*
-// @include    	https://www.twitter.com*
+// @include    	http://twitter.com/*
+// @include    	http://www.twitter.com/*
+// @include    	https://twitter.com/*
+// @include    	https://www.twitter.com/*
 // @require    	https://cdn.jsdelivr.net/jquery/3.1.1/jquery.min.js
 // @grant      	GM_getValue
+// @grant			GM_xmlhttpRequest
 // @grant      	GM_setValue
 // @grant      	GM_addStyle
 // ==/UserScript==
 
 // all infos about tfh are at ---bit.ly/scolProdTFH---
+console.log("TFH > running");
 
 // Styling
 GM_addStyle(".showMoreWhen {display:block} .naturallyHidden {display:none} .showMoreWhen:hover .naturallyHidden {display:inline}");
 GM_addStyle(".label {font-weight:bold}");
 GM_addStyle("#TFH-propBy {margin:0;padding:0 0.25em;font-style:italic;text-align:right;font-size:0.75em; #TFH-propBy a {text-decoration:underline}");
+GM_addStyle(".TFH_score {position:absolute;left:0;top:0;z-index:100;padding:50px 1em 1em 1em; opacity:.8;width:3em} .TFH_Bubble {width:2.5em;height:2.5em;border-radius:50%;box-shadow:0 0 1em white} .TFH_I {padding:.25em .5em} .TFH_NN {background:#d55;color:white} .TFH_P {background:#BB8;color:white} .TFH_PP {background:green;color:white}");
 
 // variables
-var you = null; // who are you?
-var yFng, yFrs, yList; // store some stats about you here. Add elsewhere with GM data storing?
-var user; // who is the user?
-var Datas = new Array(); // a Data collector, in case you are a Data geek ;-)
+var You, // store some stats about you here. Add also elsewhere with GM data storing?
+    User, // who is the user?
+    PageData, // data stored in page
+    TFH_score = "", // the graphical score
+    Datas = []; // a Data collector, in case you are a Data geek ;-)
 
 // avoid conflict on pages already running jQuery
 this.$ = this.jQuery = jQuery.noConflict(true);
 
 (function($) {
-	$(function() {
-		console.log($(".js-mini-current-user").attr("data-user-id"));
+    $(function() {
+        // getting huge data
+        PageData = JSON.parse($('#init-data').attr('value').replace(/&quot;/g, '"').replace(/\\\//g, '/'));
+        // getting data about user
+        User = PageData.profile_user;
+        console.log("TFH > User");
+        console.log(User);
+        // getting some data about you
+        // checking if on own page
+        if (User.screenName == PageData.screenName) {
+            console.log("TFH > you're on own page stupid!");
+        } else {
+            // get full info about yourself by xmlhttprequesting your page
+            var yourUrl = "https://twitter.com/" + PageData.screenName;
+            GM_xmlhttpRequest({
+                method: 'GET',
+                url: yourUrl,
+                headers: {
+                    'User-agent': 'Mozilla/4.0 (compatible)',
+                    'Accept': 'text/html,application/xml,text/xml',
+                },
+                onload: function(responseDetails) {
+                    var textResp = responseDetails.responseText;
+                    var regEx = /id=\"init-data\" class=\"json-data\" value=\"(.*)\">/g;
+                    You = JSON.parse(regEx.exec(textResp)[1].replace(/&quot;/g, '"').replace(/\\\//g, '/')).profile_user;
+                    // all things requiring You.xxx stats must take place thereafter
+                    console.log("TFH > You");
+                    console.log(You);
+                },
+                onerror: function(responseDetails) {
+                    console.log("TFH > error getting your data");
+                }
+            });
+        }
+
+        /* first calculations */
+        // mutual following
+        if (User.following == false) {
+            // !todo moderate this if tweepl is a "Star"
+            // if following is recent, it may not be stored in "profile_user"
+            console.log($('.FollowStatus').length);
+            if ($('.FollowStatus').length != 0) {
+                $('.FollowStatus').addClass('TFH_I TFH_P');
+                TFH_score += tfhBubble('TFH_P');
+            } else {
+                $('.ProfileHeaderCard-screenname').append('<span class="FollowStatus TFH_I TFH_NN">ne vous suit pas</span>');
+                TFH_score += tfhBubble('TFH_NN');
+            }
+        } else {
+            $('.FollowStatus').addClass('TFH_I TFH_PP');
+            TFH_score += tfhBubble('TFH_PP');
+        }
+        $('body').append('<div class="TFH_score">' + TFH_score + '</div>');
+    })
 })(jQuery);
 
-/* functions
+// defining some functions
+function tfhBubble(c) {
+    return ('<div class="TFH_Bubble ' + c + '"></div>');
+}
+
+/* Old code storage
 // execution
 
 
