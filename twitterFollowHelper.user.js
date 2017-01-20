@@ -11,12 +11,15 @@
 // @include    	https://www.twitter.com/*
 // @require    	https://cdn.jsdelivr.net/jquery/3.1.1/jquery.min.js
 // @grant      	GM_getValue
-// @grant			GM_xmlhttpRequest
 // @grant      	GM_setValue
+// @grant			GM_listValues
 // @grant      	GM_addStyle
+// @grant			GM_xmlhttpRequest
 // ==/UserScript==
 
 // all infos about tfh are at ---bit.ly/scolProdTFH---
+if (window.top === window.self) {
+
 console.log("TFH > running");
 
 // Styling
@@ -29,74 +32,94 @@ GM_addStyle(".TFH_score {position:absolute;left:0;top:0;z-index:100;padding:50px
 var You, // store some stats about you here. Add also elsewhere with GM data storing?
     User, // who is the user?
     PageData, // data stored in page
-    TFH_score = "", // the graphical score
-    Datas = []; // a Data collector, in case you are a Data geek ;-)
+    TFH_score = 0, // the graphical score
+	 // !todo : add an option to enable this
+	 Datas = ""; // the Data collector renderer, in case you are a Data geek ;-)
+	 // !todo : an option to clean those Datas
 
 // avoid conflict on pages already running jQuery
 this.$ = this.jQuery = jQuery.noConflict(true);
 
 (function($) {
     $(function() {
-        // getting huge data
-        PageData = JSON.parse($('#init-data').attr('value').replace(/&quot;/g, '"').replace(/\\\//g, '/'));
-        // getting data about user
-        User = PageData.profile_user;
-        console.log("TFH > User");
-        console.log(User);
-        // getting some data about you
-        // checking if on own page
-        if (User.screenName == PageData.screenName) {
-            console.log("TFH > you're on own page stupid!");
-        } else {
-            // get full info about yourself by xmlhttprequesting your page
-            var yourUrl = "https://twitter.com/" + PageData.screenName;
-            GM_xmlhttpRequest({
-                method: 'GET',
-                url: yourUrl,
-                headers: {
-                    'User-agent': 'Mozilla/4.0 (compatible)',
-                    'Accept': 'text/html,application/xml,text/xml',
-                },
-                onload: function(responseDetails) {
-                    var textResp = responseDetails.responseText;
-                    var regEx = /id=\"init-data\" class=\"json-data\" value=\"(.*)\">/g;
-                    You = JSON.parse(regEx.exec(textResp)[1].replace(/&quot;/g, '"').replace(/\\\//g, '/')).profile_user;
-                    // all things requiring You.xxx stats must take place thereafter
-                    console.log("TFH > You");
-                    console.log(You);
-                },
-                onerror: function(responseDetails) {
-                    console.log("TFH > error getting your data");
-                }
-            });
-        }
-
-        /* first calculations */
-        // mutual following
-        if (User.following == false) {
-            // !todo moderate this if tweepl is a "Star"
-            // if following is recent, it may not be stored in "profile_user"
-            console.log($('.FollowStatus').length);
-            if ($('.FollowStatus').length != 0) {
-                $('.FollowStatus').addClass('TFH_I TFH_P');
-                TFH_score += tfhBubble('TFH_P');
+        // getting huge data if exists
+		  if ($('#init-data').length != 0) {
+	        PageData = JSON.parse($('#init-data').attr('value').replace(/&quot;/g, '"').replace(/\\\//g, '/'));
+	        // getting data about user
+	        User = PageData.profile_user;
+console.log("TFH > User " +User.screen_name);
+			  // counting visits
+			  if(GM_getValue(User.screen_name) != undefined) User.tfh_visit_count +=1;
+			  else User.tfh_visit_count +=1;
+			  // !todo (maybe) archive data before adding the new ones
+			  GM_setValue(User.screen_name+'',JSON.stringify(User));
+console.log(User);
+	        // getting some data about you
+	        // checking if on own page
+			  if (User.screen_name == PageData.screenName) {
+console.log("TFH > you're on own page stupid!");
+	        } else {
+	            // get full info about yourself by xmlhttprequesting your page
+	            var yourUrl = "https://twitter.com/" + PageData.screenName;
+	            GM_xmlhttpRequest({
+	                method: 'GET',
+	                url: yourUrl,
+	                headers: {
+	                    'User-agent': 'Mozilla/4.0 (compatible)',
+	                    'Accept': 'text/html,application/xml,text/xml',
+	                },
+	                onload: function(responseDetails) {
+	                    var textResp = responseDetails.responseText;
+	                    var regEx = /id=\"init-data\" class=\"json-data\" value=\"(.*)\">/g;
+	                    You = JSON.parse(regEx.exec(textResp)[1].replace(/&quot;/g, '"').replace(/\\\//g, '/')).profile_user;
+	                    // all things requiring You.xxx stats must take place thereafter
+console.log("TFH > You");
+							  GM_setValue(You.screen_name+'',JSON.stringify(You));
+console.log(You);
+	                },
+	                onerror: function(responseDetails) {
+// !todo complete with some fallback
+console.log("TFH > error getting your own data");
+	                }
+	            });
+	        }
+			  /* create score container */
+			  $('body').append('<div id="TFH_score" class="TFH_score"></div>');
+	        /* first calculations */
+// !todo add some icons
+	        // mutual following
+	        // if (User.following == false) {
+// !todo moderate this if tweepl is a "Star"
+	        if ($('.FollowStatus').length != 0) {
+	            $('.FollowStatus').addClass('TFH_I TFH_P');
+                tfhBubble('TFH_PP','does follow you');
+					 TFH_score +=2;
             } else {
                 $('.ProfileHeaderCard-screenname').append('<span class="FollowStatus TFH_I TFH_NN">ne vous suit pas</span>');
-                TFH_score += tfhBubble('TFH_NN');
+                tfhBubble('TFH_NN','does\'nt follow you');
+					 TFH_score +=-2;
             }
-        } else {
-            $('.FollowStatus').addClass('TFH_I TFH_PP');
-            TFH_score += tfhBubble('TFH_PP');
-        }
-        $('body').append('<div class="TFH_score">' + TFH_score + '</div>');
+
+			  /* social graph convergence */
+
+
+	// listing collected data so far
+	// !todo add ways to activate / clean / collect and display
+	var keys =GM_listValues();
+		 	 for (t in keys) {
+		   		Datas += keys[t] +" : "+GM_getValue(keys[t])+"\n";
+		 		}
+console.log(Datas);
+		  }
     })
 })(jQuery);
 
 // defining some functions
-function tfhBubble(c) {
-    return ('<div class="TFH_Bubble ' + c + '"></div>');
+function tfhBubble(c,t) {
+    $('#TFH_score').append('<div class="TFH_Bubble ' + c + '" title="'+ t +'"></div>');
 }
 
+}
 /* Old code storage
 // execution
 
