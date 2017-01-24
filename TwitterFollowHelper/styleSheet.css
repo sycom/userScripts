@@ -1,0 +1,44 @@
+.TFH_score {
+	position:absolute;
+	left:0;
+	top:0;
+	z-index:10;
+	padding:50px 1em 1em 1em;
+	width:3em;
+	text-align:center;
+}
+
+.TFH_Bubble {
+	box-sizing: border-box;
+	padding:.65em;
+	width:2.5em;
+	height:2.5em;
+	margin:.5em;
+	border-radius:50%;
+	box-shadow:0 0 10px white;
+	text-align:center;
+
+}
+.TFH_I {
+	padding:.25em .5em
+}
+.TFH_NN {
+	background:#b00;
+	color:white
+}
+.TFH_N {
+	background:#c66;
+	color:white
+}
+.THF_O {
+	background:#bbb;
+	color:black
+}
+.TFH_P {
+	background:#cc6;
+	color:white
+}
+.TFH_PP {
+	background:#bb0;
+	color:white
+}
