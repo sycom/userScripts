@@ -13,17 +13,18 @@ For now, each indicators may take 5 values from -2 (bad point - red) to +2 (good
 
 May be we can imagine different sorts of "stars" depending on how huge is their following crew. But it's not the point here. You just have to know the tweepl is or not, since "stars" are very less likely to follow you back or engage with you.
 
-Also, for this, score is allways 0. Follow if you like but don't expect anything...
+Also, for this, __IaS score is allways 0__. Follow if you like but don't expect anything...
+
 
 ## Ify : Following you?
 * if the tweepl is following you're more about to have interaction with him, so it's a good point.
-    * in the future it might be a good idea to moderate this if the tweepl is following a lot ("serial follower")
+    * in the future it might be a good idea to moderate this if the tweepl is following a lot ("serial follower"). That also means that s\he might not hear you as much as you wished.
 * if the tweepl is not following you, may be he just doesn't know how nice you are, so it's a not so bad point.
-    * in the future this will be nuanced if the tweepl is a "star" (to define)
+    * in the future this will be more nuanced if the tweepl is a "star" (see upper)
 
-| Ify | doesn't | doesn't but is a star | does and also x persons |
-| score | -1 | 0 | 2|
-
+| Ify | doesn't | doesn't but is a star | does but also does for xxx | does |
+| --- | ---     | ---                   | ---                        |---   |
+|score| -1      |  0                    |  1                         | 2    |
 
 ## Isgc : Social graph convergence?
 In the past, there were online services helping to count precisely how much followers / following you had in common with tweepl. There's no more. So last info remaining is how much people you follow that are following tweepl (fwfg(y,u) = Fw(y) ∩ Fg(u)).
@@ -31,18 +32,27 @@ So we calculate :
 * Ty : fwfg(y,u) / People you follow
 * Tu : fwfg(y,u) / People following User
 And indicator will be their [geometric mean](https://en.wikipedia.org/wiki/Geometric_mean) expressed in % for readability :
+
 Isgc = 100 * sqrt(Ty*Tu) = 100 * fwfg(y,u) / sqrt(Fw(y) * Fg(u))
 
-Have to browse some profiles to scale this one.
-
 | Isgc | 0 | >a* | >b* | >c* | >d* |
+| --- | --- | --- | --- | --- | --- |
 |score | -2|  -1 |  0  |   1 |  2  |
+_Will have to browse some profiles to scale this one_.
 
 ## The tweepl is a human being
 Probably if Fw(u) is too high, s/he is not able to read all tweets and you may expect low engagement
 
-## The tweepl tweets a lot
-unfortunately [milliscoble](https://en.wikipedia.org/wiki/Robert_Scoble#Milliscoble) are not calculated any more (did you know it [disapeared from the web](https://www.qwant.com/?q=milliscobble&t=all)?). So will have to get this info by dividing Nt(u,all time) / all time and Nt(u,current page)/ current page
+## Ifc : The tweepl tweets a lot
+unfortunately [milliscoble](https://en.wikipedia.org/wiki/Robert_Scoble#Milliscoble) followcost values are not calculated any more (did you know it [disapeared from the web](https://www.qwant.com/?q=milliscobble&t=all)?). So will have to get this info by dividing Nt(u,all time) / all time (and may be Nt(u,current page)/ current page)
+It's pretty ennoying to follow someone tweeting too much and spamming your feed. This one helps you to identify those guys...
+
+No scale for now but the value is displayed in tweets / day
+
+| Ifc | <x* | <a* | <b* | <c* | >d* |
+| --- | --- | --- | --- | --- | --- |
+|score | 2|  1 |  0  |   -1 |  -2  |
+_Will have to browse some profiles to scale this one_.
 
 # Ideas for next
 ## The tweepl favorites a lot
