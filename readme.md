@@ -9,6 +9,11 @@ right now, it's a very young script.
 * On [site homepage map][OoA-home-map] you can pick the local bookstore you wish
 * Then, on french amazon store `http(s)://(www.)amazon.fr`, when looking for a book, a button will be added to remind you you can buy in this local bookstore.
 
+### TFH - Twitter Follow Helper (reloaded version v 0.7)
+This script adds some informations on twitter profile pages (if you're logged in for now). As it is a complete rewrite from scratch, consider it as a full beta also. Former version are archived on this repo, just rewind to see them (not working though).
+
+[documentation](./TwitterFollowHelper/documentation.md) is also a work in progress...
+
 ### [Search Engine Jumper](https://git.framasoft.org/sycom/userScripts/raw/master/SearchEngineJumper.user.js) (v0.1.3) - [SEJ branch](https://git.framasoft.org/sycom/userScripts/tree/SEJ)
 Did you know Google is not the only search engine around there? With Search Engine Jumper, when you perform a search on the internet, you will be provided a lot of links to search same terms on other search engines. Currently works (more or less) on Searx (some instances), Google, Yahoo, Bing and DuckDuckGo. No data collected or anything, of course. Stay tuned...
 
@@ -19,19 +24,6 @@ displays a small icon in the upper left corner of the page. Then, by querying Go
 * rss orange orange > to none of the feeds
 * rss vert green > to some of the feeds
 * rss bleu blue > to all feeds
-
-### TFH - Twitter Follow Helper (last version v 0.6 - 20120530 not maintained for now)
-This script used to add some informations on twitter profile pages (better if you're logged in).
-Find more detailed informations on it's *[home page](bit.ly/scolProdTFH)*
-* is the tweepl following you?
-* is s/he in your current network? (Social Graph Score via twtrfrnd)
-* is s/he conversationale (@replies rate)? (via FollowCost)
-* is s/he a big poster? (via FollowCost)
-* is s/he mentioned in tweets? (via Twitter API)
-* is the tweepl influent and how? (Klout score and type)
-* who does the tweepl like? (via autoFF)
-
-It did also exist in Chrome extension flavour
 
 # circuit
 * **[Framagit][origin]**

@@ -7,6 +7,14 @@ For now, each indicators may take 5 values from -2 (bad point - red) to +2 (good
 * Fw(x) = people "x" follows
 * Nt(x,t) = number of tweets of "x" during time "t"
 
+## IaS : The tweepl is a star
+* If the tweepl has a verified account, s\he is definitly a "star",
+* If Fw(u) / Fg(u) is low, tweepl is a also "star".
+
+May be we can imagine different sorts of "stars" depending on how huge is their following crew. But it's not the point here. You just have to know the tweepl is or not, since "stars" are very less likely to follow you back or engage with you.
+
+Also, for this, score is allways 0. Follow if you like but don't expect anything...
+
 ## Ify : Following you?
 * if the tweepl is following you're more about to have interaction with him, so it's a good point.
     * in the future it might be a good idea to moderate this if the tweepl is following a lot ("serial follower")
@@ -30,9 +38,6 @@ Have to browse some profiles to scale this one.
 | Isgc | 0 | >a* | >b* | >c* | >d* |
 |score | -2|  -1 |  0  |   1 |  2  |
 
-## The tweepl is a star
-Probably if Fw(u) / Fg(u) is low, tweepl is a "star". Also have to check if Fg(u) is high.
-
 ## The tweepl is a human being
 Probably if Fw(u) is too high, s/he is not able to read all tweets and you may expect low engagement
 
@@ -46,6 +51,19 @@ unfortunately [milliscoble](https://en.wikipedia.org/wiki/Robert_Scoble#Millisco
 ## ...
 
 # Ideas to keep in mind in old code
+
+### TFH - Twitter Follow Helper (last version v 0.6 - 20120530 not maintained for now)
+This script used to add some informations on twitter profile pages (better if you're logged in).
+Find more detailed informations on it's *[home page](bit.ly/scolProdTFH)*
+* is the tweepl following you?
+* is s/he in your current network? (Social Graph Score via twtrfrnd)
+* is s/he conversationale (@replies rate)? (via FollowCost)
+-
+* is s/he a big poster? (via FollowCost)
+* is s/he mentioned in tweets? (via Twitter API)
+* is the tweepl influent and how? (Klout score and type)
+* who does the tweepl like? (via autoFF)
+
 
 ````
 function giveMeInfos() {
