@@ -17,6 +17,10 @@ This script adds some informations on twitter profile pages (if you're logged in
 ### [Search Engine Jumper](https://git.framasoft.org/sycom/userScripts/raw/master/SearchEngineJumper.user.js) (v0.1.3) - [SEJ branch](https://git.framasoft.org/sycom/userScripts/tree/SEJ)
 Did you know Google is not the only search engine around there? With Search Engine Jumper, when you perform a search on the internet, you will be provided a lot of links to search same terms on other search engines. Currently works (more or less) on Searx (some instances), Google, Yahoo, Bing and DuckDuckGo. No data collected or anything, of course. Stay tuned...
 
+### [Rick Astley Super April](https://framagit.org/sycom/userScripts/raw/master/rickAstleySuperApril.user.js)
+(v0.0.0) - [rASA branch](https://framagit.org/sycom/userScripts/tree/rASA)
+A very very basic script created to funly demonstrate to my children how fast easy it is to code. Will transform any link on any page into a link to Rick Astley's video...
+
 ### Smart Google Reader Subscribe Button (last version 2.1b no more use)
 As of Jul 2 2013, this script doesn't work anymore since Google shut down Google Reader. But you may find the script useful as the API is (partialy) reused by many *copycats* ;-)
 *You may visit [the script homepage](http://sylvain.comte.online.fr/AirCarnet/?post/Smart-Google-Subscriber) if you want more information*
