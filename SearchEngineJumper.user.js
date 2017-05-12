@@ -166,7 +166,7 @@ var SEJ_SeList = [
         'liste': [
             {
                'name': 'Mastodon',
-                'url': 'https://www.tootsearch.com/?q='
+                'url': 'https://cler.ical.ist/?q='
             },
             {
                 'name': 'Google+',
