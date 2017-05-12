@@ -4,15 +4,18 @@
 // @description  parce que souvent, les acronymes, on y comprend rien.
 // @downloadURL  https://git.framasoft.org/sycom/userScripts/raw/master/GouvCronyme.user.js
 // @include     /^https?://.*\.gouv\.fr/?.*$/
+// @include     /^https?://.*\.gouvernement\.fr/?.*$/
 // @author	     Sylvain Comte
-// @version      0.0.2
+// @version      0.0.3
 // @require      https://cdn.jsdelivr.net/jquery/3.2.1/jquery.min.js
-// @grant       GM_xmlhttpRequest
+// @grant        GM_xmlhttpRequest
 // @noframes
 // ==/UserScript==
 console.log('GVC > running');
 this.$ = this.jQuery = jQuery.noConflict(true); // avoid conflict on pages already running jQuery
-var Accr = [];
+
+var Accr = [], // le tableau des acronymes récupérés sur RCAUAF
+    regCheck = new RegExp(/[A-Z]+[\w\d]*[A-Z]+[\w\d]*(?![\w]\s)/g); // repère tous les groupes de plus de deux lettres en majuscules qui se suivent et ne sont pas déjà des <abbr>
 
 $(document).ready(function() {
     // récupération du fichier des acronymes
@@ -64,17 +67,17 @@ $(document).ready(function() {
         }
     });
 
-    // repère tous les groupes de plus de deux lettres en majuscules qui se suivent
-    // et ne sont pas déjà des <abbr>
-    var regCheck = new RegExp(/[A-Z]{2,}(?![A-Z]<\/abbr>)/g);
-
     function transCronym() {
         console.log('GVC > transCronym launched');
         // stop observing
         //observer.disconnect();
         // récupère l'ensemble des noeuds texte dans body
         $('body *:not(script)').contents().filter(function() {
-            return this.nodeType === 3;
+            var ok = 0;
+            if (this.nodeType === 3) {
+                if(this.parentNode.nodeName !== "ABBR") ok = 1;
+            }
+            return ok;
         }).replaceWith(function() {
             // récupère le contenu du noeud
             var content = this.nodeValue;
@@ -89,7 +92,7 @@ $(document).ready(function() {
                         // récupère l'ensemble des significations possibles et les lie avec "ou "
                         var acro = Accr[result[m]][0];
                         for (var a = 1; a < Accr[result[m]].length; a++) {
-                            acro += "ou " + Accr[result[m]][1];
+                            acro += " ou " + Accr[result[m]][1];
                         }
                         // procède au remplacement de ACRONYM par <abbr title="sens de l'acronyme">ACRONYM</abbr>
                         var reg = new RegExp(result[m], "g");
