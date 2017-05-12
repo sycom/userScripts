@@ -6,7 +6,7 @@
 // @include     /^https?://.*\.gouv\.fr/?.*$/
 // @include     /^https?://.*\.gouvernement\.fr/?.*$/
 // @author	     Sylvain Comte
-// @version      0.0.3
+// @version      0.0.4
 // @require      https://cdn.jsdelivr.net/jquery/3.2.1/jquery.min.js
 // @grant        GM_xmlhttpRequest
 // @noframes
@@ -96,7 +96,7 @@ $(document).ready(function() {
                         }
                         // procède au remplacement de ACRONYM par <abbr title="sens de l'acronyme">ACRONYM</abbr>
                         var reg = new RegExp(result[m], "g");
-                        content = content.replace(reg, "<abbr title='" + acro + "'>" + result[m] + "</abbr>");
+                        content = content.replace(reg, "<abbr style='text-decoration:dotted underline' title='" + acro + "'>" + result[m] + "</abbr>");
                     }
                 }
             }
