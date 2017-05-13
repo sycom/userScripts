@@ -6,7 +6,7 @@
 // @include     /^https?://.*\.gouv\.fr/?.*$/
 // @include     /^https?://.*\.gouvernement\.fr/?.*$/
 // @author	     Sylvain Comte
-// @version      0.0.4
+// @version      0.1.0
 // @require      https://cdn.jsdelivr.net/jquery/3.2.1/jquery.min.js
 // @grant        GM_xmlhttpRequest
 // @noframes
@@ -43,34 +43,36 @@ $(document).ready(function() {
                 }
             }
             // console.log(Accr);
-/* à retravailler, ne fonctionne pas en l'état
-            // création d'un observateur si on "navigue" sur mastodon
-            var target = document.body;
-            // configuration de l'observateur
-            var config = {
-                attributes: true,
-                childList: true,
-                characterData: true,
-                subtree: true
-            };
-            // construction
-            var observer = new MutationObserver(function(mutations) {
-                mutations.forEach(function(mutation) {
-                    console.log(mutation.type);
-                    transCronym();
-                });
-            });
-            // mise en route
-            observer.observe(target, config);
-*/
             transCronym();
+            observer.observe(target, config);
         }
     });
 
+    /* à retravailler, ne fonctionne pas en l'état */
+    // création d'un observateur si on "navigue" sur mastodon
+    var target = document.body,
+        transindic = "pépère"; // indique si une transposition des acronymes est en cours
+    // configuration de l'observateur
+    var config = {
+        attributes: true,
+        childList: true,
+        characterData: true,
+        subtree: true
+    };
+    // construction
+    var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if(mutation.type === "attributes" &&
+                transindic !== "running") {
+                    // évite qu'on lance plusieurs fois de suite
+                    transindic = "running";
+                    window.setTimeout(transCronym,420);
+            }
+        });
+    });
+
     function transCronym() {
-        console.log('GVC > transCronym launched');
-        // stop observing
-        //observer.disconnect();
+        transindic = "running";
         // récupère l'ensemble des noeuds texte dans body
         $('body *:not(script)').contents().filter(function() {
             var ok = 0;
@@ -102,9 +104,6 @@ $(document).ready(function() {
             }
             return content;
         });
-        // observer.observe(target, config);
-        // on refait transCronym toutes les 4,2 secondes.
-        // Un peu bourrin, mais pour l'instant, j'ai pas réussi à utiliser observer comme il faut
-        window.setTimeout(transCronym,4200);
+        transindic = "pépère";
     }
 });
