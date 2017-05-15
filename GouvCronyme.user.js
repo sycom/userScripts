@@ -6,7 +6,7 @@
 // @include     /^https?://.*\.gouv\.fr/?.*$/
 // @include     /^https?://.*\.gouvernement\.fr/?.*$/
 // @author	     Sylvain Comte
-// @version      0.1.0
+// @version      0.1.1
 // @require      https://cdn.jsdelivr.net/jquery/3.2.1/jquery.min.js
 // @grant        GM_xmlhttpRequest
 // @noframes
@@ -31,15 +31,23 @@ $(document).ready(function() {
             var textLines = data.replace(/"/g, '').split(/\r\n|\n/);
             // récupération des en-têtes
             var headings = textLines[0].split(',');
+            // récupération des numéros d'en-têtes correspondant à "term" et "definition" (au cas où l'ordre change)
+            var hAbbr, hText;
+            for (var i in headings) {
+                if (headings[i] === "term") hAbbr = i;
+                if (headings[i] === "definition") hText = i;
+            }
+            if (hAbbr === undefined) hAbbr = 1;
+            if (hText === undefined) hText = 2;
             for (var l = 1; l < textLines.length; l++) {
                 // récupération des acronymes (attention dépend du csv de base)
                 var tmp = textLines[l].split(',');
                 // intègre la possibilité qu'un acronyme aie plusieurs sens
-                if (Accr[tmp[1]] !== undefined) {
-                    Accr[tmp[1]].push(tmp[2]);
+                if (Accr[tmp[hAbbr]] !== undefined) {
+                    Accr[tmp[hAbbr]].push(tmp[hText]);
                 } else {
-                    Accr[tmp[1]] = [];
-                    Accr[tmp[1]].push(tmp[2]);
+                    Accr[tmp[hAbbr]] = [];
+                    Accr[tmp[hAbbr]].push(tmp[hText]);
                 }
             }
             // console.log(Accr);
