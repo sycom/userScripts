@@ -15,26 +15,35 @@
 
 <body>
 	<div id="title" class="row high">
-		<h1>GouvCronyme</h1>
-		<nav id="navigation" role="navigation" class="nav">
+        <nav id="navigation" role="navigation" class="nav">
 			<ul class="buttons">
-                <li class="fa fa-home fa-2x"><a href="../"></a></li>
-				<li class="fa fa-bug fa-2x"><a href="#">Bugs</a></li>
-				<li class="fa fa-fork-code fa-2x"><a href="#contact">Contact</a></li>
-                <li class=""><a href="index-fr.html" rel="alternate" hreflang="fr">fr</a></li>
+                <a class="fa fa-home" href="../"></a>
+				<a class="fa fa-bug" href="#"></a>
+				<a class="fa fa-code-fork" href="#"></a>
 			</ul>
 		</nav>
+		<h1>GouvCronyme</h1>
+
 	</div>
 	<header id="header" role="banner" class="header">
-		<p>GouvCronyme est un petit userscript qui transforme à la volée les pages des domaines <i>gouvernement.fr</i> et <i>gouv.fr</i> que vous visitez. Il transforme les acronymes qu'il rencontre et reconnait sur la base du <a href="" target="_blank">Répertoire Collaboratif des Acronymes en Usage dans l'Administration Française</a> de façon à permettre leur traduction (au survol de la souris)<br/>
-        Par exemple : <br/>
-        <div class="center">RCAUAF deviendra <abbr title="Répertoire Collaboratif des Acronymes en Usage dans l'Administration Française">RCAUAF</abbr>
+		<p>GouvCronyme est un petit userscript qui transforme à la volée les pages des domaines <i>gouvernement.<span class="curse">fr</span></i> et <i>gouv.<span class="curse">fr</span></i> que vous visitez. Il transforme les acronymes qu'il rencontre et reconnait sur la base du <a href="" target="_blank">Répertoire Collaboratif des Acronymes en Usage dans l'Administration Française</a> de façon à permettre leur traduction (au survol de la souris)<br/>
+        <div class="center">ainsi par exemple : RCAUAF deviendra <abbr title="Répertoire Collaboratif des Acronymes en Usage dans l'Administration Française">RCAUAF</abbr>
         </p>
-
+        <div class="center">
+            <nav id="onglets">
+                <ul>
+                    <li class="active">Explorer</li>
+                    <li>Conseils</li>
+                    <li>Participer</li>
+                </ul>
+            </nav>
+        </div>
 	</header>
 	<div id="main" role="main">
-		
-		</div>
+        <div id="Explorer" class="active">La liste complète des acronymes avec une barre de rechercher</div>
+        <div id="Conseils">Des conseils pour les services sur l'usage des abbréviations et acronymes</div>
+        <div id="Participer">Comment proposer des acronymes et enrichir l'outil</div>
+	</div>
 		<footer id="footer" role="contentinfo" class="footer">
 			<p>page powered with <a href="http://necolas.github.io/normalize.css/" target="_blank">normalize</a>, <a href="http://fontawesome.io" target="_blank">font-awesome</a> and some elbow oil</p>
 		</footer>
