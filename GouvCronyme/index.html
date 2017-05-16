@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html class="no-js" lang="fr">
+
+<head>
+	<meta charset="UTF-8">
+	<title>GouvCronyme</title>
+	<meta name="HandheldFriendly" content="True">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href='https://fonts.googleapis.com/css?family=Cormorant+Upright|Open+Sans' rel='stylesheet' type='text/css'>
+    <link href="./index-fr.html" hreflang="fr" rel="alternate"/>
+	<link rel="stylesheet" href="../lib/normalize-min.css" media="all" type="text/css">
+	<link rel="stylesheet" href="../lib/font-awesome-min.css" media="all" type="text/css">
+	<link rel="stylesheet" href="./styles.css" media="all" type="text/css">
+</head>
+
+<body>
+	<div id="title" class="row high">
+		<h1>GouvCronyme</h1>
+		<nav id="navigation" role="navigation" class="nav">
+			<ul class="buttons">
+                <li class="fa fa-home fa-2x"><a href="../"></a></li>
+				<li class="fa fa-bug fa-2x"><a href="#">Bugs</a></li>
+				<li class="fa fa-fork-code fa-2x"><a href="#contact">Contact</a></li>
+                <li class=""><a href="index-fr.html" rel="alternate" hreflang="fr">fr</a></li>
+			</ul>
+		</nav>
+	</div>
+	<header id="header" role="banner" class="header">
+		<p>GouvCronyme est un petit userscript qui transforme à la volée les pages des domaines <i>gouvernement.fr</i> et <i>gouv.fr</i> que vous visitez. Il transforme les acronymes qu'il rencontre et reconnait sur la base du <a href="" target="_blank">Répertoire Collaboratif des Acronymes en Usage dans l'Administration Française</a> de façon à permettre leur traduction (au survol de la souris)<br/>
+        Par exemple : <br/>
+        <div class="center">RCAUAF deviendra <abbr title="Répertoire Collaboratif des Acronymes en Usage dans l'Administration Française">RCAUAF</abbr>
+        </p>
+
+	</header>
+	<div id="main" role="main">
+		
+		</div>
+		<footer id="footer" role="contentinfo" class="footer">
+			<p>page powered with <a href="http://necolas.github.io/normalize.css/" target="_blank">normalize</a>, <a href="http://fontawesome.io" target="_blank">font-awesome</a> and some elbow oil</p>
+		</footer>
+        <script>
+            var page = window.location.hostname;
+            if (navigator.doNotTrack != 1) {
+                (function(i, s, o, g, r, a, m) {
+                    i['GoogleAnalyticsObject'] = r;
+                    i[r] = i[r] || function() {
+                        (i[r].q = i[r].q || []).push(arguments)
+                    }, i[r].l = 1 * new Date();
+                    a = s.createElement(o),
+                        m = s.getElementsByTagName(o)[0];
+                    a.async = 1;
+                    a.src = g;
+                    m.parentNode.insertBefore(a, m)
+                })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+                ga('set', 'page', page);
+                ga('set', 'title', document.title);
+                ga('create', 'UA-109815-12', page);
+                ga('send', 'pageview');
+            }
+        </script>
+	</div>
+</body>
+
+</html>
