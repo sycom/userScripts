@@ -11,15 +11,23 @@
 	<link rel="stylesheet" href="../lib/normalize-min.css" media="all" type="text/css">
 	<link rel="stylesheet" href="../lib/font-awesome-min.css" media="all" type="text/css">
 	<link rel="stylesheet" href="./styles.css" media="all" type="text/css">
+    <script src="https://d3js.org/d3-collection.v1.min.js"></script>
+<script src="https://d3js.org/d3-dispatch.v1.min.js"></script>
+<script src="https://d3js.org/d3-dsv.v1.min.js"></script>
+<script src="https://d3js.org/d3-request.v1.min.js"></script>
+    <script src="../lib/zepto.min.js"></script>
+    <script src="./script.js"></script>
+    <script src="../lib/pgi.js"></script>
+    <script src="./user/pgi-config.js"></script>
 </head>
 
 <body>
 	<div id="title" class="row high">
         <nav id="navigation" role="navigation" class="nav">
 			<ul class="buttons">
-                <a class="fa fa-home" href="../"></a>
-				<a class="fa fa-bug" href="#"></a>
-				<a class="fa fa-code-fork" href="#"></a>
+                <a class="fa fa-home" title="page d'accueil userScripts" href="../"></a>
+				<a class="fa fa-bug pgiButton" title="bugs et commentaires" href="#"></a>
+				<a class="fa fa-code-fork"  title="code source" href="https://framagit.org/sycom/userScripts#gouvcronyme"></a>
 			</ul>
 		</nav>
 		<h1>GouvCronyme</h1>
@@ -32,20 +40,39 @@
         <div class="center">
             <nav id="onglets">
                 <ul>
-                    <li class="active">Explorer</li>
-                    <li>Conseils</li>
-                    <li>Participer</li>
+                    <li class="active" target="Explorer">Explorer</li>
+                    <li target="Conseils">Conseils</li>
+                    <li target="Participer">Participer</li>
                 </ul>
             </nav>
         </div>
 	</header>
 	<div id="main" role="main">
-        <div id="Explorer" class="active">La liste complète des acronymes avec une barre de rechercher</div>
-        <div id="Conseils">Des conseils pour les services sur l'usage des abbréviations et acronymes</div>
-        <div id="Participer">Comment proposer des acronymes et enrichir l'outil</div>
+        <div id="Explorer" class="active">
+            Rechercher un acronyme ou une abbréviation :
+            <input type="text"></input>
+            <div id="laListe">
+            </div>
+        </div>
+        <div id="Conseils">L'outil GouvCronyme travaille à sa propre disparition. Il devrait, en théorie, être inutile sur l'ensemble des sites de l'administration d'Etat puisque ceux ci doivent respecter le <abbr title="Référentiel Général d'Accessibilité pour les Administrations">RGAA</abbr> qui prévoit en particulier que l'ensemble des sigles, acronymes et abréviations soient explicités :
+        <cite src="https://references.modernisation.gouv.fr/sites/default/files/RGAA-3-2016-Referentiel-Technique_0.pdf">
+        <h3>Critère 9.4 [AAA] Dans chaque page Web, la première occurrence de chaque abréviation permet-elle d’en connaître la signification ?</h3>
+        <ul>
+    <li>L’abréviation est accompagnée de sa signification sous forme d’un texte adjacent ;</li>
+    <li>L’abréviation est implémentée via un lien référençant une page ou un emplacement dans la page qui permet d’en connaître la signification ;</li>
+    <li>L’abréviation fait partie d’un lien possédant un attribut title qui permet d’en connaître la signification ;</li>
+    <li>La signification de l’abréviation est présente dans un glossaire présent sur le site ;</li>
+    <li>L’abréviation est implémentée via une balise abbr possédant un attribut title qui permet d’en connaître la signification.</li></ul>
+    </cite>
+    Pour autant, dans certains cas, et notamment certaines applications, il est parfois difficile de respecter cette règle. Dans ce cas, GouvCronyme prend le relais...
+        </div>
+        <div id="Participer">
+            <p>Vous pouvez signaler les bugs ou proposer des améliorations sur le fonctionnement du script en cliquant sur le bouton <span class="fa fa-bug fa-button pgiButton" title="bugs et commentaires"></span> ou en vous rendant sur la page qui héberge le code <a class="fa fa-code-fork fa-button" title="code source" target="_blank" href="https://framagit.org/sycom/userScripts#gouvcronyme"></a>.</p>
+            <p>Il est également possible de compléter ou de demander des compléments et correction sur le <abbr title="">RCAUAF</abbr> en vous rendant sur <a href="https://github.com/michelbl/RCAUAF" target="_blank">la page du projet</a> correspondant, indépendant du projet GouvCronyme.</p>
+        </div>
 	</div>
 		<footer id="footer" role="contentinfo" class="footer">
-			<p>page powered with <a href="http://necolas.github.io/normalize.css/" target="_blank">normalize</a>, <a href="http://fontawesome.io" target="_blank">font-awesome</a> and some elbow oil</p>
+			<p>page propulsée avec l'aide de <a href="http://zeptojs.com" target="_blank">Zepto</a>, un petit bout de d3js (d3-request), <a href="http://sycom.gitlab.io/post-Gitlab-issues" target="_blank">post Gitlab issues</a>, <a href="http://necolas.github.io/normalize.css/" target="_blank">normalize</a>, <a href="http://fontawesome.io" target="_blank">font-awesome</a> et un peu d'huile de coude</p>
 		</footer>
         <script>
             var page = window.location.hostname;

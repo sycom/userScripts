@@ -12,11 +12,12 @@ var pGi={
    token:"p9o7Nmsf-RQH9aNuuisC",               // token !WARNING! this_is_your_SECONDARY_gitlab_token_with_ONLY_GUEST_PRIVILEGE
 /* F I E L D S list*/
    form:[
-       {name:"objet",type:"text",dest:"title",def:"objet de votre rapport",req:true,hid:false},
-       {name:"description",type:"textarea",dest:"description",def:"merci de décrire tout ça le plus précisémment possible. Pour un suivi personnalisé, laissez des informations de contact. Attention, tout est publiquement accessible.",req:false,hid:false}
+       {name:"titre",type:"text",dest:"title",def:"titre ou résumé court du rapport",req:true,hid:false},
+       {name:"tag",type:"tag",dest:"labels",def:"GVC",req:false,hid:true},
+       {name:"comment",type:"textarea",dest:"description",def:"description plus détaillée du problème ou de la demande",req:false,hid:false}
    ],
-   intro:"Pour proposer une amélioration à Out of Am*z*n ou signaler un bug, merci de remplir le formulaire...",
-   thanks:"Merci pour pour votre participation. Restez connecté...",
+   intro:"Envoyez vos commentaires ou demandes d'amélioration concernant le script GouvCronyme.",
+   thanks:"Merci pour votre aide, le commentaire a été envoyé",
    autoclose:30000
 }
 /* H E L P

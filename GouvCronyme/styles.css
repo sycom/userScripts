@@ -14,6 +14,8 @@
 
 .center {text-align:center}
 
+cite {display:block;border-left:4px solid #888;padding-left:.5em}
+
 #onglets ul li {
   display:inline-block;
   margin:2em .1em 0 .1em;
@@ -27,18 +29,23 @@
 /******************/
 html {font-family: "Open Sans", sans-serif;font-size:18px}
 .high h1 {
-  font-family: "Cormorant Upright",serif;
+  font-family: "Cormorant Upright", Georgia, serif;
   font-style: italic;
   font-size:30px;
 }
 
 .center {text-align:center}
-.curse {font-family: "Cormorant Upright";font-size:120%}
+.curse {font-family: "Cormorant Upright", Georgia;font-style:italic;font-size:115%}
 
 .header, .footer {text-align:center}
 
+#main .title {font-weight:bold}
+#laListe p {text-indent:-3em}
+#laListe p {margin-left: 3em}
+
 .fa-stack a {text-decoration: none}
 
+cite {font-size:80%}
 /******************/
 /*  C O L O R S    */
 /*******************/
@@ -55,7 +62,6 @@ a {color:#222}
 
 #onglets ul li {
   background-color:#128297; color:#fff;
-  border:2px solid gray;
   border-bottom:0;
   border-radius: 6px 6px 0 0;
   box-shadow:-2px -4px 3px #bbb
