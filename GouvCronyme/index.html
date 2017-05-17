@@ -34,13 +34,14 @@
 
 	</div>
 	<header id="header" role="banner" class="header">
-		<p>GouvCronyme est un petit userscript qui transforme à la volée les pages des domaines <i>gouvernement.<span class="curse">fr</span></i> et <i>gouv.<span class="curse">fr</span></i> que vous visitez. Il transforme les acronymes qu'il rencontre et reconnait sur la base du <a href="" target="_blank">Répertoire Collaboratif des Acronymes en Usage dans l'Administration Française</a> de façon à permettre leur traduction (au survol de la souris)<br/>
+		<p>GouvCronyme est un petit userscript qui transforme à la volée les pages des domaines <i>gouvernement.<span class="curse">fr</span></i> et <i>gouv.<span class="curse">fr</span></i> que vous visitez. Il transforme les acronymes qu'il rencontre et reconnait sur la base du <a href="https://github.com/michelbl/RCAUAF" target="_blank">Répertoire Collaboratif des Acronymes en Usage dans l'Administration Française</a> de façon à permettre leur traduction (au survol de la souris)<br/>
         <div class="center">ainsi par exemple : RCAUAF deviendra <abbr title="Répertoire Collaboratif des Acronymes en Usage dans l'Administration Française">RCAUAF</abbr>
         </p>
         <div class="center">
             <nav id="onglets">
                 <ul>
                     <li class="active" target="Explorer">Explorer</li>
+                    <li target="Installer">Installer</li>
                     <li target="Conseils">Conseils</li>
                     <li target="Participer">Participer</li>
                 </ul>
@@ -53,6 +54,19 @@
             <input type="text"></input>
             <div id="laListe">
             </div>
+        </div>
+        <div id="Installer">
+            L'installation du script se fait en deux étapes maximum (une seule si vous avez déjà Greasemonkey)...
+            <ol>
+                <li>Si vous ne l'avez pas déjà sur votre navigateur, installez
+                    <ul class="fa-ul">
+                        <li><i class="fa fa-li fa-firefox"></i><a href="https://addons.mozilla.org/en/firefox/addon/greasemonkey/" target="_blank">Greasemonkey</a> sur Firefox</li>
+                        <li><i class="fa fa-li fa-chrome"></i><a href="https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo" target="_blank">Tampermonkey</a> sur Chrome</li>
+                    </ul>
+                </li>
+                <li>Installez le script <a class="fa fa-download" href="https://framagit.org/sycom/userScripts/raw/master/GouvCronyme.user.js" target="_blank"></a>
+            </ol>
+            Il est possible que le script vous demande de confirmer que vous l'autorisez à récupérer les données depuis <code>https://github.com/mich (...)</code>. Cela lui permet de récupérer les informations du <abbr title="Répertoire Collaboratif des Acronymes en Usage dans l'Administration Française">RCAUAF</abbr> à jour et ne présente aucun risque. Si vous refusez, le script ne fonctionnera pas.
         </div>
         <div id="Conseils">L'outil GouvCronyme travaille à sa propre disparition. Il devrait, en théorie, être inutile sur l'ensemble des sites de l'administration d'Etat puisque ceux ci doivent respecter le <abbr title="Référentiel Général d'Accessibilité pour les Administrations">RGAA</abbr> qui prévoit en particulier que l'ensemble des sigles, acronymes et abréviations soient explicités :
         <cite src="https://references.modernisation.gouv.fr/sites/default/files/RGAA-3-2016-Referentiel-Technique_0.pdf">
@@ -68,7 +82,7 @@
         </div>
         <div id="Participer">
             <p>Vous pouvez signaler les bugs ou proposer des améliorations sur le fonctionnement du script en cliquant sur le bouton <span class="fa fa-bug fa-button pgiButton" title="bugs et commentaires"></span> ou en vous rendant sur la page qui héberge le code <a class="fa fa-code-fork fa-button" title="code source" target="_blank" href="https://framagit.org/sycom/userScripts#gouvcronyme"></a>.</p>
-            <p>Il est également possible de compléter ou de demander des compléments et correction sur le <abbr title="">RCAUAF</abbr> en vous rendant sur <a href="https://github.com/michelbl/RCAUAF" target="_blank">la page du projet</a> correspondant, indépendant du projet GouvCronyme.</p>
+            <p>Il est également possible de compléter ou de demander des compléments et correction sur le <abbr title="Répertoire Collaboratif des Acronymes en Usage dans l'Administration Française">RCAUAF</abbr> en vous rendant sur <a href="https://github.com/michelbl/RCAUAF" target="_blank">la page du projet</a> correspondant, indépendant du projet GouvCronyme.</p>
         </div>
 	</div>
 		<footer id="footer" role="contentinfo" class="footer">

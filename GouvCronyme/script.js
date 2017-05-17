@@ -1,13 +1,10 @@
-
-console.log("started");
-
 Zepto(function($){
 // essaye de récupérer les données sur github
 d3.csv('https://github.com/michelbl/RCAUAF/raw/master/glossary.csv',
 function(error, data) {
    if (error) {
        // si ça ne marche pas, utilisation de la copie locale
-       d3.csv("./RCAUAF.csv", function(er, da) {
+       d3.csv("RCAUAF.csv", function(er, da) {
            if (er) throw er;
            createDataListe(da);
        });
@@ -26,7 +23,6 @@ function createDataListe(d) {
 
 // bascule entre les onglets
 $('#onglets li').on('click', function (e) {
-    console.log(e);
     var target = $(this).attr("target");
     $('#onglets li').removeClass('active');
     $(this).addClass('active');
@@ -36,7 +32,6 @@ $('#onglets li').on('click', function (e) {
 
 // recherche dans les acronymes
 $('#Explorer input').on('change input', function(e) {
-    console.log($(this)[0].value);
     var q = $(this)[0].value.toUpperCase();
     $("#laListe p").each(function() {
         var classe = $(this).attr('class').toUpperCase();
