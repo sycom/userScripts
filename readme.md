@@ -3,8 +3,8 @@
 You must have [greasemonkey addon][greasemonkey] installed in your Firefox browser in order to make those scripts work ([Tampermonkey][tampermonkey] in Chrome may work also)...
 
 ### [GouvCronyme](https://framagit.org/sycom/userScripts/raw/master/GouvCronyme.user.js)
-(v0.1.1) - [GVC branch][gvc]
-Un userscript pour transformer les acronymes incompréhensibles de l'administration française en acronymes plus explicites via la balise `<abbr>`. Utilise le [RCAUAF][rcauaf] (Répertoire Collaboratif des Acronymes en Usage dans l'Administration Française ;-) disponible sur github et fonctionne sur les sites en *.gouv.fr*. Attention, peinture fraiche!
+(v0.2.0) - [GVC branch][gvc]
+Un userscript pour transformer les acronymes incompréhensibles de l'administration française en acronymes plus explicites via la balise `<abbr>`. Utilise le [RCAUAF][rcauaf] (Répertoire Collaboratif des Acronymes en Usage dans l'Administration Française ;-) disponible sur github et fonctionne sur les sites en *.gouv.fr*. Un "webmaster mode" est disponible en appuyant sur `ctrl + alt + w` : le script met alors en bleu les sigles qui n'utilisent pas la balise `<abbr>` et en rouge ceux qui en plus ne sont pas dans le RCAUAF. Attention, peinture fraiche!
 
 ### [Search Engine Jumper](https://framagit.org/sycom/userScripts/raw/master/SearchEngineJumper.user.js)
 (v0.1.4) - [SEJ branch](https://framagit.org/sycom/userScripts/tree/SEJ)
