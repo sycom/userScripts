@@ -55,10 +55,18 @@ a {color:#222}
   a:hover {black}
   a:visited {color:#777}
 
+code {border:1px dashed #777;
+    border-radius:4px;
+    padding:1px 5px 0 5px;
+}
+
 .high nav a {border:#444 solid 1px;color:#666;text-decoration:none}
   .high nav a:hover {background:#ddd}
 
 .header,.footer {color:#444;background:#333;background-image: linear-gradient(33deg,#ddd,#eaeaea);}
+
+.oublie {background-color:#128297; color:#fff;padding:0 2px}
+.inconnu {background-color:#972412; color:#fff;padding:0 2px}
 
 #onglets ul li {
   background-color:#128297; color:#fff;
