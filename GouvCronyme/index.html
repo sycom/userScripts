@@ -40,8 +40,8 @@
         <div class="center">
             <nav id="onglets">
                 <ul>
-                    <li class="active" target="Explorer">Explorer</li>
-                    <li target="Installer">Installer</li>
+                    <li target="Explorer">Explorer</li>
+                    <li class="active" target="Installer">Installer</li>
                     <li target="Conseils">Conseils</li>
                     <li target="Participer">Participer</li>
                 </ul>
@@ -49,7 +49,7 @@
         </div>
 	</header>
 	<div id="main" role="main">
-        <div id="Explorer" class="active">
+        <div id="Explorer">
             Rechercher un acronyme ou une abbréviation :
             <input type="text"></input>
             <div id="laListe">
@@ -59,7 +59,7 @@
                 <li>l'<a href="http://publications.europa.eu/code/fr/fr-5000400.htm" target="_blank">annexe 4</a> du code de rédaction interinstitutionnel de l'Union Européenne</li>
             </ul>
         </div>
-        <div id="Installer">
+        <div id="Installer" class="active">
             L'installation du script se fait en deux étapes maximum (une seule si vous avez déjà Greasemonkey)...
             <ol>
                 <li>Si vous ne l'avez pas déjà sur votre navigateur, installez
@@ -83,6 +83,13 @@
     <li>L’abréviation est implémentée via une balise abbr possédant un attribut title qui permet d’en connaître la signification.</li></ul>
     </cite>
     Pour autant, dans certains cas, et notamment certaines applications, il est parfois difficile de respecter cette règle. Dans ce cas, GouvCronyme prend le relais...
+        <h3>Règles typographiques</h3>
+    <p>La <a href="https://www.legifrance.gouv.fr/Droit-francais/Charte-typographique-JO-2016" target="_blank">Charte typographique</a> du <abbr title="Journal officiel">JO</abbr> fourni quelques règles sur la représentation des sigles, abréviations et acronymes :
+        <ul>
+            <li>Ne <strong>jamais porter de points</strong> dans les acronymes et sigles. Il convient de <strong>les mettre systématiquement en majuscules</strong>,</li>
+            <li>Les développés des acronymes <strong>prennent toujours des minuscules aux mots suivant le premier mot</strong>, même lorsque celui-ci prend une majuscule à l’initiale.</li>
+        </ul>
+    </p>
         </div>
         <div id="Participer">
             <p>Vous pouvez signaler les bugs ou proposer des améliorations sur le fonctionnement du script en cliquant sur le bouton <span class="fa fa-bug fa-button pgiButton" title="bugs et commentaires"></span> ou en vous rendant sur la page qui héberge le code <a class="fa fa-code-fork fa-button" title="code source" target="_blank" href="https://framagit.org/sycom/userScripts#gouvcronyme"></a>.</p>
