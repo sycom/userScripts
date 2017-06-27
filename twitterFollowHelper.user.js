@@ -3,7 +3,7 @@
 // @author      Sylvain Comte
 // @namespace   http://sylvain.comte.online.fr
 // @description Display several informations about the twitter profile your looking at to help you decide wether or not s/he's worth following
-// @version     0.7.0
+// @version     0.7.1
 // @downloadURL  https://framagit.org/sycom/userScripts/raw/master/twitterFollowHelper.user.js
 // @licence     MIT
 // @include     http://twitter.com/*
