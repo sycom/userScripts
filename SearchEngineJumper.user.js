@@ -6,7 +6,7 @@
 // @include      https://*
 // @include      http://*
 // @author	     Sylvain Comte
-// @version      0.1.4
+// @version      0.1.5
 // @require      https://cdn.jsdelivr.net/jquery/3.2.1/jquery.min.js
 // @grant        none
 // @noframes
@@ -239,8 +239,8 @@ var SEJ_destList = [
         'containerClass': ' cardReg searchRightTop',
         'containerStyle': '',
         'htmlBefore': '<div class=\'dd\' style=\'padding-top:18px\'><h2 class=\'title\'>Chercher ailleurs</h2><div class=\'\'>',
-        'typeBefore': '<h4>',
-        'typeAfter': '</h4>',
+        'typeBefore': '<h3>',
+        'typeAfter': '</h3>',
         'linkClass': 'btn btn-default btn-xs',
         'linkStyle': 'margin:0px 5px 3px 0',
         'linkSepar': ' | ',
@@ -289,15 +289,15 @@ if (SEJm !== undefined) SEJ_suggest();
 else console.log('SEJ > site pas dans la liste des moteurs');
 
 function SEJ_suggest() {
-    var s=SEJm
+    var s=SEJm;
     console.log('SEJ > moteur : ' + SEJ_destList[s].name);
     if (document.getElementById('#' + SEJ_destList[s].searchField) !== undefined) {
         SEJ_q = escape($('#' + SEJ_destList[s].searchField).attr('value'));
         if (SEJ_destList[s].includeIdClass !== '') {
             var SEJ_Se_div = $(SEJ_destList[s].includeIdClass);
             console.log(SEJ_Se_div.length);
-            if (SEJ_Se_div.length == 0) {
-                setTimeout(function() {SEJ_suggest()}, 420);}
+            if (SEJ_Se_div.length === 0) {
+                setTimeout(function() {SEJ_suggest();}, 420);}
             else {
                 console.log("trying");
                 var html = '<div class=\'' + SEJ_destList[s].containerClass + '\' style=\'' + SEJ_destList[s].containerStyle + '\'>';
