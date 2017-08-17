@@ -224,10 +224,10 @@ var SEJ_destList = [
         'containerClass': '',
         'containerStyle': '',
         'htmlBefore': '<div class=\'dd\' style=\'\'><h2 class=\'\'><span class="icon icon-search"></span>Chercher ailleurs</h2><div class=\'\'>',
-        'typeBefore': '<h3 style=\'color:#777\'>',
+        'typeBefore': '<h3 style=\'color:#777;margin-top:.25em\'>',
         'typeAfter': '</h3>',
         'linkClass': '',
-        'linkStyle': 'margin:0px 3px 3px 0;color:#0064be',
+        'linkStyle': 'margin:0px 3px 3px 0;color:#0064be;line-height:1.5em',
         'linkSepar': ' | ',
         'htmlAfter': '<div style=\'width:100%;text-align:right;font-size:.55rem;font-style:italic\'>' + SEJ_homepage_text + '</div></div></div>'
     },
