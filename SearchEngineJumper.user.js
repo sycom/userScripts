@@ -13,7 +13,7 @@
 // ==/UserScript==
 this.$ = this.jQuery = jQuery.noConflict(true); // avoid conflict on pages already running jQuery
 var SEJ_q, // search query
-SEJ_homepage_text = 'powered by <a href=\'https://framagit.org/sycom/userScripts#search-engine-jumper-v013-sej-branch\' target=\'_blank\'>Search Engine Jumper userscript</a>'; // this will be the script homepage
+SEJ_homepage_text = 'powered by <a href=\'https://framagit.org/sycom/userScripts#search-engine-jumper\' target=\'_blank\'>Search Engine Jumper userscript</a>'; // this will be the script homepage
 /* alternative search engine list - see ./SearchEngineJumper/engineList.json */
 var SEJ_SeList = [
     {
@@ -95,6 +95,10 @@ var SEJ_SeList = [
             {
                 'name': 'Exalead',
                 'url': 'https://www.exalead.com/search/image/results/?q='
+            },
+            {
+                'name': 'Tineye (by image)',
+                'url': 'https://www.tineye.com/search/'
             }
         ]
     },
@@ -179,6 +183,7 @@ var SEJ_SeList = [
         ]
     }
 ];
+
 /* search engine eligible to search elsewhere */
 var SEJ_destList = [
     {
@@ -207,7 +212,7 @@ var SEJ_destList = [
         'typeBefore': '<div class=\'_gdf\' style=\'margin:4px 0;color:#777\'>',
         'typeAfter': '</div>',
         'linkClass': '', //btn btn-default btn-xs',
-        'linkStyle': 'margin:0px 5px 3px 0',
+        'linkStyle': 'margin:0px 5px 3px 0;line-height: 1.75em',
         'linkSepar': ' | ',
         'htmlAfter': '<div style=\'width:100%;text-align:right;font-size:.85rem;font-style:italic\'>' + SEJ_homepage_text + '</div></div></div>'
     },

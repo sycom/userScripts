@@ -77,6 +77,10 @@
       {
         "name": "Exalead",
         "url": "https://www.exalead.com/search/image/results/?q="
+      },
+      {
+          "name": "Tineye (by image)",
+          "url": "https://www.tineye.com/search/"
       }
     ]
   },
