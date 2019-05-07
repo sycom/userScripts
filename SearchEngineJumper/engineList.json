@@ -67,6 +67,10 @@
         "url": "https://google.com/search?site=imghp&?q="
       },
       {
+        "name": "Wikimedia Commons",
+        "url": "https://commons.wikimedia.org/w/index.php?search="
+      }
+      {
         "name": "Yahoo",
         "url": "https://images.search.yahoo.com/?p="
       },
@@ -81,6 +85,18 @@
       {
           "name": "Tineye (by image)",
           "url": "https://www.tineye.com/search/"
+      },
+      {
+        "name": "Pikiwizard (free images)",
+        "url": "https://pikwizard.com/?q="
+      },
+      {
+        "name": "Pixnio (free images)",
+        "url": "https://pixnio.com/fr/?s="
+      },
+      {
+        "name": "Morguefile",
+        "url": "https://morguefile.com/photos/morguefile/1/"
       }
     ]
   },

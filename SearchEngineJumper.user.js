@@ -189,7 +189,7 @@ var SEJ_destList = [
     {
         'name': 'Searx',
         'url': '//framabee.org,//searx.me,www.privatesearch.io,searx.laquadrature.net,//trouvons.org,//tontonroger.org',
-        'searchField': 'q',
+        'searchField': '#q',
         'includeIdClass': '#sidebar_results',
         'containerClass': 'panel panel-default',
         'containerStyle': '',
@@ -204,7 +204,7 @@ var SEJ_destList = [
     {
         'name': 'Google',
         'url': 'www.google.com,www.google.fr',
-        'searchField': 'lst-ib',
+        'searchField': 'input[name="q"]',
         'includeIdClass': '#rhs_block',
         'containerClass': 'g g-blk',
         'containerStyle': 'margin:5px;padding:15px;border-color:gray;border:solid .5px #ddd;border-radius:3px;box-shadow:0px .75px 1px lightgray;',
@@ -219,7 +219,7 @@ var SEJ_destList = [
     {
         'name': 'Qwant',
         'url': 'www.qwant.com',
-        'searchField': 'c_27_input',
+        'searchField': '.search_bar__form__input',
         'includeIdClass': '.results-column--social',
         'containerClass': '',
         'containerStyle': '',
@@ -234,7 +234,7 @@ var SEJ_destList = [
      {
         'name': 'Yahoo',
         'url': 'search.yahoo.com,search.yahoo.fr',
-        'searchField': 'yschsp',
+        'searchField': '#yschsp',
         'includeIdClass': '#right',
         'containerClass': ' cardReg searchRightTop',
         'containerStyle': '',
@@ -249,7 +249,7 @@ var SEJ_destList = [
     {
         'name': 'Bing',
         'url': 'www.bing.com,www.bing.fr',
-        'searchField': 'sb_form_q',
+        'searchField': '#sb_form_q',
         'includeIdClass': '#b_context',
         'containerClass': 'b_ans',
         'containerStyle': '',
@@ -264,7 +264,7 @@ var SEJ_destList = [
     {
         'name': 'DuckDuckgo',
         'url': 'duckduckgo.com,www.duckduckgo.com',
-        'searchField': 'search_form_input',
+        'searchField': '#search_form_input',
         'includeIdClass': '.results--sidebar',
         'containerClass': 'tile tile__body',
         'containerStyle': 'text-align:left',
@@ -284,15 +284,53 @@ for (var m in SEJ_destList) {
     if (SEJ_destList[m].url.search(SEJ_url) > - 1) SEJm = m; // check if we have the code to run in this search engine
 } /* creating links to alt search engines */
 
-
 if (SEJm !== undefined) SEJ_suggest();
 else console.log('SEJ > site pas dans la liste des moteurs');
+
+/* from https://paul.kinlan.me/waiting-for-an-element-to-be-created/
+function waitForQuery(selector) {
+  return new Promise(function(resolve, reject) {
+    var element = document.querySelector(selector);
+    if(element) {
+      resolve(element);
+      return;
+    }
+    var observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(mutation) {
+        var nodes = Array.from(mutation.addedNodes);
+        for(var node of nodes) {
+          if(node.matches && node.matches(selector)) {
+            observer.disconnect();
+            resolve(node);
+            return;
+          }
+        };
+      });
+    });
+    observer.observe(document.documentElement, { childList: true, subtree: true });
+  });
+} */
+
+/* inspired from https://stackoverflow.com/questions/16149431/make-function-wait-until-element-exists */
+function waitForQuery(selector) {
+    while(!document.querySelector(selector)) {
+        return new Promise(function(resolve, reject) {
+    var element = document.querySelector(selector);
+    if(element) {
+      resolve(element);
+      return;
+    } => setTimeout(r, 500));
+    }
+}
+
 
 function SEJ_suggest() {
     var s=SEJm;
     console.log('SEJ > moteur : ' + SEJ_destList[s].name);
-    if (document.getElementById('#' + SEJ_destList[s].searchField) !== undefined) {
-        SEJ_q = escape($('#' + SEJ_destList[s].searchField).attr('value'));
+console.log(SEJ_destList[s].searchField);
+    waitForQuery(SEJ_destList[s].searchField).then(function(element) {
+console.log(element);
+        SEJ_q = escape(element.value);
         if (SEJ_destList[s].includeIdClass !== '') {
             var SEJ_Se_div = $(SEJ_destList[s].includeIdClass);
             console.log(SEJ_Se_div.length);
@@ -315,5 +353,5 @@ function SEJ_suggest() {
             }
         }
        else console.log('SEJ > pas d\'endroit où insérer le code');
-    } else console.log('SEJ > impossible de trouver la requête');
+    }); // else console.log('SEJ > impossible de trouver la requête');
 }
