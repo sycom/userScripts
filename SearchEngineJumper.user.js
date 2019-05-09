@@ -220,7 +220,7 @@ var SEJ_destList = [
         'name': 'Qwant',
         'url': 'www.qwant.com',
         'searchField': '.search_bar__form__input',
-        'includeIdClass': '.results-column--social',
+        'includeIdClass': '.ia_container',
         'containerClass': '',
         'containerStyle': '',
         'htmlBefore': '<div class=\'dd\' style=\'\'><h2 class=\'\'><span class="icon icon-search"></span>Chercher ailleurs</h2><div class=\'\'>',
@@ -284,74 +284,51 @@ for (var m in SEJ_destList) {
     if (SEJ_destList[m].url.search(SEJ_url) > - 1) SEJm = m; // check if we have the code to run in this search engine
 } /* creating links to alt search engines */
 
-if (SEJm !== undefined) SEJ_suggest();
+var waitForQuery = function(selector, callback, count) {
+  if (jQuery(selector).length) {
+    callback();
+  }
+  else {
+    setTimeout(function() {
+      if(!count) {
+        count=0;
+      }
+      count++;
+      console.log("SEJ > count: " + count);
+      if(count < 10) {
+        waitForQuery(selector,callback,count);
+      } else {return;}
+    }, 100);
+  }
+};
+
+if (SEJm !== undefined) {
+    var selector = SEJ_destList[SEJm].searchField;
+    waitForQuery(selector, SEJ_suggest);
+}
 else console.log('SEJ > site pas dans la liste des moteurs');
 
-/* from https://paul.kinlan.me/waiting-for-an-element-to-be-created/
-function waitForQuery(selector) {
-  return new Promise(function(resolve, reject) {
-    var element = document.querySelector(selector);
-    if(element) {
-      resolve(element);
-      return;
-    }
-    var observer = new MutationObserver(function(mutations) {
-      mutations.forEach(function(mutation) {
-        var nodes = Array.from(mutation.addedNodes);
-        for(var node of nodes) {
-          if(node.matches && node.matches(selector)) {
-            observer.disconnect();
-            resolve(node);
-            return;
-          }
-        };
-      });
-    });
-    observer.observe(document.documentElement, { childList: true, subtree: true });
-  });
-} */
-
-/* inspired from https://stackoverflow.com/questions/16149431/make-function-wait-until-element-exists */
-function waitForQuery(selector) {
-    while(!document.querySelector(selector)) {
-        return new Promise(function(resolve, reject) {
-    var element = document.querySelector(selector);
-    if(element) {
-      resolve(element);
-      return;
-    } => setTimeout(r, 500));
-    }
-}
-
-
 function SEJ_suggest() {
-    var s=SEJm;
-    console.log('SEJ > moteur : ' + SEJ_destList[s].name);
-console.log(SEJ_destList[s].searchField);
-    waitForQuery(SEJ_destList[s].searchField).then(function(element) {
-console.log(element);
-        SEJ_q = escape(element.value);
-        if (SEJ_destList[s].includeIdClass !== '') {
-            var SEJ_Se_div = $(SEJ_destList[s].includeIdClass);
-            console.log(SEJ_Se_div.length);
-            if (SEJ_Se_div.length === 0) {
-                setTimeout(function() {SEJ_suggest();}, 420);}
-            else {
-                console.log("trying");
-                var html = '<div class=\'' + SEJ_destList[s].containerClass + '\' style=\'' + SEJ_destList[s].containerStyle + '\'>';
-                html += SEJ_destList[s].htmlBefore;
-                for (var m in SEJ_SeList) {
-                    html += SEJ_destList[s].typeBefore + SEJ_SeList[m].type + SEJ_destList[s].typeAfter;
-                    var SEJmot = SEJ_SeList[m].liste;
-                    for (var i in SEJmot) {
-                        if (i > 0) html += SEJ_destList[s].linkSepar;
-                        html += '<a href=\'' + SEJmot[i].url + '' + SEJ_q + '\' class=\'' + SEJ_destList[s].linkClass + '\' style=\'' + SEJ_destList[s].linkStyle + '\'>' + SEJmot[i].name + '</a>';
-                    }
+  var s = SEJm,
+      element = document.querySelector(selector);
+  SEJ_q = escape(element.value);
+    console.log(SEJ_q);
+    if (SEJ_destList[s].includeIdClass !== '') {
+        var SEJ_Se_div = document.querySelector(SEJ_destList[s].includeIdClass);
+console.log(SEJ_Se_div);
+            var html = '<div class=\'' + SEJ_destList[s].containerClass + '\' style=\'' + SEJ_destList[s].containerStyle + '\'>';
+            html += SEJ_destList[s].htmlBefore;
+            for (var m in SEJ_SeList) {
+                html += SEJ_destList[s].typeBefore + SEJ_SeList[m].type + SEJ_destList[s].typeAfter;
+                var SEJmot = SEJ_SeList[m].liste;
+                for (var i in SEJmot) {
+                    if (i > 0) html += SEJ_destList[s].linkSepar;
+                    html += '<a href=\'' + SEJmot[i].url + '' + SEJ_q + '\' class=\'' + SEJ_destList[s].linkClass + '\' style=\'' + SEJ_destList[s].linkStyle + '\'>' + SEJmot[i].name + '</a>';
                 }
-                html += SEJ_destList[s].htmlAfter;
-                SEJ_Se_div.prepend(html);
             }
-        }
-       else console.log('SEJ > pas d\'endroit où insérer le code');
-    }); // else console.log('SEJ > impossible de trouver la requête');
+            html += SEJ_destList[s].htmlAfter;
+            SEJ_Se_div.prepend(html);
+
+    }
+    else console.log('SEJ > pas d\'endroit où insérer le code');
 }
