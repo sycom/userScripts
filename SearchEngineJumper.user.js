@@ -16,7 +16,7 @@ var SEJ_q, // search query
 
 /* alternative search engine list
    See ./SearchEngineJumper/engineList.json */
-var SEJ_SeList = [{"type":"autres moteurs","liste":[{"name":"Searx","url":"https://searx.me/?q="},{"name":"Duck Duck Go","url":"https://duckduckgo.com/?q="},{"name":"Qwant","url":"https://qwant.com/?q="},{"name":"Ixquick","url":"https://ixquick.fr/do/search?q="},{"name":"Ask","url":"https://ask.com/web/?q="},{"name":"Google","url":"https://google.com/?q="},{"name":"Yahoo","url":"https://search.yahoo.com/?p="},{"name":"Bing","url":"https://bing.com/?q="},{"name":"Exalead","url":"https://www.exalead.com/search/web/results/?q="},{"name":"Orange","url":" https://lemoteur.orange.fr/?profil=lemoteur&module=lemoteur&bhv=web_mondial&kw="}]},{"type":"images","liste":[{"name":"Searx","url":"https://searx.me/?category_images&q="},{"name":"Duck Duck Go","url":"https://duckduckgo.com/?ia=images&q="},{"name":"Qwant","url":"https://qwant.com/?t=images&q="},{"name":"Ask","url":"https://ask.com/pictures/?q="},{"name":"Google","url":"https://google.com/search?site=imghp&?q="},{"name":"Wikimedia Commons","url":"https://commons.wikimedia.org/w/index.php?search="},{"name":"Yahoo","url":"https://images.search.yahoo.com/?p="},{"name":"Bing","url":"https://bing.com/images/?q="},{"name":"Exalead","url":"https://www.exalead.com/search/image/results/?q="},{"name":"Tineye (by image)","url":"https://www.tineye.com/search/"},{"name":"Pikiwizard (free images)","url":"https://pikwizard.com/?q="},{"name":"Pixnio (free images)","url":"https://pixnio.com/fr/?s="},{"name":"Morguefile","url":"https://morguefile.com/photos/morguefile/1/"}]},{"type":"cartes","liste":[{"name":"OpenStreetMap","url":"https://www.openstreetmap.org/search?query="},{"name":"Google","url":"https://maps.google.com/?q="},{"name":"Bing","url":"https://bing.com/maps/?q="}]},{"type":"vidéos","liste":[{"name":"Duck Duck Go","url":"https://duckduckgo.com/?ia=videos&q="},{"name":"Qwant","url":"https://qwant.com/?t=videos&q="},{"name":"Ask","url":"https://ask.com/youtube/?q="},{"name":"Google","url":"https://google.com/search?tbm=vid&?q="},{"name":"Yahoo","url":"https://video.search.yahoo.com/?p="},{"name":"Bing","url":"https://bing.com/videos/?q="},{"name":"Exalead","url":"https://www.exalead.com/search/video/results/?q="}]},{"type":"personnes","liste":[{"name":"Qwant","url":"https://www.qwant.com/people?q="},{"name":"Yatedo","url":"https://www.yatedo.fr/search/profil?q="}]}];
+var SEJ_SeList = [{"type":"autres moteurs","liste":[{"name":"Qwant","url":"https://qwant.com/?q="},{"name":"Duck Duck Go","url":"https://duckduckgo.com/?q="},{"name":"Searx","url":"https://searx.me/?q="},{"name":"Google","url":"https://google.com/?source=sycom_SEJ&q="},{"name":"Ixquick","url":"https://ixquick.fr/do/search?q="},{"name":"Ask","url":"https://ask.com/web/?q="},{"name":"Yahoo","url":"https://search.yahoo.com/?p="},{"name":"Bing","url":"https://bing.com/?q="},{"name":"Exalead","url":"https://www.exalead.com/search/web/results/?q="},{"name":"Orange","url":" https://lemoteur.orange.fr/?profil=lemoteur&module=lemoteur&bhv=web_mondial&kw="}]},{"type":"images","liste":[{"name":"Duck Duck Go","url":"https://duckduckgo.com/?ia=images&q="},{"name":"Qwant","url":"https://qwant.com/?t=images&q="},{"name":"CC Search","url":"https://ccsearch.creativecommons.org/search?q="},{"name":"Searx","url":"https://searx.me/?category_images&q="},{"name":"Ask","url":"https://ask.com/pictures/?q="},{"name":"Google","url":"https://google.com/search?site=imghp&?q="},{"name":"Wikimedia Commons","url":"https://commons.wikimedia.org/w/index.php?search="},{"name":"Yahoo","url":"https://images.search.yahoo.com/?p="},{"name":"Bing","url":"https://bing.com/images/?q="},{"name":"Exalead","url":"https://www.exalead.com/search/image/results/?q="},{"name":"Tineye","url":"https://www.tineye.com/search/"},{"name":"Pikiwizard","url":"https://pikwizard.com/?q="},{"name":"Pixnio","url":"https://pixnio.com/fr/?s="},{"name":"Morguefile","url":"https://morguefile.com/photos/morguefile/1/"}]},{"type":"cartes","liste":[{"name":"OpenStreetMap","url":"https://www.openstreetmap.org/search?query="},{"name":"Google","url":"https://maps.google.com/?q="},{"name":"Bing","url":"https://bing.com/maps/?q="}]},{"type":"vidéos","liste":[{"name":"Duck Duck Go","url":"https://duckduckgo.com/?ia=videos&q="},{"name":"Qwant","url":"https://qwant.com/?t=videos&q="},{"name":"Ask","url":"https://ask.com/youtube/?q="},{"name":"Google","url":"https://google.com/search?tbm=vid&?q="},{"name":"Yahoo","url":"https://video.search.yahoo.com/?p="},{"name":"Bing","url":"https://bing.com/videos/?q="},{"name":"Exalead","url":"https://www.exalead.com/search/video/results/?q="}]},{"type":"personnes","liste":[{"name":"Qwant","url":"https://www.qwant.com/people?q="},{"name":"Yatedo","url":"https://www.yatedo.fr/search/profil?q="}]}];
 
 /* search engine eligible to search elsewhere
    See ./SearchEngineJumper/engineJump.json */
@@ -52,7 +52,7 @@ if (SEJm !== undefined) {
     var selector = SEJ_destList[SEJm].searchField;
     waitForQuery(selector, SEJ_suggest);
 }
-else console.log('SEJ > site pas dans la liste des moteurs');
+else console.log("SEJ > site pas dans la liste des moteurs");
 
 function SEJ_suggest() {
     var s = SEJm,
@@ -68,7 +68,7 @@ console.log(SEJ_SeList);
 console.log(SEJmot);
             for (var i in SEJmot) {
                 if (i > 0) html += SEJ_destList[s].linkSepar;
-                html += '<a href=\'' + SEJmot[i].url + '' + SEJ_q + '\' class=\'' + SEJ_destList[s].linkClass + '\' style=\'' + SEJ_destList[s].linkStyle + '\'>' + SEJmot[i].name + '</a>';
+                html += "<a href='" + SEJmot[i].url + "" + SEJ_q + "' class='" + SEJ_destList[s].linkClass + "' style='" + SEJ_destList[s].linkStyle + "'>" + SEJmot[i].name + "</a>";
             }
         }
         html += "<div style='width:100%;text-align:right;font-size:.85rem;font-style:italic'>" + SEJ_homepage_text + "</div></div></div>";
@@ -78,5 +78,5 @@ console.log(SEJmot);
         div.setAttribute("style",SEJ_destList[s].containerStyle);
         div.innerHTML = html;
     }
-    else console.log('SEJ > pas d\'endroit où insérer le code');
+    else console.log("SEJ > pas d'endroit où insérer le code");
 }

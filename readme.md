@@ -2,13 +2,13 @@
 ## A userscripts collection
 You must have [greasemonkey addon][greasemonkey] installed in your Firefox browser in order to make those scripts work ([Tampermonkey][tampermonkey] in Chrome may work also)...
 
-### [GouvCronyme](https://framagit.org/sycom/userScripts/raw/master/GouvCronyme.user.js)
-(v0.2.0) - [GVC branch][gvc]
-Un userscript pour transformer les acronymes incompréhensibles de l'administration française en acronymes plus explicites via la balise `<abbr>`. Utilise le [RCAUAF][rcauaf] (Répertoire Collaboratif des Acronymes en Usage dans l'Administration Française ;-) disponible sur github et fonctionne sur les sites en *.gouv.fr*. Un "webmaster mode" est disponible en appuyant sur `ctrl + alt + w` : le script met alors en bleu les sigles qui n'utilisent pas la balise `<abbr>` et en rouge ceux qui en plus ne sont pas dans le RCAUAF. Attention, peinture fraiche!
-
 ### [Search Engine Jumper](https://framagit.org/sycom/userScripts/raw/master/SearchEngineJumper.user.js)
 (v0.2.0) - [SEJ branch](https://framagit.org/sycom/userScripts/tree/SEJ)
 Did you know Google is not the only search engine around there? With Search Engine Jumper, when you perform a search on the internet, you will be provided a lot of links to search same terms on other search engines. Currently works (more or less) on Searx (on some instances), Qwant, Google, Yahoo, Bing and DuckDuckGo. No data collected or anything, of course. Stay tuned...
+
+### [GouvCronyme](https://framagit.org/sycom/userScripts/raw/master/GouvCronyme.user.js)
+(v0.2.0) - [GVC branch][gvc]
+Un userscript pour transformer les acronymes incompréhensibles de l'administration française en acronymes plus explicites via la balise `<abbr>`. Utilise le [RCAUAF][rcauaf] (Répertoire Collaboratif des Acronymes en Usage dans l'Administration Française ;-) disponible sur github et fonctionne sur les sites en *.gouv.fr*. Un "webmaster mode" est disponible en appuyant sur `ctrl + alt + w` : le script met alors en bleu les sigles qui n'utilisent pas la balise `<abbr>` et en rouge ceux qui en plus ne sont pas dans le RCAUAF. Attention, peinture fraiche!
 
 ### [Out of Amazon](https://framagit.org/sycom/userScripts/raw/master/OutOfAmazon.user.js)
 (v0.3.0) - [OoA branch](https://framagit.org/sycom/userScripts/tree/OoA)
@@ -38,7 +38,7 @@ displays a small icon in the upper left corner of the page. Then, by querying Go
 * rss bleu blue > to all feeds
 
 # circuit
-* **[Framagit][origin]**
+* **[Framagit][origin]** 
    * Gitlab > *gh-pages* > [homepage][homepage]
       * Github > *gh-pages* > [github page][github-page]
 
