@@ -48,8 +48,9 @@ $('head').append('<link href="https://cdn.jsdelivr.net/fontawesome/4.4.0/css/fon
 // a-t-il défini une (ou plusieurs) boutique
 if (GM_getValue("Stores")) {
     OoAStores = GM_getValue("Stores");
-    console.log(OoAStores);
+console.log(OoAStores);
 }
+
 // si ce n'est pas le cas, on met la valeur par défaut (quai des mômes)
 if (OoAStores.length == 0) {
     OoAStores.push(OoAdefault);
@@ -126,11 +127,11 @@ if (window.location.href.match(/(b\.io\/userScripts\/outOfAm-z-n\/)/) != null ) 
 // Ce qui se passe quand on est sur Amazon...
 if (window.location.href.match(/(\/\/www\.amazon\.fr\/)/) != null) {
     // vérifie qu'on est dans la rubrique livre sur amazon.fr
-    var rubrique = $(".nav-b").text();
+    var rubrique = document.querySelector(".nav-a-content").innerHTML.replace(/\s/g, '');
     if (rubrique === "Livres") {
-        console.log("OoA > On est bien dans les livres");
+console.log("OoA > On est bien dans les livres");
         // récupère le titre du livre et le prépare pour le mettre dans le lien de la boutique locale
-        var OoATitle = escape($("#productTitle").text());
+        var OoATitle = escape(document.querySelector("#productTitle").innerText);
         var OoAAuthor = "";
         $(".author > span > a").each(function() {
             OoAAuthor += $(this).text() + "+";
@@ -145,15 +146,15 @@ if (window.location.href.match(/(\/\/www\.amazon\.fr\/)/) != null) {
         for (var s in OoAStores) {
             if (OoAStores[s].active === true) {
                 var itemSendTo = '<li id="OoA'+ s +'" data-width="192" class="swatchElement selected" style="width:192px">';
-                itemSendTo += '<span class="a-button a-button-selected a-spacing-mini a-button-toggle format" style="box-shadow:3px 3px 6px gray;border-color:' + OoAcolor + '">';
-                itemSendTo += '<span class="a-button-inner" style="background-image:linear-gradient(145deg,#fff,#f8fef2)">';
-                itemSendTo += '<span class="fa fa-wrench OoA-setButton" title="réglages" style="float:right;margin:2px 2px 0 0;padding:2px;box-sizing:border-box;border-radius:50%;color:white;background-color:' + OoAcolor + '"></span>';
-                if(OoAStores[s].search == "") {
+                    itemSendTo += '<span class="a-button a-button-selected a-spacing-mini a-button-toggle format" style="box-shadow:3px 3px 6px gray;border-color:' + OoAcolor + '">';
+                    itemSendTo += '<span class="a-button-inner" style="background-image:linear-gradient(145deg,#fff,#f8fef2)">';
+                    itemSendTo += '<span class="fa fa-wrench OoA-setButton" title="réglages" style="float:right;margin:2px 2px 0 0;padding:2px;box-sizing:border-box;border-radius:50%;color:white;background-color:' + OoAcolor + '"></span>';
+                    if(OoAStores[s].search == "") {
                     itemSendTo += '<span id="OoAname'+s+'" class="a-list-item">';
                     itemSendTo += '<a href="#" class="a-button-text" role="button">';
                     itemSendTo += '<span>près de chez vous';
                     itemSendTo += '<span class="a-color-base"><span class="a-color-price">';
-                    itemSendTo += '<a href="#">'+ OoAStores[s].name +', ' + OoAStores[s].city +'</a>';
+                    itemSendTo += '<a href="' + OoAStores[s].search + '' + OoATitle + ',' + OoAAuthor + '&amp;from=OoAsycom">'+ OoAStores[s].name +', ' + OoAStores[s].city +'</a>';
                     itemSendTo += '</span></span></span></a>';
                     itemSendTo += '<a id="OoACoord'+ s +'" class="hidden"><ul>';
                     if(OoAStores[s].phone!==0) {
